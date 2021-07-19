@@ -32,7 +32,8 @@ let UserSchema = new Schema({
       ref: "Role"
     }
   ]*/
-  isOwner: {type: Boolean, default:false}
+  isOwner: {type: Boolean, default:false},
+  horse: {type:Array} //TODO must refere to horses-model
 });
 
 /*UserSchema.set(`toJson`,{
