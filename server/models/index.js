@@ -6,6 +6,8 @@ mongoose.Promise = global.Promise;
 const db = {};
 db.mongoose = mongoose;
 db.url = dbConfig.url;
-db.users = require("./user.model.js")(mongoose);
+
+db.user = require("./user-model");
+db.ROLES = ['pupil', 'coach', 'rider', 'horse-owner', 'club-owner'];
 
 module.exports = db;

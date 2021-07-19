@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user.model';
 
-const baseURL = 'http://localhost:5050'; //TODO ????
+const baseURL = 'http://localhost:5050';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +14,9 @@ export class UserService {
 
   //This provides methods to access public and protected resources
 
-  signup(data:any): Observable<any>{
+  /*signup(data:any): Observable<any>{ //questo non serve qui
     return this.http.post(baseURL,data);
-  }
+  }*/
 
   getPublicContent(): Observable<any> {
     return this.http.get(baseURL + 'all', { responseType: 'text' });
