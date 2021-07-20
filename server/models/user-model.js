@@ -25,15 +25,10 @@ let UserSchema = new Schema({
     country: {type: String, required: true}
   },
   nationality: {type: String, required: true},
-  club: {type: String, required: true},
-  /*roles: [ //TODO we will need this because a person can be coach, horse owner, club owner and rider
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Role"
-    }
-  ]*/
+  club: {type: Schema.Types.ObjectId, ref:"Club", required: true},
+  roles: [{type: Schema.Types.ObjectId, ref: "Role"}],
   isOwner: {type: Boolean, default:false},
-  horse: {type:Array} //TODO must refere to horses-model
+  horse: [{type:Schema.Types.ObjectId, ref:"Horse"}] //refers to horses-model
 });
 
 /*UserSchema.set(`toJson`,{

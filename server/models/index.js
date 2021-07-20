@@ -7,7 +7,12 @@ const db = {};
 db.mongoose = mongoose;
 db.url = dbConfig.url;
 
+db.arena = require("./arena-model");
+db.club = require("./club-model");
+db.group = require("./group-model");
+db.horse = require("./horse-model");
+db.lesson = require("./lesson-model");
+db.role = require("./role-model")
 db.user = require("./user-model");
-db.ROLES = ['pupil', 'coach', 'rider', 'horse-owner', 'club-owner'];
 
 module.exports = db;
