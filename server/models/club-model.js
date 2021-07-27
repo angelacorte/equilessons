@@ -14,4 +14,4 @@ let ClubSchema = new Schema({
   owner:[{type:Schema.Types.ObjectId, ref:"User"}],
 });
 
-module.exports = mongoose.model("Club", ClubSchema);
+module.exports = mongoose.model("Club", ClubSchema, "clubs");

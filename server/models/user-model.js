@@ -28,13 +28,9 @@ let UserSchema = new Schema({
   club: {type: Schema.Types.ObjectId, ref:"Club", required: true},
   roles: [{type: Schema.Types.ObjectId, ref: "Role"}],
   isOwner: {type: Boolean, default:false},
-  horse: [{type:Schema.Types.ObjectId, ref:"Horse"}] //refers to horses-model
+  horse: [{type:Schema.Types.ObjectId, ref:"Horse"}], //refers to horses-model
+  token : {type: String}
 });
-
-/*UserSchema.set(`toJson`,{
-  virtuals: true,
-  versionkey: false,
-});*/
 
 UserSchema.pre("save", function(next) {
   let user = this;
@@ -64,5 +60,31 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 }
 
+let reasons = UserSchema.statics.failedLogin = { NOT_FOUND: 0, PASSWORD_INCORRECT: 1, MAX_ATTEMPTS: 2 };
 
-module.exports = mongoose.model("User", UserSchema);
+UserSchema.statics.getAuthenticated = function (usernameOrEmail, password, cb) {
+  this.findOne({
+    $or:[
+      {username:usernameOrEmail},
+      {email:usernameOrEmail}
+    ]
+  }, function (err,user) {
+    if(err){
+      return cb(err);
+    }
+    if(!user){
+      return  cb(null, null, reasons.NOT_FOUND);
+    }
+
+    user.comparePassword(password, function (err,isMatch) {
+      if(err){
+        return cb(err);
+      }
+      if(isMatch){
+        return cb(null,user);
+      }
+    })
+  })
+}
+
+module.exports = mongoose.model("User", UserSchema, "users");

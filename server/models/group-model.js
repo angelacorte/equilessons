@@ -9,4 +9,4 @@ let GroupSchema = new Schema({
   club: {type:Schema.Types.ObjectId, ref:"Club"} //object/reference of 'club model'
 });
 
-module.exports = mongoose.model("Group", GroupSchema);
+module.exports = mongoose.model("Group", GroupSchema, 'groups');

@@ -12,13 +12,33 @@ const userController = require("../controllers/user-controller");
 module.exports = function (app){
 
   //ARENA
-  app.route('/club/:clubName')
-    .get(clubController.findClubByName); //returns club's id
+  app.route('/arenaName/:arenaName')
+    .get(arenaController.getArenaByName); //returns arena's info
+
+  app.route('/arenasClub/:clubId')
+    .get(arenaController.getArenaByClub); //return all the arenas in a club
+
+  app.route('/arena')
+    .post(arenaController.addArena);
+
   //CLUB
+  app.route('/club')
+    .post(clubController.addClub);
+
+  app.route('/clubId/:id')
+    .get(clubController.getClubById)
+
+  app.route('/clubName/:clubName')
+    .get(clubController.getClubByName); //returns club's info
 
   //GROUP
 
   //HORSE
+  app.route('/horse')
+    .post(horseController.addHorse);
+
+  app.route('/getSchoolHorses/:clubId')
+    .get(horseController.getScholasticHorses);
 
   //LESSON
   app.route('/create-lesson')

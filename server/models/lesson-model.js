@@ -14,4 +14,4 @@ let  LessonSchema = new Schema({
   club: {type:Schema.Types.ObjectId, ref:"Club"} //object/reference of 'club model'
 });
 
-module.exports = mongoose.model("Lesson", LessonSchema);
+module.exports = mongoose.model("Lesson", LessonSchema, "lessons");
