@@ -18,6 +18,7 @@ export class AuthService {
   //this sends POST requests to back-end
 
   login(username:string, password: string): Observable<any>{
+    console.log("auth service login ");
     return this.http.post(baseURL + '/login', {
       username,
       password

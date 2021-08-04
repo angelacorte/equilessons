@@ -1,48 +1,44 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
-
-<body>
-<div id="login">
-  <h3 class="text-center text-white pt-5">Login form</h3>
-  <div class="container">
-    <div id="login-row" class="row justify-content-center align-items-center">
-      <div id="login-column" class="col-md-6">
-        <div id="login-box" class="col-md-12">
-          <form id="login-form" class="form" action="" method="post" *ngIf="!isLoggedIn"
-                name="form"
-                (ngSubmit)="f.form.valid && onSubmit()"
-                #f="ngForm"
-                novalidate>
-            <h3 class="text-center text-info">Login</h3>
-            <div class="form-group">
-              <label for="username" class="text-info">Username:</label><br>
-              <input type="text" name="username" id="username" class="form-control">
+<div class='container-fluid mt-5'>
+  <h2 class="text-center">Effettua l'accesso!</h2>
+    <form class="form-group content-center mt-4 mb-4 px-5 py-4"
+          *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+      <div class="form-group.text-center.content-center.col-md-6.offset-md-3">
+        <div class="form-row d-flex flex-row col-6">
+          <label class="sr-only" for="username">Inserisci username</label>
+          <input id="username" type="text" class="form-control" name="username" placeholder="Username"
+            [(ngModel)]="form.username" required #username="ngModel"
+          />
+          <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
+            Username is required!
+          </div>
+        </div>
+        <div class="form-row d-flex flex-row col-6">
+          <label class="sr-only" for="password">Inserisci password</label>
+          <input id="password" type="password" class="form-control" name="password" placeholder="Password"
+            [(ngModel)]="form.password" required minlength="4" #password="ngModel"/>
+          <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
+            <div *ngIf="password.errors.required">Password is required</div>
+            <div *ngIf="password.errors.minlength">
+              Password must be at least 6 characters
             </div>
-            <div class="form-group">
-              <label for="password" class="text-info">Password:</label><br>
-              <input type="text" name="password" id="password" class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="remember-me" class="text-info"><span>Remember me</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>
-              <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
-            </div>
-            <div id="register-link" class="text-right">
-              <a href="#" class="text-info">Register here</a>
-            </div>
-            <div class="form-group">
-              <div
-                class="alert alert-danger"
-                role="alert"
-                *ngIf="f.submitted && isLoginFailed">
-                Login failed: {{ errorMsg }}
-              </div>
-            </div>
-          </form>
+          </div>
+        </div>
+        <div class="form-row d-flex flex-row col-4 p-3">
+          <button class="btn btn-block">Login</button>
+        </div>
+        <div class="form-row">
+          <a href="/signup">Devo effettuare la registrazione</a>
+        </div>
+        <div class="form-group">
+          <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
+            Login failed: {{ errorMessage }}
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </form>
+<!--
+    <div class="alert alert-success" *ngIf="isLoggedIn">
+      Welcome back!
+    </div>-->
+
 </div>
-</body>

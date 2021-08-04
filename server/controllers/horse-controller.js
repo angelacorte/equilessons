@@ -7,6 +7,9 @@ let Lesson = db.lesson;
 let Role = db.role;
 let User = db.user;
 
+let ObjectId = require('mongodb').ObjectID;
+
+
 exports.addHorse = function (req,res){
   let newHorse = new Horse(req.body);
   newHorse.save(function(err, user) {
@@ -18,7 +21,6 @@ exports.addHorse = function (req,res){
 }
 
 exports.getScholasticHorses = function (req,res) {
-  console.log("enters getscholastichorses")
   Horse.find({clubId:req.params.clubId, scholastic:true}).then(result =>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
@@ -28,3 +30,14 @@ exports.getScholasticHorses = function (req,res) {
     console.log("Error: ", err.message);
   });
 }
+
+exports.getHorseInfos = function (req,res){
+  Horse.find({_id:new ObjectId(req.params.horseId)}).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+};

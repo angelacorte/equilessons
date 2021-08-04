@@ -7,6 +7,9 @@ let Lesson = db.lesson;
 let Role = db.role;
 let User = db.user;
 
+let ObjectId = require('mongodb').ObjectID;
+
+
 exports.createLesson = function (req,res){   //TODO add the coach who create the lesson, might be managed with sessions and authentication (tokens)
   let newLesson = new Lesson(req.body);
   //lesson.coach =
@@ -30,7 +33,7 @@ exports.updateLesson = function (req,res){
 
 };
 
-exports.getLessonInfo = function (req,res){
+exports.getLessonInfo = function (req,res){ //may needs req.query
 
 };
 

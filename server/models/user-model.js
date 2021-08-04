@@ -25,7 +25,7 @@ let UserSchema = new Schema({
     country: {type: String, required: true}
   },
   nationality: {type: String, required: true},
-  club: {type: Schema.Types.ObjectId, ref:"Club", required: true},
+  clubId: {type: Schema.Types.ObjectId, ref:"Club", required: true},
   roles: [{type: Schema.Types.ObjectId, ref: "Role"}],
   isOwner: {type: Boolean, default:false},
   horse: [{type:Schema.Types.ObjectId, ref:"Horse"}], //refers to horses-model

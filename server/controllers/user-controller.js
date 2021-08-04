@@ -9,21 +9,21 @@ let User = db.user;
 const bcrypt = require("bcrypt");
 
 //find one user
-exports.findOneUser = (req,res)=>{
+exports.getUserByName = function (req,res){
 
 };
 
 //find all users
-exports.findAllUsers = (req,res)=>{
+exports.getAllUsers = function (req,res){
 
 };
 
 //delete one user
-exports.deleteOneUser = (req,res)=>{
+exports.deleteOneUser = function (req,res){
 
 };
 
 //update user info
-exports.updateUser = (req,res)=>{
+exports.updateUser = function (req,res){
 
 };

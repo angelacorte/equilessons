@@ -1,14 +1,29 @@
-/*body {
+body {
   margin: 0;
   padding: 0;
-  background-color: #FFFFFF; /*84F2AE
-  height: 100vh;
+  background-color: #FFFFFF; /*84F2AE*/
+  height: 100%;
 }
 
 .navbar{
-  background: #007f6f;
+  background: #001635; /*007f6f*/
   text-decoration: none;
-  height: 50px;
+  position: sticky;
+  padding: 10px;
+  color: #FFFFFF;
+}
+.navbar-brand{
+  color: #FFFFFF;
+  font-family: 'monospace';
 }
 
-*/
+.btn{
+  background: #001635;
+  color: #EAEAEA;
+  border-color: #001635;
+}
+
+.btn:hover{
+  color: #EAEAEA;
+  background: #397367;
+}

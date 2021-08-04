@@ -11,17 +11,16 @@ const userController = require("../controllers/user-controller");
 
 module.exports = function (app){
 
-  //ARENA
+  //---------------------------------ARENA---------------------------------
   app.route('/arenaName/:arenaName')
     .get(arenaController.getArenaByName); //returns arena's info
 
-  app.route('/arenasClub/:clubId')
-    .get(arenaController.getArenaByClub); //return all the arenas in a club
+
 
   app.route('/arena')
-    .post(arenaController.addArena);
+    .post(loginController.authenticate, arenaController.addArena);
 
-  //CLUB
+  //---------------------------------CLUB---------------------------------
   app.route('/club')
     .post(clubController.addClub);
 
@@ -31,23 +30,29 @@ module.exports = function (app){
   app.route('/clubName/:clubName')
     .get(clubController.getClubByName); //returns club's info
 
-  //GROUP
+  app.route('/clubArenas')
+    .get(clubController.getClubArenas); //return all the arenas in a club
 
-  //HORSE
+  //---------------------------------GROUP---------------------------------
+
+  //---------------------------------HORSE---------------------------------
   app.route('/horse')
     .post(horseController.addHorse);
 
   app.route('/getSchoolHorses/:clubId')
     .get(horseController.getScholasticHorses);
 
-  //LESSON
+  app.route('/horse/:horseId')
+    .get(horseController.getHorseInfos);
+
+  //---------------------------------LESSON---------------------------------
   app.route('/create-lesson')
     .post(lessonController.createLesson);
 
 
-  //ROLE
+  //---------------------------------ROLE---------------------------------
 
-  //USER
+  //---------------------------------USER---------------------------------
   app.route('/login')
     .post(loginController.login);
 

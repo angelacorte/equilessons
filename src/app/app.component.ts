@@ -21,8 +21,11 @@ export class AppComponent implements OnInit{
     if(this.isLoggedIn){
       const user = this.tokenStorageService.getUser();
       this.roles = user.roles;
+      this.username = user.user.username;
 
-      this.username = user.username;
+      console.log('ngoninit app components ', user, '\n username ', user.user.username);
+
+
     }
   }
 

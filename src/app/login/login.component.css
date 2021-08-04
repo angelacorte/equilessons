@@ -4,6 +4,33 @@ body {
   background-color: #FFFFFF; /*84F2AE*/
   height: 100vh;
 }
+
+.btn{
+  align-content: center;
+  background: #001690;
+  color: #EAEAEA;
+  border-color: #001635;
+}
+
+div.container{
+  align-content: center;
+}
+
+a{
+  color: #001635;
+  font-size: 20px;
+}
+
+:hover{
+  text-decoration: none;
+  color: #397367;
+}
+
+.btn:hover{
+  color: #EAEAEA;
+  background: #397367;
+}
+/*
 #login .container #login-row #login-column #login-box {
   margin-top: 120px;
   max-width: 600px;
@@ -17,3 +44,4 @@ body {
 #login .container #login-row #login-column #login-box #login-form #register-link {
   margin-top: -85px;
 }
+*/

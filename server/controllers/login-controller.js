@@ -13,14 +13,16 @@ function generateAccessToken(userId){
 }
 
 exports.login = function (req,res) {
+  console.log("login controller login");
   User.getAuthenticated(req.body.username, req.body.password, function (err, user, reason) {
     if (err) {
       throw err;
     }
-
+    console.log("user e pass",req.body.username, req.body.password);
     if (user) {
       const accessToken = generateAccessToken(user._id);
       const refreshToken = jwt.sign(JSON.stringify(user._id), process.env.REFRESH_TOKEN_SECRET);
+      let userSess = {};
 
       const filter = {"_id": user._id};
       const update = {"token": refreshToken};
@@ -31,11 +33,13 @@ exports.login = function (req,res) {
         if (!result) {
           res.status(500).json({"accessToken": accessToken, "refreshToken": refreshToken});
         }
+        console.log("login successfull");
         res.status(200).json({"accessToken": accessToken, "refreshToken": refreshToken, "user": user});
       }).catch(err => {
         console.log("Error: ", err.message);
       });
     }
+
 
     let reasons = User.failedLogin;
     switch (reason) {
@@ -47,11 +51,11 @@ exports.login = function (req,res) {
         // the user *why* the login failed, only that it did
         res.status(401).json({"description": "incorrect username or password"});
         break;
-      case reasons.MAX_ATTEMPTS:
+      /*case reasons.MAX_ATTEMPTS:
         // send email or otherwise notify user that account is
         // temporarily locked
         res.status(401).json({"description": "you have been locked"});
-        break;
+        break;*/
     }
   });
 }
