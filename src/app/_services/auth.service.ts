@@ -27,6 +27,7 @@ export class AuthService {
 
   signup(name: string, surname: string, taxcode: string, email: string, telephone: number, birthday: string, birthLocation: string,
          nationality: string, username: string, password: string, city: string, cap: number, address: string, county: string, nrFise: string, club: string, owner: boolean): Observable<any>{
+    console.log('prova')
     return this.http.post(baseURL + '/signup', {
       name, surname, taxcode, email, telephone, birthday, birthLocation, nationality, username, password, city, cap, address, county, nrFise, club, owner
     }, httpOptions);

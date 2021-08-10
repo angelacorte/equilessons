@@ -22,6 +22,7 @@ module.exports = function (app){
 
   //---------------------------------CLUB---------------------------------
   app.route('/club')
+    .get(clubController.getAllClubs)
     .post(clubController.addClub);
 
   app.route('/clubId/:id')

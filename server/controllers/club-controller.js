@@ -9,11 +9,31 @@ let User = db.user;
 
 let ObjectId = require('mongodb').ObjectID;
 
-exports.getClubByName = function (req,res){
-  Club.findOne({"clubName": req.params.clubName}).then(result=>{
+exports.getAllClubs = function (req,res) {
+  Club.find({},{_id:1,clubName:1}).then(result =>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
+    console.log("get all clubs ", result);
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
+exports.getClubByName = function (club, req,res){
+  let clubN;
+  console.log("club ", club)
+  if(req !== undefined){
+    clubN = req.params.clubName;
+  }else if(club){
+    clubN = club;
+  }
+  Club.findOne({"clubName": clubN}).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    console.log('result getclub by name ', result)
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);

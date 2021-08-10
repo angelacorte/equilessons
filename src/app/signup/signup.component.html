@@ -1,5 +1,4 @@
 <form>
-
   <div id="signup">
     <h3 class="text-center text-white pt-5">signup form</h3>
     <div class="container">
@@ -48,10 +47,6 @@
                   <label for="birthLocation">Luogo di nascita</label>
                   <input id="birthLocation" type="text" class="form-control" placeholder="Luogo di nascita" required>
                 </div>
-                <div class="col-md-4 mb-3">
-                  <label for="nationality">Nazionalità</label>
-                  <input type="text" class="form-control" id="nationality" placeholder="Nazionalità" required>
-                </div>
               </div>
 
               <div class="form-row">
@@ -80,18 +75,8 @@
                   <input type="text" class="form-control" id="city" placeholder="Città" required>
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label for="cap">CAP</label>
-                  <input type="text" class="form-control" id="cap" placeholder="CAP" required>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-md-4 mb-3">
                   <label for="address">Indirizzo</label>
                   <input type="text" class="form-control" id="address" placeholder="Indirizzo" required>
-                </div>
-                <div class="col-md-3 mb-3">
-                  <label for="county">Provincia</label>
-                  <input type="text" class="form-control" id="county" placeholder="Provincia" required>
                 </div>
               </div>
               <div class="form-row">
@@ -100,8 +85,15 @@
                   <input id="nrFise" type="text" class="form-control" placeholder="Tessera FISE" required>
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label for="club">Circolo di appartenenza</label>
-                  <input id="club" type="text" class="form-control" placeholder="Dovra diventare selezionabile" required>
+                  <label for="clubId">Circolo di appartenenza</label>
+                    <select class="form-control" id="clubId" required>
+                      <option>--</option>
+                      <option *ngFor="let club of clubs" [value]="club">
+                        {{club['clubName']}}
+                      </option>
+                    </select>
+                    <!--<error *ngIf="clubControl.hasError('required')">Please choose an animal</error>
+                    <hint>{{clubControl.value?.location.city}}</hint>-->
                 </div>
               </div>
               <div class="form-group">
