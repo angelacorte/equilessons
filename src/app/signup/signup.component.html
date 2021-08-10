@@ -1,126 +1,223 @@
-<form>
-  <div id="signup">
-    <h3 class="text-center text-white pt-5">signup form</h3>
-    <div class="container">
-      <div id="signup-row" class="row justify-content-center align-items-center">
-        <div id="signup-column" class="col-md-12">
-          <div id="signup-box" class="col-md-12">
-            <form id="signup-form" class="form border mt-4 mb-4 px-5 py-4" action="" method="post" *ngIf="!isSuccessful"
-                  name="form"
-                  (ngSubmit)="f.form.valid && onSubmit()"
-                  #f="ngForm"
-                  novalidate>
-              <h3 class="text-center text-info">Registrati!</h3>
-              <div class="form-row">
-                <div class="col-md-4 mb-3">
-                  <label for="validationDefault01">Nome</label>
-                  <input type="text" class="form-control" id="validationDefault01" placeholder="Nome" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="validationDefault02">Cognome</label>
-                  <input type="text" class="form-control" id="validationDefault02" placeholder="Cognome" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="taxcode">Codice fiscale</label>
-                  <input type="text" class="form-control" id="taxcode" placeholder="Codice fiscale" required>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-md-4 mb-3">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" class="form-control" placeholder="Email" [(ngModel)]="form.email"
-                         required
-                         email
-                         #email="ngModel">
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="telephone">Numero di telefono</label>
-                  <input type="tel" id="telephone" class="form-control" placeholder="Numero di telefono" required>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-md-4 mb-3">
-                  <label for="birthday">Data di nascita</label>
-                  <input type="date" id="birthday" class="form-control" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="birthLocation">Luogo di nascita</label>
-                  <input id="birthLocation" type="text" class="form-control" placeholder="Luogo di nascita" required>
-                </div>
-              </div>
+<div class="container mt-5 align-self-auto">
+    <form
+      *ngIf="!isSuccessful"
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+    >
+      <h3 class="title">Registrati!</h3>
 
-              <div class="form-row">
-                <div class="col-md-4 mb-3">
-                  <label for="validationDefaultUsername">Username</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroupPrepend2">@</span>
-                    </div>
-                    <input type="text" class="form-control" id="validationDefaultUsername" placeholder="Username" aria-describedby="inputGroupPrepend2" required>
-                  </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" placeholder="password" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="confirmPsw">Conferma password</label>
-                  <input type="password" class="form-control" id="confirmPsw" placeholder="Conferma password" onChange="checkPasswordMatch()" required>
-                  <p id="passwordMatch" hidden></p>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-md-6">
-                  <label for="city">Città</label>
-                  <input type="text" class="form-control" id="city" placeholder="Città" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="address">Indirizzo</label>
-                  <input type="text" class="form-control" id="address" placeholder="Indirizzo" required>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="col-md-4 mb-3">
-                  <label for="nrFise">Tessera FISE</label>
-                  <input id="nrFise" type="text" class="form-control" placeholder="Tessera FISE" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="clubId">Circolo di appartenenza</label>
-                    <select class="form-control" id="clubId" required>
-                      <option>--</option>
-                      <option *ngFor="let club of clubs" [value]="club">
-                        {{club['clubName']}}
-                      </option>
-                    </select>
-                    <!--<error *ngIf="clubControl.hasError('required')">Please choose an animal</error>
-                    <hint>{{clubControl.value?.location.city}}</hint>-->
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="false" id="owner">
-                  <label class="form-check-label" for="owner">
-                    Sono proprietario di cavalli
-                  </label>
-                </div>
-              </div>
-              <button class="btn btn-primary" type="submit">Submit form</button>
-            </form>
+      <div class="form-row">
+        <div class="col-md-5 mt-2">
+          <label for="name">Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="name"
+            placeholder="Name"
+            [(ngModel)]="form.name"
+            required
+          />
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="surname">Cognome</label>
+          <input
+            type="text"
+            class="form-control"
+            name="surname"
+            id="surname"
+            placeholder="Surname"
+            [(ngModel)]="form.surname"
+            required
+          />
+        </div>
+
+      </div>
+
+      <div class="form-row ">
+        <div class="col-md-5 mt-2">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            id="email"
+            placeholder="Email"
+            [(ngModel)]="form.email"
+            required
+            email
+          />
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="birthday">Data di Nascita</label>
+          <input
+            type="date"
+            class="form-control"
+            name="birthday"
+            id="birthday"
+            [(ngModel)]="form.birthday"
+            required
+          />
+        </div>
+      </div>
+
+
+      <div class="form-row">
+        <div class="col-md-5 mt-2">
+          <label for="username">Username</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupPrepend2">@</span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              name="username"
+              id="username"
+              placeholder="Username"
+              [(ngModel)]="form.username"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            id="password"
+            placeholder="Password"
+            [(ngModel)]="form.password"
+            required
+            minlength="4"
+            #password="ngModel"
+          />
+          <div class="alert-danger" *ngIf="password.errors && f.submitted">
+            <div *ngIf="password.errors.required">Password is required</div>
+            <div *ngIf="password.errors.minlength">
+              Password must be at least 6 characters
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <div class="form-row">
+        <div class="col-md-5 mt-2">
+          <label for="phoneNumber">Numero di telefono</label>
+          <input
+            type="tel"
+            class="form-control"
+            name="phoneNumber"
+            id="phoneNumber"
+            placeholder="Numero di telefono"
+            [(ngModel)]="form.phoneNumber"
+            required
+          />
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="taxcode">Codice Fiscale</label>
+          <input
+            type="text"
+            class="form-control"
+            name="taxcode"
+            id="taxcode"
+            placeholder="Codice Fiscale"
+            [(ngModel)]="form.taxcode"
+            required
+          />
+        </div>
+
+      </div>
+
+      <div class="form-row ">
+        <div class="col-md-5 mt-2">
+          <label for="city">Città di residenza</label>
+          <input
+            type="text"
+            class="form-control"
+            name="city"
+            id="city"
+            placeholder="Città di residenza"
+            [(ngModel)]="form.city"
+            required
+          />
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="address">Indirizzo</label>
+          <input
+            type="text"
+            class="form-control"
+            name="address"
+            id="address"
+            placeholder="Indirizzo"
+            [(ngModel)]="form.address"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="col-md-5 mt-2">
+          <label for="nrFise">Tessera FISE</label>
+          <input
+            type="text"
+            class="form-control"
+            name="nrFise"
+            id="nrFise"
+            placeholder="Tessera Fise"
+            [(ngModel)]="form.nrFise"
+            required
+          />
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="clubId">Circolo di appartenenza</label>
+          <select
+            class="form-control"
+            name="clubId"
+            id="clubId"
+            [(ngModel)]="form.clubId"
+            required>
+            <option *ngFor="let club of clubs"
+                    [value]="club['_id']">
+              {{club['clubName']}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row mt-4">
+        <div class="col-md-8">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              value="false"
+              (change)="isChecked()"
+            id="isOwner">
+            <label class="form-check-label" for="isOwner">Sono proprietario di cavalli</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group mt-4">
+        <button class="btn col-md-4">Iscrivimi</button>
+      </div>
+
+      <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+        Signup failed!<br />{{ errorMessage }}
+      </div>
+  </form>
+
+
+  <div class="alert alert-success" *ngIf="isSuccessful">
+    Registrazione completata!
+    <a href="/login">Ora effettua il login!</a>
   </div>
-</form>
+</div>
 
 <!--
-<div class="col-md-4 mb-3">
-                  <label></label>
-                  <input>
-                </div>
--->
-
-
 <script>
   // Example starter JavaScript for disabling form submissions if there are invalid fields
   (function() {
@@ -159,4 +256,5 @@
     passMatch.style.display = "block";
     //- })
   })();
-</script>
+</script>&ndash;&gt;
+-->

@@ -18,18 +18,28 @@ export class AuthService {
   //this sends POST requests to back-end
 
   login(username:string, password: string): Observable<any>{
-    console.log("auth service login ");
     return this.http.post(baseURL + '/login', {
       username,
       password
     }, httpOptions);
   }
 
-  signup(name: string, surname: string, taxcode: string, email: string, telephone: number, birthday: string, birthLocation: string,
-         nationality: string, username: string, password: string, city: string, cap: number, address: string, county: string, nrFise: string, club: string, owner: boolean): Observable<any>{
-    console.log('prova')
+  signup(name:string, surname:string, email:string, birthday:string, username:string, password:string, phoneNumber:number, taxcode:string,
+         city:string, address:string, nrFise:string, clubId:string, isOwner:boolean): Observable<any>{
     return this.http.post(baseURL + '/signup', {
-      name, surname, taxcode, email, telephone, birthday, birthLocation, nationality, username, password, city, cap, address, county, nrFise, club, owner
+      name,
+      surname,
+      email,
+      birthday,
+      username,
+      password,
+      phoneNumber,
+      taxcode,
+      city,
+      address,
+      nrFise,
+      clubId,
+      isOwner
     }, httpOptions);
   }
 }

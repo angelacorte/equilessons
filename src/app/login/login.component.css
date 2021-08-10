@@ -21,7 +21,7 @@ a{
   font-size: 20px;
 }
 
-:hover{
+.btn:hover{
   text-decoration: none;
   color: #397367;
 }

@@ -18,6 +18,10 @@ exports.getAllUsers = function (req,res){
 
 };
 
+exports.getUserRoles = function (req,res) {
+
+}
+
 //delete one user
 exports.deleteOneUser = function (req,res){
 

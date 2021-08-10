@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../_services/auth.service";
-import {FormControl, Validators} from "@angular/forms";
-import {ClubService} from "../_services/club.service";
+import { FormGroup, FormControl } from '@angular/forms';
 import {map} from "rxjs/operators";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {TokenStorageService} from "../_services/token-storage.service";
 
 const baseURL = 'http://localhost:5050';
 
@@ -22,27 +22,24 @@ export class SignupComponent implements OnInit {
   form: any = {
     name: "",
     surname: "",
-    taxcode: "",
     email: "",
-    telephone: "",
     birthday: "",
-    birthLocation: "",
-    nationality: "",
     username: "",
     password: "",
+    telephone: "",
+    taxcode: "",
     city: "",
-    cap: "",
     address: "",
-    county: "",
     nrFise: "",
-    club: "",
-    owner: ""
+    clubId: "",
+    isOwner: false
   };
 
   clubs = [];
   isSuccessful = false;
-  isSignupFailed = false;
-  errorMsg = '';
+  isSignUpFailed = false;
+  errorMessage = '';
+  isSelected = false;
 
   constructor(private authService: AuthService, private http: HttpClient) { }
 
@@ -51,10 +48,8 @@ export class SignupComponent implements OnInit {
   }
 
   private fetchData(){
-    console.log("fetch data");
     this.http.get(baseURL + '/club', httpOptions).pipe(map(responseData=>{
       const dataArray = [];
-      console.log("response data ", responseData);
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
           // @ts-ignore
@@ -64,12 +59,8 @@ export class SignupComponent implements OnInit {
       return dataArray;
 
     })).subscribe(response=>{
-      console.log('response ', response);
       // @ts-ignore
       this.clubs = response;
-      this.clubs.forEach((club: any)=>{
-        console.log("club ", club);
-      })
     });
   }
 
@@ -77,36 +68,50 @@ export class SignupComponent implements OnInit {
     const {
       name,
       surname,
-      taxcode,
       email,
-      telephone,
       birthday,
-      birthLocation,
-      nationality,
       username,
       password,
+      phoneNumber,
+      taxcode,
       city,
-      cap,
       address,
-      county,
       nrFise,
-      club,
-      owner
+      clubId,
+      isOwner
     } = this.form;
 
-    this.authService.signup(name, surname, taxcode, email, telephone, birthday, birthLocation, nationality, username, password,
-      city, cap, address, county, nrFise, club, owner).subscribe(
+    this.authService.signup(name,
+      surname,
+      email,
+      birthday,
+      username,
+      password,
+      phoneNumber,
+      taxcode,
+      city,
+      address,
+      nrFise,
+      clubId,
+      isOwner).subscribe(
         data => {
-          console.log('signup components ', data);
           this.isSuccessful = true;
-          this.isSignupFailed = false;
+          this.isSignUpFailed = false;
+          // this.reloadPage();
         },
       err => {
-          this.errorMsg = err.error.message;
-          this.isSignupFailed = true;
+          this.errorMessage = err.error.message;
+          this.isSignUpFailed = true;
       }
     );
-
   }
 
+  isChecked() {
+    this.isSelected = true;
+    this.form.isOwner = this.isSelected;
+  }
+
+  // reloadPage(): void {
+  //   window.location.assign("/login");
+  // }
 }

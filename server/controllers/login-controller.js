@@ -13,12 +13,10 @@ function generateAccessToken(userId){
 }
 
 exports.login = function (req,res) {
-  console.log("login controller login");
   User.getAuthenticated(req.body.username, req.body.password, function (err, user, reason) {
     if (err) {
       throw err;
     }
-    console.log("user e pass",req.body.username, req.body.password);
     if (user) {
       const accessToken = generateAccessToken(user._id);
       const refreshToken = jwt.sign(JSON.stringify(user._id), process.env.REFRESH_TOKEN_SECRET);
@@ -33,7 +31,6 @@ exports.login = function (req,res) {
         if (!result) {
           res.status(500).json({"accessToken": accessToken, "refreshToken": refreshToken});
         }
-        console.log("login successfull");
         res.status(200).json({"accessToken": accessToken, "refreshToken": refreshToken, "user": user});
       }).catch(err => {
         console.log("Error: ", err.message);

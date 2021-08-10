@@ -17,11 +17,6 @@ exports.signup = function(req, res) {
     }else{
       let newUser = new User(req.body);
 
-      console.log("req.body.clubId signup controller ", req.body.club)
-      Club.getClubByName(req.body.club);
-
-      console.log('clubInfo signup controller ')
-
       newUser.save(function(err, user) {
         if (err){
           res.send(err);
