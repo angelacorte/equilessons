@@ -1,3 +1,7 @@
 <h1 class="d-flex ml-5 mt-5">Il tuo profilo</h1>
-
-<p *ngFor="let role of roles">{{role}}</p>
+<div class="d-flex flex-column ml-2 mt-5">
+  <h2 class="d-flex ml-2 mt-5">Ruoli</h2>
+  <ul class="list-group" style="list-style-type:square;">
+    <li class="list-group-item col-md-4" *ngFor="let role of roles">{{role}}</li>
+  </ul>
+</div>

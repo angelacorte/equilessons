@@ -26,6 +26,13 @@ export class AuthService {
 
   signup(name:string, surname:string, email:string, birthday:string, username:string, password:string, phoneNumber:number, taxcode:string,
          city:string, address:string, nrFise:string, clubId:string, isOwner:boolean): Observable<any>{
+    let roles = [];
+
+    if(isOwner){
+      roles.push("horse-owner");
+    }else{
+      roles.push("pupil");
+    }
     return this.http.post(baseURL + '/signup', {
       name,
       surname,
@@ -39,7 +46,8 @@ export class AuthService {
       address,
       nrFise,
       clubId,
-      isOwner
+      isOwner,
+      roles
     }, httpOptions);
   }
 }

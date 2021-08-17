@@ -65,6 +65,7 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit(): void{
+
     const {
       name,
       surname,

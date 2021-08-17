@@ -18,7 +18,7 @@ let UserSchema = new Schema({
   nrFise : {type: String, required: true, unique:true},
   clubId: {type: Schema.Types.ObjectId, ref:"Club", required: true},
   isOwner: {type: Boolean, default:false},
-  roles: [{type: Schema.Types.ObjectId, ref: "Role"}],
+  roles: {type: Array , default:"pupil"},
   horse: [{type:Schema.Types.ObjectId, ref:"Horse"}], //refers to horses-model
   token : {type: String}
 });

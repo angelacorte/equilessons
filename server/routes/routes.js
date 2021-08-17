@@ -60,6 +60,6 @@ module.exports = function (app){
   app.route('/signup')
     .post(signupController.signup);
 
-  app.route('/user/roles')
+  app.route('/user/roles/:id')
     .get(userController.getUserRoles);
 }

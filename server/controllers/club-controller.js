@@ -14,7 +14,6 @@ exports.getAllClubs = function (req,res) {
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log("get all clubs ", result);
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
@@ -33,7 +32,6 @@ exports.getClubByName = function (club, req,res){
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log('result getclub by name ', result)
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
