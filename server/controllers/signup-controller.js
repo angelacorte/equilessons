@@ -1,4 +1,4 @@
-const config = require("../config/auth.config"); //secret phrase
+//const config = require('../config/auth.config');
 const db = require("../models");
 const User = db.user; //password already with salt
 const Club = require('./club-controller')

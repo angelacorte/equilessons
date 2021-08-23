@@ -13,6 +13,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ClubRegistrationComponent } from './club-registration/club-registration.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ProfileComponent } from './profile/profile.component';
     SignupComponent,
     PageNotFoundComponent,
     HomeComponent,
-    ProfileComponent
+    ProfileComponent,
+    ClubRegistrationComponent
   ],
     imports: [
         BrowserModule,

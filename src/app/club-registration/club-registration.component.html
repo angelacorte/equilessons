@@ -1,0 +1,95 @@
+<div class="container mt-5 align-self-auto">
+    <form
+      *ngIf="!isSuccessful"
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+    >
+      <h3 class="title">Registra il tuo circolo!</h3>
+
+      <div class="form-row">
+        <div class="col-md-5 mt-2">
+          <label for="name">Denominazione</label>
+          <input
+            type="text"
+            class="form-control"
+            name="clubName"
+            id="clubName"
+            placeholder="Denominazione"
+            [(ngModel)]="form.clubName"
+            required
+          />
+        </div>
+
+      </div>
+
+      <div class="form-row ">
+        <div class="col-md-5 mt-2">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            name="clubEmail"
+            id="clubEmail"
+            placeholder="Email"
+            [(ngModel)]="form.clubEmail"
+            required
+            email
+          />
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="birthday">Telefono</label>
+          <input
+            type="tel"
+            class="form-control"
+            name="clubTelephone"
+            id="clubTelephone"
+            [(ngModel)]="form.clubTelephone"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row ">
+        <div class="col-md-5 mt-2">
+          <label for="city">Città</label>
+          <input
+            type="text"
+            class="form-control"
+            name="clubCity"
+            id="clubCity"
+            placeholder="Città"
+            [(ngModel)]="form.clubCity"
+            required
+          />
+        </div>
+        <div class="col-md-5 mt-2">
+          <label for="address">Indirizzo</label>
+          <input
+            type="text"
+            class="form-control"
+            name="clubAddress"
+            id="clubAddress"
+            placeholder="Indirizzo"
+            [(ngModel)]="form.clubAddress"
+            required
+          />
+        </div>
+      </div>
+
+      
+      <div class="form-group mt-4">
+        <button class="btn col-md-4">Registrami!</button>
+      </div>
+
+      <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+        Signup failed!<br />{{ errorMessage }}
+      </div>
+  </form>
+
+
+  <div class="alert alert-success" *ngIf="isSuccessful">
+    Registrazione completata!
+  </div>
+</div>
