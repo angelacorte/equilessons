@@ -28,7 +28,6 @@ export class ProfileComponent implements OnInit {
 
     if(this.isLoggedIn){
       this.infos = this.tokenStorage.getUser();
-      console.log("profile ngoninit infos", this.infos)
       this.fetchData();
 
     }

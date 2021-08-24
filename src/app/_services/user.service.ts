@@ -14,13 +14,14 @@ export class UserService {
 
   //This provides methods to access public and protected resources
 
-  /*signup(data:any): Observable<any>{ //questo non serve qui
-    return this.http.post(baseURL,data);
-  }*/
-
   getPublicContent(): Observable<any> {
     return this.http.get(baseURL + 'all', { responseType: 'text' });
   }
+
+  addRole(role:any, id:any): Observable<any>{
+    return this.http.post(baseURL + '/user/roles', {role, id});
+  }
+
 
   /*
   get(id: any): Observable<User> {

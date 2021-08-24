@@ -9,8 +9,8 @@
       <h3 class="title">Registra il tuo circolo!</h3>
 
       <div class="form-row">
-        <div class="col-md-5 mt-2">
-          <label for="name">Denominazione</label>
+        <div class="col-md-10 mt-2">
+          <label for="clubName">Denominazione</label>
           <input
             type="text"
             class="form-control"
@@ -26,7 +26,7 @@
 
       <div class="form-row ">
         <div class="col-md-5 mt-2">
-          <label for="email">Email</label>
+          <label for="clubEmail">Email</label>
           <input
             type="email"
             class="form-control"
@@ -39,12 +39,13 @@
           />
         </div>
         <div class="col-md-5 mt-2">
-          <label for="birthday">Telefono</label>
+          <label for="clubTelephone">Telefono</label>
           <input
             type="tel"
             class="form-control"
             name="clubTelephone"
             id="clubTelephone"
+            placeholder="Telefono"
             [(ngModel)]="form.clubTelephone"
             required
           />
@@ -53,7 +54,7 @@
 
       <div class="form-row ">
         <div class="col-md-5 mt-2">
-          <label for="city">Città</label>
+          <label for="clubCity">Città</label>
           <input
             type="text"
             class="form-control"
@@ -65,7 +66,7 @@
           />
         </div>
         <div class="col-md-5 mt-2">
-          <label for="address">Indirizzo</label>
+          <label for="clubAddress">Indirizzo</label>
           <input
             type="text"
             class="form-control"
@@ -78,12 +79,12 @@
         </div>
       </div>
 
-      
+
       <div class="form-group mt-4">
         <button class="btn col-md-4">Registrami!</button>
       </div>
 
-      <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+      <div class="alert alert-warning" *ngIf="f.submitted && isRegistrationFailed">
         Signup failed!<br />{{ errorMessage }}
       </div>
   </form>

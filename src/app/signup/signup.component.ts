@@ -4,6 +4,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import {map} from "rxjs/operators";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
+import {ClubService} from "../_services/club.service";
 
 const baseURL = 'http://localhost:5050';
 
@@ -41,14 +42,14 @@ export class SignupComponent implements OnInit {
   errorMessage = '';
   isSelected = false;
 
-  constructor(private authService: AuthService, private http: HttpClient) { }
+  constructor(private authService: AuthService, private http: HttpClient, private clubService: ClubService) { }
 
   ngOnInit(): void {
     this.fetchData();
   }
 
   private fetchData(){
-    this.http.get(baseURL + '/club', httpOptions).pipe(map(responseData=>{
+    this.clubService.getAllClubs().pipe(map(responseData=>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){

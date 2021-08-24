@@ -31,6 +31,16 @@ exports.getUserRoles = function (req,res) {
   });
 }
 
+exports.addRole = function (req,res){
+  User.updateOne({_id:req.body.id},{$push:{roles: req.body.role}}).then(result=>{
+    if(result.ok != 1){
+      return res.status(500).send({message: "an error occurred"});
+    }
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
 //delete one user
 exports.deleteOneUser = function (req,res){
 

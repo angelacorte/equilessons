@@ -61,5 +61,8 @@ module.exports = function (app){
     .post(signupController.signup);
 
   app.route('/user/roles/:id')
-    .get(userController.getUserRoles);
+    .get(userController.getUserRoles)
+
+  app.route('/user/roles')
+    .post(userController.addRole);
 }
