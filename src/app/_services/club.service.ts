@@ -23,4 +23,8 @@ export class ClubService {
   getAllClubs(): Observable<any>{
     return this.http.get(baseURL, httpOptions);
   }
+
+  addCoach(clubId:any, id:any): Observable<any>{
+    return this.http.post(baseURL + '/addCoach', {clubId, id}, httpOptions);
+  }
 }

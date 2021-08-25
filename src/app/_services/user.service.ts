@@ -22,7 +22,13 @@ export class UserService {
     return this.http.post(baseURL + '/user/roles', {role, id});
   }
 
+  getUserRoles(id:any): Observable<any>{
+    return this.http.get(baseURL + '/user/roles/' + id);
+  }
 
+  changeClub(userId:any, clubId:any): Observable<any>{
+    return this.http.post(baseURL + '/user/changeClub', {userId, clubId});
+  }
   /*
   get(id: any): Observable<User> {
     return this.http.get(`${baseUrl}/${id}`);

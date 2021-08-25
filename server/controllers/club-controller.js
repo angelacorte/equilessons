@@ -50,8 +50,7 @@ exports.getClubById = function (req,res){
 }
 
 exports.getClubArenas = function (req,res) { //gets all the arenas in a club
-  let clubId = new ObjectId("60f702d3329ccb26f26937a0") //new ObjectId(req.club.clubId); //TODO make this generic with the infos of the one who has logged, now is specific for "delta team"
-  Club.aggregate([{$match:{"_id": clubId}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasInClub"}}]).then(result=>{
+  Club.aggregate([{$match:{"_id": req.params.id}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasInClub"}}]).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -67,7 +66,20 @@ exports.addClub = function (req,res) {
     if (err){
       res.send(err);
     }
-    res.status(201).json(user);
+    res.status(200).json(newClub);
+  });
+}
+
+exports.addCoach = function (req,res){
+  console.log("addcoach club-controller req.body", req.body.clubId);
+
+  Club.updateOne({_id:req.body.clubId},{$push:{clubCoach: req.body.id}}).then(result=>{
+    if(result.ok !== 1){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
   });
 }
 

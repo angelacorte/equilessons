@@ -42,7 +42,8 @@ export class ClubRegistrationComponent implements OnInit {
 
     if(this.isLoggedIn){
       this.infos = this.tokenStorage.getUser();
-      console.log("profile ngoninit infos", this.infos);
+      console.log("club registration ngoninit infos", this.infos);
+      console.log("club reg this.infos.user", this.infos.user)
     }
   }
 
@@ -58,15 +59,30 @@ export class ClubRegistrationComponent implements OnInit {
     };
 
     const role = 'club-owner';
+    let tmpRole = this.infos.user['roles'];
+    tmpRole.push(role);
 
     this.clubService.registration(registration).subscribe(response=>{
         this.submitted = true;
         this.isSuccessful = true;
-        this.userService.addRole(role, registration.clubOwnerId).subscribe(resp =>{
-          console.log("updated user");
+        console.log("response club service registration ", response)
+        this.userService.changeClub(registration.clubOwnerId, response._id).subscribe(r=>{
+            this.userService.addRole(role, registration.clubOwnerId).subscribe(resp =>{
+              console.log("updated user");
+              console.log("response.id", response._id);
+//              this.tokenStorage.modifyUserClub(response._id);
+              this.infos.user['clubId'] = response._id;
+              this.infos.user['roles'] = tmpRole;
+              this.tokenStorage.saveUser(this.infos);
+
+              //console.log("this.infos.user['clubId']", this.infos.user['clubId']);
+            },
+                e => {
+              console.log(e);
+            })
         },
-          e => {
-            console.log(e);
+          er=>{
+          console.log(er);
           })
       },
       err => {

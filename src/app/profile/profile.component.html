@@ -5,5 +5,6 @@
     <li class="list-group-item col-md-4" *ngFor="let role of roles">{{role}}</li>
   </ul>
 
-  <a href='/newClub'>Iscrivi il mio circolo</a>
+  <a class="btn col-md-4 mt-4" *ngIf="!roles.includes('club-owner')" href='/newClub'>Iscrivi il mio circolo!</a>
+  <button class="btn col-md-4 mt-4" *ngIf="!roles.includes('coach')" (click)="addCoach()">Sono istruttore presso il circolo ippico selezionato.</button>
 </div>

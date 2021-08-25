@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {TokenStorageService} from "../_services/token-storage.service";
+import {UserService} from "../_services/user.service";
+import {ClubService} from "../_services/club.service";
 
 const baseURL = 'http://localhost:5050';
 
@@ -16,25 +18,25 @@ const httpOptions = {
 })
 export class ProfileComponent implements OnInit {
 
-  roles = [];
+  roles: string[] = [];
   isLoggedIn = false;
   infos:any;
   user:any;
 
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private clubService: ClubService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if(this.isLoggedIn){
-      this.infos = this.tokenStorage.getUser();
+      this.updateInfos();
       this.fetchData();
-
+      console.log("profile ng oninit infos", this.infos)
     }
   }
 
   private fetchData() {
-    this.http.get(baseURL + '/user/roles/' + this.infos.user._id, httpOptions).pipe(map(responseData=>{
+    this.userService.getUserRoles(this.infos.user._id).pipe(map(responseData=>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -50,4 +52,34 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  private updateInfos(){
+    console.log("updateinfo");
+    //console.log("clubid before", this.infos.user['clubId']);
+    this.infos = this.tokenStorage.getUser();
+    //this.infos.user['clubId'] = this.infos.clubId;
+    console.log("clubid updateinfos after tokenstorage get user", this.infos.user['clubId']);
+  }
+
+  addCoach() {
+    let role = 'coach';
+    let tmpRole = this.infos.user['roles'];
+    tmpRole.push(role);
+    //this.tokenStorage.modifyUserClub(this.infos.user['clubId']);
+    this.updateInfos();
+    console.log("addcoach clubid ", this.infos.user['clubId']);
+    this.clubService.addCoach(this.infos.user['clubId'], this.infos.user['_id']).subscribe(response=>{
+        this.userService.addRole(role, this.infos.user._id).subscribe(resp =>{
+          this.infos.user['roles'] = tmpRole;
+          this.tokenStorage.saveUser(this.infos);
+          console.log("updated user");
+          window.location.reload();
+          },
+          e => {
+            console.log(e);
+          })
+      },
+      err => {
+        console.log(err);
+      })
+  }
 }

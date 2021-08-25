@@ -33,9 +33,21 @@ exports.getUserRoles = function (req,res) {
 
 exports.addRole = function (req,res){
   User.updateOne({_id:req.body.id},{$push:{roles: req.body.role}}).then(result=>{
-    if(result.ok != 1){
+    if(result.ok !== 1){
       return res.status(500).send({message: "an error occurred"});
     }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
+exports.changeClub = function (req,res) {
+  User.updateOne({_id:req.body.userId}, {clubId: req.body.clubId}).then(result=>{
+    if(result.ok !== 1){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.status(200).json({"clubId": req.body.clubId});
   }).catch(err=> {
     console.log("Error: ", err.message);
   });

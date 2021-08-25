@@ -7,7 +7,8 @@ let ClubSchema = new Schema({
   clubTelephone:{type:Number, unique:true, required:true},
   clubCity: {type: String, required: true},
   clubAddress: {type: String, required: true},
-  clubOwnerId:{type:Schema.Types.ObjectId, ref:"User"},
+  clubOwnerId:{type:Schema.Types.ObjectId, ref:"User", required:true},
+  clubCoach:[{type:Schema.Types.ObjectId, ref:"User"}]
 });
 
 module.exports = mongoose.model("Club", ClubSchema, "clubs");

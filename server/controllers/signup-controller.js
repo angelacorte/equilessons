@@ -21,7 +21,7 @@ exports.signup = function(req, res) {
         if (err){
           res.send(err);
         }
-        res.status(201).json(user);
+        res.status(200).json(user);
       });
     }
   })
