@@ -180,6 +180,7 @@
             id="clubId"
             [(ngModel)]="form.clubId"
             required>
+<!--            <option [value]="'club-owner'">Possiedo un mio maneggio</option>-->
             <option *ngFor="let club of clubs"
                     [value]="club['_id']">
               {{club['clubName']}}

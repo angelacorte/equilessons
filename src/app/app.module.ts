@@ -14,6 +14,7 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ClubRegistrationComponent } from './club-registration/club-registration.component';
+import { HorseRegistrationComponent } from './horse-registration/horse-registration.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ClubRegistrationComponent } from './club-registration/club-registration
     PageNotFoundComponent,
     HomeComponent,
     ProfileComponent,
-    ClubRegistrationComponent
+    ClubRegistrationComponent,
+    HorseRegistrationComponent
   ],
     imports: [
         BrowserModule,

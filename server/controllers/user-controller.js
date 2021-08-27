@@ -18,6 +18,17 @@ exports.getAllUsers = function (req,res){
 
 };
 
+exports.getUsersByClub = function (req,res) {
+  User.find({clubId:req.params.clubId}, {name:1,surname:1}).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
 exports.getUserRoles = function (req,res) {
   User.findOne({_id:req.params.id},{roles:1}).then(result=>{
     if(!result){

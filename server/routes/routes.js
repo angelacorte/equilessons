@@ -71,4 +71,7 @@ module.exports = function (app){
 
   app.route('/user/changeClub')
     .post(userController.changeClub);
+
+  app.route('/user/:clubId')
+    .get(userController.getUsersByClub);
 }

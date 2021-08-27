@@ -42,8 +42,6 @@ export class ClubRegistrationComponent implements OnInit {
 
     if(this.isLoggedIn){
       this.infos = this.tokenStorage.getUser();
-      console.log("club registration ngoninit infos", this.infos);
-      console.log("club reg this.infos.user", this.infos.user)
     }
   }
 
@@ -64,8 +62,7 @@ export class ClubRegistrationComponent implements OnInit {
 
     this.clubService.registration(registration).subscribe(response=>{
         this.submitted = true;
-        this.isSuccessful = true;
-        console.log("response club service registration ", response)
+        console.log("response club service registration ", response);
         this.userService.changeClub(registration.clubOwnerId, response._id).subscribe(r=>{
             this.userService.addRole(role, registration.clubOwnerId).subscribe(resp =>{
               console.log("updated user");
@@ -74,6 +71,7 @@ export class ClubRegistrationComponent implements OnInit {
               this.infos.user['clubId'] = response._id;
               this.infos.user['roles'] = tmpRole;
               this.tokenStorage.saveUser(this.infos);
+              this.isSuccessful = true;
 
               //console.log("this.infos.user['clubId']", this.infos.user['clubId']);
             },
@@ -90,19 +88,5 @@ export class ClubRegistrationComponent implements OnInit {
         this.isRegistrationFailed = true;
         console.log(err);
       })
-
-
-    /*http.post(baseURL + '/club', { }, httpOptions)
-      .subscribe(response=>{
-        console.log("club registration", registration);
-        console.log("response club registration ", response);
-        this.submitted = true;
-        this.isSuccessful = true;
-      },
-        err => {
-        this.errorMessage = err.error.message;
-        this.isRegistrationFailed = true;
-          console.log(err);
-        })*/
   }
 }

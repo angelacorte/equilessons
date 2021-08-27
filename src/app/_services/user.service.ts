@@ -26,6 +26,10 @@ export class UserService {
     return this.http.get(baseURL + '/user/roles/' + id);
   }
 
+  getUsersByClub(clubId:any): Observable<any>{
+    return this.http.get(baseURL + '/user/' + clubId);
+  }
+
   changeClub(userId:any, clubId:any): Observable<any>{
     return this.http.post(baseURL + '/user/changeClub', {userId, clubId});
   }

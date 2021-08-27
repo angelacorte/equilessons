@@ -1,0 +1,14 @@
+.btn{
+  background: #001635;
+  color: #EAEAEA;
+  border-color: #001635;
+}
+
+.btn:hover{
+  color: #EAEAEA;
+  background: #397367;
+}
+
+.title{
+  color: #397367;
+}

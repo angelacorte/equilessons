@@ -12,11 +12,11 @@ let ObjectId = require('mongodb').ObjectID;
 
 exports.addHorse = function (req,res){
   let newHorse = new Horse(req.body);
-  newHorse.save(function(err, user) {
+  newHorse.save(function(err, horse) {
     if (err){
       res.send(err);
     }
-    res.status(201).json(user);
+    res.status(200).json(horse);
   });
 }
 

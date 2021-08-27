@@ -20,14 +20,13 @@ exports.login = function (req,res) {
     if (user) {
       const accessToken = generateAccessToken(user._id);
       const refreshToken = jwt.sign(JSON.stringify(user._id), process.env.REFRESH_TOKEN_SECRET);
-      let userSess = {};
 
       const filter = {"_id": user._id};
       const update = {"token": refreshToken};
 
       User.findOneAndUpdate(filter, update, {
         new: true
-      }).then(result => {
+      }, ).then(result => {
         if (!result) {
           res.status(500).json({"accessToken": accessToken, "refreshToken": refreshToken});
         }
