@@ -72,7 +72,6 @@ export class HorseRegistrationComponent implements OnInit {
         }
       });
     });
-
   }
 
   onSubmit(): void{

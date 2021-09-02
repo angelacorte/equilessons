@@ -28,14 +28,6 @@ export class TokenStorageService {
     window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
-  /*public modifyUserClub(clubId: any): void{
-    let user = this.getUser();
-    console.log("modify user club", user)
-    console.log("clubid ", clubId);
-    user.user.clubId = clubId;
-    this.saveUser(user);
-  }*/
-
   public getUser(): any {
     const user = window.sessionStorage.getItem(USER_KEY);
     if(user){

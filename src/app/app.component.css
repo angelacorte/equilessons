@@ -1,3 +1,5 @@
+@import "../../node_modules/angular-calendar/css/angular-calendar.css";
+
 body {
   background-color: #FFFFFF; /*84F2AE*/
   height: 100%;

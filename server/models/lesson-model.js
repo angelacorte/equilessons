@@ -4,13 +4,13 @@ const Schema = mongoose.Schema;
 let  LessonSchema = new Schema({
   begins: {type: Date, required:true},
   ends: {type: Date, required:true},
-  arena: {type: Schema.Types.ObjectId, ref:"Arena", required:true},
-  coach: {type:Schema.Types.ObjectId, ref:"User"}, //refers to user coach
+  arenaId: {type: Schema.Types.ObjectId, ref:"Arena", required:true},
+  coachId: {type:Schema.Types.ObjectId, ref:"User"}, //refers to user coach
   participants: [{
-    rider: {type:Schema.Types.ObjectId, ref:"User"},
-    horse: {type:Schema.Types.ObjectId, ref:"Horse"}
+    riderId: {type:Schema.Types.ObjectId, ref:"User"},
+    horseId: {type:Schema.Types.ObjectId, ref:"Horse"}
   }],
-  maxComponents: {type: Number, required: true},
+  //maxComponents: {type: Number, required: true},
   club: {type:Schema.Types.ObjectId, ref:"Club"} //object/reference of 'club model'
 });
 

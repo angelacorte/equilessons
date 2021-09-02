@@ -15,10 +15,11 @@ module.exports = function (app){
   app.route('/arenaName/:arenaName')
     .get(arenaController.getArenaByName); //returns arena's info
 
-
+  app.route('/arena/:clubId')
+    .get(arenaController.getArenasByClubId);
 
   app.route('/arena')
-    .post(loginController.authenticate, arenaController.addArena);
+    .post(/*loginController.authenticate,*/ arenaController.addArena);
 
   //---------------------------------CLUB---------------------------------
   app.route('/club')
@@ -36,6 +37,12 @@ module.exports = function (app){
 
   app.route('/club/addCoach')
     .post(clubController.addCoach);
+
+  app.route('/club/coaches/:clubId')
+    .get(clubController.getCoachByClubId);
+
+  app.route('/club/athletes/:clubId')
+    .get(clubController.getClubAthletes);
 
   //---------------------------------GROUP---------------------------------
 

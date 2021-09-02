@@ -72,13 +72,11 @@
             (change)="isOwnerRider($event)"
             id="isOwnerRider"
             [checked]=isInList(form.ownerId)>
-          <!--[ngModelOptions]="{standalone: true}"-->
           <label class="form-check-label" for="isOwnerRider">Sono il suo cavaliere.</label>
         </div>
       </div>
 
       <div class="col-md-5 mt-2">
-           <!--ngController="addRiderController">-->
         <label for="riderId">Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</label>
         <select
           class="form-control"
@@ -88,7 +86,7 @@
           >
           <option *ngFor="let user of users"
                   [value]="user['_id']"
-                  [disabled]=isInList(riderId)>
+                  [disabled]="isInList(user['_id'])">
             {{user['name']}} {{user['surname']}}
           </option>
         </select>

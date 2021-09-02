@@ -1,0 +1,359 @@
+<div class="container mt-5">
+  <form
+    *ngIf="!isSuccessful"
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate
+  >
+    <h2 class="title">Nuova lezione</h2>
+    <div class="col-md-12 mt-3">
+      <div class="input-group">
+        <label class="input-group-text" for="lessonDate">Giorno</label>
+        <div class="input-group-append">
+          <input
+            type="date"
+            class="form-control"
+            name="lessonDate"
+            id="lessonDate"
+            placeholder="Giorno"
+            [(ngModel)]="form.lessonDate"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-group-text" for="lessonHour">Ora</label>
+        <div class="input-group-append">
+          <input
+            type="time"
+            class="form-control"
+            name="lessonHour"
+            id="lessonHour"
+            placeholder="Ora"
+            [(ngModel)]="form.lessonHour"
+            required
+          />
+        </div>
+      </div>
+      <mat-hint>Formato AM-PM</mat-hint>
+
+      <div class="col-md-3 mt-4">
+        <h5>Durata</h5>
+        <div class="input-group mt-1">
+          <div class="input-group-text">
+            <input type="radio"
+                   aria-label="60 minuti"
+                   id="lessonDuration60"
+                   name="lessonDuration"
+                   value="60"
+                   [(ngModel)]="form.lessonDuration">
+          </div>
+          <input type="tel"
+                 class="form-control input-group-append"
+                 aria-label="60 minuti"
+                 placeholder="60 minuti"
+                 disabled>
+        </div>
+
+        <div class="input-group mt-1">
+          <div class="input-group-text">
+            <input type="radio"
+                   aria-label="30 minuti"
+                   id="lessonDuration30"
+                   name="lessonDuration"
+                   value="30"
+                   [(ngModel)]="form.lessonDuration">
+          </div>
+          <input type="tel"
+                 class="form-control input-group-append"
+                 aria-label="30 minuti"
+                 placeholder="30 minuti"
+                 disabled>
+        </div>
+
+        <div class="input-group mt-1">
+          <div class="input-group-text">
+            <input type="radio"
+                   aria-label="Personalizzato"
+                   id="customLessonDuration"
+                   name="lessonDuration"
+                   [(ngModel)]="form.lessonDuration"
+            >
+          </div>
+          <input type="tel"
+                 class="form-control input-group-append"
+                 aria-label="Durata personalizzata"
+                 placeholder="Personalizza">
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group col-md-5 mt-4">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="arenaId">Campo utilizzato</label>
+      </div>
+      <select
+        class="custom-select"
+        name="arenaId"
+        id="arenaId"
+        [(ngModel)]="form.arenaId"
+        required>
+        <option *ngFor="let arena of arenas"
+                [value]="arena['_id']">
+          {{arena['arenaName']}}
+        </option>
+      </select>
+    </div>
+
+    <div class="d-flex row col-md-12 mt-4">
+      <div class="d-flex-row input-group col-md-6">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="riderId">Allievo</label>
+        </div>
+        <select
+          class="custom-select"
+          name="riderId"
+          id="riderId"
+          [(ngModel)]="form.riderId"
+          required>
+          <!--            <option [value]="'club-owner'">Possiedo un mio maneggio</option>-->
+          <option *ngFor="let rider of riders"
+                  [value]="rider['_id']"
+                  [disabled]="isRiderInList(rider['_id'])"
+                  (click)="isRider(rider['_id'])">
+          {{rider['surname']}} {{rider['name']}}
+          </option>
+        </select>
+
+        <div class="d-flex-row input-group col-md-6 mt-3">
+          <div class="input-group-prepend ">
+            <label class="input-group-text" for="horseId">Cavallo</label>
+          </div>
+          <select
+            class="custom-select"
+            name="horseId"
+            id="horseId"
+            [(ngModel)]="form.horseId"
+            required>
+            <!--            <option [value]="'club-owner'">Possiedo un mio maneggio</option>-->
+            <option *ngFor="let horse of horses"
+                    [value]="horse['_id']"
+                [disabled]="isHorseInList(horse['_id'])">
+              {{horse['horseName']}}
+            </option>
+          </select>
+        </div>
+
+      </div>
+      <button class="d-flex-row btn col-md-2 mt'4" (click)="addRiderToList(form.riderId, form.horseId)" >Aggiungi</button>
+    </div>
+
+    <div class="col-md-8 mt-3">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          [value]="form.coachId"
+          (change)="isCoach($event)"
+          id="coachId"
+          checked>
+        <label class="form-check-label" for="coachId">Sono l'istruttore.</label>
+      </div>
+    </div>
+
+    <div class="input-group col-md-5 mt-4" *ngIf="infos.user['_id'] !== form.coachId">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="otherCoachId">Scegli l'istruttore</label>
+      </div>
+      <select
+        class="custom-select"
+        name="coachId"
+        id="otherCoachId"
+        [(ngModel)]="coachId"
+        >
+        <option *ngFor="let coach of coaches"
+                [value]="coach['_id']">
+              {{coach['surname']}} {{coach['name']}}
+        </option>
+      </select>
+    </div>
+
+    <mat-form-field class="mt-3">
+      <input
+        matInput
+        type="color"
+        placeholder="Colore nel calendario"
+
+        value="#00C3FF">
+    </mat-form-field> <!--formControlName="color"-->
+
+    <div class="mt-5" *ngIf="lesson.length != 0"> <!--[style.display]="'true'"-->
+      <h3>Lezione composta da:</h3>
+        <mat-table [dataSource]="lesson" class="mat-elevation-z8 mb-5">
+          <ng-container matColumnDef="checkbox">
+            <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+              <mat-cell *matCellDef="let les">               <!--<td  *ngFor="let les of lesson">-->
+              <input
+                  type="checkbox"
+                  class="form-check-input"
+                  value="true"
+                  checked
+                  (change)="isRiderUnchecked($event, les)"
+                  id="isRider">
+              </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="allievo">
+            <mat-header-cell *matHeaderCellDef> Allievo </mat-header-cell>
+            <mat-cell *matCellDef="let les"> {{les.riderInfo['surname']}} {{les.riderInfo['name']}}   </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="cavallo">
+            <mat-header-cell *matHeaderCellDef> Cavallo assegnato </mat-header-cell>
+            <mat-cell *matCellDef="let les">  {{les.horseInfo['horseName']}}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        </mat-table>
+
+      <div class="form-group mt-3 mb-5">
+        <button class="btn col-md-4" (click)="onSubmit()">Crea</button>
+      </div>
+    </div>
+
+<!--
+    <div class="form-row ">
+
+      <div class="col-md-5 mt-2">
+        <label for="horseBirthday">Data di nascita</label>
+        <input
+          type="date"
+          class="horseBirthday"
+          name="horseBirthday"
+          id="horseBirthday"
+          placeholder="Data di nascita"
+          [(ngModel)]="form.horseBirthday"
+          required
+        />
+      </div>
+    </div>
+    <div class="col-md-5 mt-2">
+      <label for="horseFise">Numero FISE</label>
+      <input
+        type="text"
+        class="form-control"
+        name="horseFise"
+        id="horseFise"
+        placeholder="Numero FISE (opzionale)"
+        [(ngModel)]="form.horseFise"
+      />
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-8">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [value]="form.ownerId"
+            (change)="isOwnerRider($event)"
+            id="isOwnerRider"
+            [checked]=isInList(form.ownerId)>
+          &lt;!&ndash;[ngModelOptions]="{standalone: true}"&ndash;&gt;
+          <label class="form-check-label" for="isOwnerRider">Sono il suo cavaliere.</label>
+        </div>
+      </div>
+
+      <div class="col-md-5 mt-2">
+        &lt;!&ndash;ngController="addRiderController">&ndash;&gt;
+        <label for="riderId">Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</label>
+        <select
+          class="form-control"
+          name="riderId"
+          id="riderId"
+          [(ngModel)]="riderId"
+        >
+          <option *ngFor="let user of users"
+                  [value]="user['_id']"
+                  [disabled]=isInList(riderId)>
+            {{user['name']}} {{user['surname']}}
+          </option>
+        </select>
+        <button class="btn col-md-3" (click)="addRiderToList(riderId)">Aggiungi</button>
+      </div>
+    </div>
+
+    <div class="form-row" *ngIf="riders.length != 0"> &lt;!&ndash;[style.display]="'true'"&ndash;&gt;
+      <h4>Cavalieri selezionati:</h4>
+      <div class="col-md-8">
+        <ul role="listbox">
+          <li *ngFor="let rider of riders" role="option" aria-checked="true" >
+            <input
+              type="checkbox"
+              class="form-check-input"
+              value="true"
+              checked
+              (change)="isRiderUnchecked($event, rider)"
+              id="isRider">
+            <label class="form-check-label" for="isRider">{{rider['name']}} {{rider['surname']}}</label>
+          </li>
+        </ul>
+        &lt;!&ndash;<div class="form-check">
+          <p *ngFor="let rider in riders">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              value="true"
+              (change)="isRiderChecked()"
+              id="isRider">
+            <label class="form-check-label" for="isRider">{{rider['name']}} {{rider['surname']}}</label>
+          </p>
+        </div>&ndash;&gt;
+      </div>
+    </div>
+
+    <div class="form-row ">
+      <div class="col-md-8">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            value="false"
+            (change)="isClubOwnerChecked($event)"
+            id="isClubOwner">
+          <label class="form-check-label" for="isClubOwner">Proprieta' del circolo ippico</label>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            value="false"
+            (change)="isScholasticChecked($event)"
+            id="isScholastic">
+          <label class="form-check-label" for="isScholastic">Cavallo adibito a lezioni della scuola</label>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-group mt-4">
+      <button class="btn col-md-4">Iscrivi</button>
+    </div>
+
+    <div class="alert alert-warning" *ngIf="f.submitted && isRegistrationFailed">
+      Signup failed!<br />{{ errorMessage }}
+    </div>-->
+  </form>
+
+
+  <div class="alert alert-success" *ngIf="isSuccessful">
+    Registrazione completata!
+  </div>
+</div>

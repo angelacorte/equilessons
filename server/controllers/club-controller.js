@@ -83,6 +83,30 @@ exports.addCoach = function (req,res){
   });
 }
 
+exports.getClubAthletes = function (req,res) {
+  User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1}).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
+//db.users.aggregate([{$match:{"clubId":ObjectId("60f702d3329ccb26f26937a0"), "roles":"coach"}}])
+exports.getCoachByClubId = function (req,res) {
+  User.find( {"clubId":req.params.clubId,"roles":"coach"},{"name":1, "surname":1}).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    console.log("getCoachByClubId", result);
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
 /*
 db.arenas.aggregate([{ $match:{"clubId":ObjectId("60f702d3329ccb26f26937a0")}},{$lookup:{from:"clubs",localField:"clubId",foreignField:"_id",as:"arenasClub
 

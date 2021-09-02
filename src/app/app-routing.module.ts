@@ -7,6 +7,9 @@ import {HomeComponent} from "./home/home.component";
 import {ProfileComponent} from "./profile/profile.component";
 import { ClubRegistrationComponent } from './club-registration/club-registration.component';
 import {HorseRegistrationComponent} from "./horse-registration/horse-registration.component";
+import {CalendarComponent} from "./calendar/calendar.component";
+import {NewArenaComponent} from "./new-arena/new-arena.component";
+import {NewLessonComponent} from "./new-lesson/new-lesson.component";
 
 const routes: Routes = [
   {path: '', redirectTo:'home', pathMatch:'full'},
@@ -16,6 +19,9 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'newClub', component: ClubRegistrationComponent},
   {path: 'horseRegistration', component: HorseRegistrationComponent},
+  {path: 'calendar', component: CalendarComponent},
+  {path: 'newArena', component: NewArenaComponent},
+  {path: 'newLesson', component: NewLessonComponent},
   {path: `**`, component: PageNotFoundComponent},
 ];
 

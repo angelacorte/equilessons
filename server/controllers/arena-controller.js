@@ -22,17 +22,27 @@ exports.getArenaByName = function (req,res){ //gets all the info of an arena by 
   });
 }
 
-
 //db.clubs.aggregate([{ $match:{"_id":ObjectId("60f702d3329ccb26f26937a0")}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasClub"}}])
 
-
-
 exports.addArena = function (req,res){
-  let newArena = new Arena(req.body)
-  newArena.save(function(err, user) {
-    if (err){
-      res.send(err);
+  Arena.insertMany(req.body.newArenas).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
     }
-    res.status(201).json(user);
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
+exports.getArenasByClubId = function (req,res){
+  Arena.find({"clubId":req.params.clubId}, {"clubId":0}).then(result=>{
+    console.log(result);
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
   });
 }

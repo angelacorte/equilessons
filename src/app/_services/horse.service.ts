@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 
-const baseURL = 'http://localhost:5050/horse';
+const baseURL = 'http://localhost:5050';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -17,6 +17,10 @@ export class HorseService {
 
   horseRegistration(data:any): Observable<any>{
     console.log("data horse reg", data);
-    return this.http.post(baseURL, data, httpOptions);
+    return this.http.post(baseURL + '/horse', data, httpOptions);
+  }
+
+  getScholasticHorses(clubId: any): Observable<any>{
+    return this.http.get(baseURL + '/getSchoolHorses/' + clubId, httpOptions);
   }
 }

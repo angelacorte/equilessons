@@ -15,6 +15,22 @@ import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ClubRegistrationComponent } from './club-registration/club-registration.component';
 import { HorseRegistrationComponent } from './horse-registration/horse-registration.component';
+import { CalendarComponent } from './calendar/calendar.component';
+
+import { CommonModule } from '@angular/common';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import {FullCalendarModule} from "@fullcalendar/angular";
+import { NewLessonComponent } from './new-lesson/new-lesson.component';
+import { NewArenaComponent } from './new-arena/new-arena.component';
+import {MatTableModule} from "@angular/material/table";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSlider, MatSliderModule} from "@angular/material/slider";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+
 
 @NgModule({
   declarations: [
@@ -25,16 +41,32 @@ import { HorseRegistrationComponent } from './horse-registration/horse-registrat
     HomeComponent,
     ProfileComponent,
     ClubRegistrationComponent,
-    HorseRegistrationComponent
+    HorseRegistrationComponent,
+    CalendarComponent,
+    NewLessonComponent,
+    NewArenaComponent
   ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpClientModule,
-        RouterModule,
-        AppRoutingModule,
-        ReactiveFormsModule
-    ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    RouterModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    CommonModule,
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
+    FullCalendarModule,
+    MatTableModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
