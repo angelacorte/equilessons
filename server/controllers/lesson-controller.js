@@ -17,7 +17,7 @@ exports.createLesson = function (req,res){   //TODO add the coach who create the
     if (err){
       res.send(err);
     }
-    res.status(201).json(user);
+    res.status(200).json(user);
   });
 };
 

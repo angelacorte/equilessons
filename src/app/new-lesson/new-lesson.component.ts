@@ -7,6 +7,8 @@ import {ArenaService} from "../_services/arena.service";
 import {map} from "rxjs/operators";
 import {ClubService} from "../_services/club.service";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {validateEvents} from "angular-calendar/modules/common/util";
+import {LessonService} from "../_services/lesson.service";
 
 @Component({
   selector: 'app-new-lesson',
@@ -18,14 +20,16 @@ export class NewLessonComponent implements OnInit {
   @ViewChild(MatTable) table: MatTable<any>;
 
   form:any = {
-    begin: '',
-    finish: '',
+    lessonDate: '',
+    lessonHour: '',
+    lessonDuration: '',
     clubId: '',
     arenaId: '',
     coachId: '',
     pairs: [],
     riderId: '',
-    horseId: ''
+    horseId: '',
+    //color: ''
   }
 
   isSuccessful = false;
@@ -44,7 +48,7 @@ export class NewLessonComponent implements OnInit {
   coaches: {_id: any, name: any, surname: any}[] = [];
   coachId: any;
 
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -57,10 +61,42 @@ export class NewLessonComponent implements OnInit {
   }
 
   onSubmit(): void {
+    let beginDate = new Date(this.form.lessonDate.toString() + ' ' + this.form.lessonHour.toString());
+    let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
+    let pairs: { riderId: any; horseId: any; }[] = [];
+    console.log("newdate", beginDate);
+    console.log("tmp", endDate)
+
+    this.lesson.forEach((val: any) =>{
+      console.log("lesson foreach val", val);
+      let pair = {
+        riderId: val.riderInfo['riderId'],
+        horseId: val.horseInfo['horseId']
+      }
+      console.log("pair", pair)
+      pairs.push(pair);
+    })
+    console.log("pairs", pairs)
+
     const lesson = {
-
+      beginDate: beginDate,
+      endDate: endDate,
+      arenaId: this.form.arenaId,
+      coachId: this.form.coachId,
+      clubId: this.infos.user['clubId'],
+      pairs: pairs,
+      //color: this.form.color
     }
+    console.log("lesson", lesson);
 
+    this.lessonService.createLesson(lesson).subscribe(response=>{
+      this.submitted = true;
+      this.isSuccessful = true;
+    }, err => {
+      this.errorMessage = err.error.message;
+      this.isRegistrationFailed = true;
+      console.log(err);
+    })
   }
 
   private fetchData() {
@@ -205,5 +241,13 @@ export class NewLessonComponent implements OnInit {
         })
       }
     })
+  }
+
+  onReset() {
+    this.form.lessonDuration = '';
+    this.form.arenaId = '';
+    this.form.lessonDate = '';
+    this.form.lessonHour = '';
+    this.lesson = [];
   }
 }

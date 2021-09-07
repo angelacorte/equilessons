@@ -57,7 +57,7 @@ module.exports = function (app){
     .get(horseController.getHorseInfos);
 
   //---------------------------------LESSON---------------------------------
-  app.route('/create-lesson')
+  app.route('/lesson')
     .post(lessonController.createLesson);
 
 

@@ -48,6 +48,7 @@
                    id="lessonDuration60"
                    name="lessonDuration"
                    value="60"
+                   [checked]=true
                    [(ngModel)]="form.lessonDuration">
           </div>
           <input type="tel"
@@ -76,16 +77,20 @@
         <div class="input-group mt-1">
           <div class="input-group-text">
             <input type="radio"
-                   aria-label="Personalizzato"
+                   aria-label="Personalizza"
                    id="customLessonDuration"
                    name="lessonDuration"
-                   [(ngModel)]="form.lessonDuration"
+                   [value]="lessonDuration.value"
             >
           </div>
           <input type="tel"
+                 #lessonDuration
                  class="form-control input-group-append"
                  aria-label="Durata personalizzata"
-                 placeholder="Personalizza">
+                 placeholder="Personalizza"
+                 name="lessonDuration"
+                 [(ngModel)]="form.lessonDuration"
+          >
         </div>
       </div>
     </div>
@@ -180,14 +185,14 @@
       </select>
     </div>
 
-    <mat-form-field class="mt-3">
+   <!-- <mat-form-field class="mt-3">
       <input
         matInput
         type="color"
         placeholder="Colore nel calendario"
-
-        value="#00C3FF">
-    </mat-form-field> <!--formControlName="color"-->
+        value="#00C3FF"
+        [(ngModel)]="form.color">
+    </mat-form-field> &lt;!&ndash;formControlName="color"&ndash;&gt;-->
 
     <div class="mt-5" *ngIf="lesson.length != 0"> <!--[style.display]="'true'"-->
       <h3>Lezione composta da:</h3>
@@ -222,138 +227,14 @@
 
       <div class="form-group mt-3 mb-5">
         <button class="btn col-md-4" (click)="onSubmit()">Crea</button>
+        <button class="btn col-md-4" (click)="onReset()" type="reset">Reset</button>
+
       </div>
     </div>
-
-<!--
-    <div class="form-row ">
-
-      <div class="col-md-5 mt-2">
-        <label for="horseBirthday">Data di nascita</label>
-        <input
-          type="date"
-          class="horseBirthday"
-          name="horseBirthday"
-          id="horseBirthday"
-          placeholder="Data di nascita"
-          [(ngModel)]="form.horseBirthday"
-          required
-        />
-      </div>
-    </div>
-    <div class="col-md-5 mt-2">
-      <label for="horseFise">Numero FISE</label>
-      <input
-        type="text"
-        class="form-control"
-        name="horseFise"
-        id="horseFise"
-        placeholder="Numero FISE (opzionale)"
-        [(ngModel)]="form.horseFise"
-      />
-    </div>
-
-    <div class="form-row">
-      <div class="col-md-8">
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            [value]="form.ownerId"
-            (change)="isOwnerRider($event)"
-            id="isOwnerRider"
-            [checked]=isInList(form.ownerId)>
-          &lt;!&ndash;[ngModelOptions]="{standalone: true}"&ndash;&gt;
-          <label class="form-check-label" for="isOwnerRider">Sono il suo cavaliere.</label>
-        </div>
-      </div>
-
-      <div class="col-md-5 mt-2">
-        &lt;!&ndash;ngController="addRiderController">&ndash;&gt;
-        <label for="riderId">Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</label>
-        <select
-          class="form-control"
-          name="riderId"
-          id="riderId"
-          [(ngModel)]="riderId"
-        >
-          <option *ngFor="let user of users"
-                  [value]="user['_id']"
-                  [disabled]=isInList(riderId)>
-            {{user['name']}} {{user['surname']}}
-          </option>
-        </select>
-        <button class="btn col-md-3" (click)="addRiderToList(riderId)">Aggiungi</button>
-      </div>
-    </div>
-
-    <div class="form-row" *ngIf="riders.length != 0"> &lt;!&ndash;[style.display]="'true'"&ndash;&gt;
-      <h4>Cavalieri selezionati:</h4>
-      <div class="col-md-8">
-        <ul role="listbox">
-          <li *ngFor="let rider of riders" role="option" aria-checked="true" >
-            <input
-              type="checkbox"
-              class="form-check-input"
-              value="true"
-              checked
-              (change)="isRiderUnchecked($event, rider)"
-              id="isRider">
-            <label class="form-check-label" for="isRider">{{rider['name']}} {{rider['surname']}}</label>
-          </li>
-        </ul>
-        &lt;!&ndash;<div class="form-check">
-          <p *ngFor="let rider in riders">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              value="true"
-              (change)="isRiderChecked()"
-              id="isRider">
-            <label class="form-check-label" for="isRider">{{rider['name']}} {{rider['surname']}}</label>
-          </p>
-        </div>&ndash;&gt;
-      </div>
-    </div>
-
-    <div class="form-row ">
-      <div class="col-md-8">
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            value="false"
-            (change)="isClubOwnerChecked($event)"
-            id="isClubOwner">
-          <label class="form-check-label" for="isClubOwner">Proprieta' del circolo ippico</label>
-        </div>
-      </div>
-
-      <div class="col-md-8">
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            value="false"
-            (change)="isScholasticChecked($event)"
-            id="isScholastic">
-          <label class="form-check-label" for="isScholastic">Cavallo adibito a lezioni della scuola</label>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="form-group mt-4">
-      <button class="btn col-md-4">Iscrivi</button>
-    </div>
-
-    <div class="alert alert-warning" *ngIf="f.submitted && isRegistrationFailed">
-      Signup failed!<br />{{ errorMessage }}
-    </div>-->
   </form>
 
 
   <div class="alert alert-success" *ngIf="isSuccessful">
-    Registrazione completata!
+    Lezione aggiunta con successo!
   </div>
 </div>
