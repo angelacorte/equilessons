@@ -46,7 +46,15 @@ exports.getLessonByArenaID = function (req,res){
 }
 
 exports.getLessonByClubID = function (req,res){
-
+  Lesson.find({"clubId": req.params.clubId}).sort({beginDate:1}).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    console.log("getLessonByClubID", result);
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
 }
 
 exports.getLessonByDate = function (req,res){

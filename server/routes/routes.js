@@ -60,7 +60,8 @@ module.exports = function (app){
   app.route('/lesson')
     .post(lessonController.createLesson);
 
-
+  app.route('/lesson/:clubId')
+    .get(lessonController.getLessonByClubID);
   //---------------------------------ROLE---------------------------------
 
   //---------------------------------USER---------------------------------

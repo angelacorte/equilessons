@@ -18,4 +18,8 @@ export class LessonService {
   createLesson(data:any): Observable<any>{
     return this.http.post(baseURL + '/lesson', data, httpOptions);
   }
+
+  getClubsLessons(clubId: any): Observable<any> {
+    return this.http.get(baseURL + '/lesson/' + clubId, httpOptions);
+  }
 }
