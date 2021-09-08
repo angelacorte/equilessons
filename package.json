@@ -29,6 +29,7 @@
     "@syncfusion/ej2-angular-calendars": "^19.2.55",
     "@syncfusion/ej2-angular-schedule": "^19.2.56",
     "angular-calendar": "^0.28.27",
+    "angular-calendar-scheduler": "^11.0.7",
     "angular-in-memory-web-api": "^0.11.0",
     "angularx-flatpickr": "^6.6.0",
     "bcrypt": "^5.0.1",

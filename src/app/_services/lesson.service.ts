@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, throwError} from "rxjs";
+import {CalendarSchedulerEventAction} from "angular-calendar-scheduler";
 
 const baseURL = 'http://localhost:5050';
 
@@ -22,4 +23,11 @@ export class LessonService {
   getClubsLessons(clubId: any): Observable<any> {
     return this.http.get(baseURL + '/lesson/' + clubId, httpOptions);
   }
+
+  // getEvents(actions: CalendarSchedulerEventAction[]) {
+  //
+  // }
+  /*getEvents(actions: CalendarSchedulerEventAction[]): Observable<any> {
+    return throwError("method to implement");
+  }*/
 }

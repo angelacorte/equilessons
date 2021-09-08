@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
@@ -15,9 +15,8 @@ import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ClubRegistrationComponent } from './club-registration/club-registration.component';
 import { HorseRegistrationComponent } from './horse-registration/horse-registration.component';
-import { CalendarComponent } from './calendar/calendar.component';
 
-import { CommonModule } from '@angular/common';
+import {CommonModule, registerLocaleData} from '@angular/common';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -30,7 +29,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSlider, MatSliderModule} from "@angular/material/slider";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-
+import {SchedulerModule} from "angular-calendar-scheduler";
+import {CalendarComponent} from "./calendar/calendar.component";
+import * as moment from 'moment';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import localeIt from '@angular/common/locales/it';
+registerLocaleData(localeIt);
 
 @NgModule({
   declarations: [
@@ -55,19 +59,21 @@ import {MatInputModule} from "@angular/material/input";
     ReactiveFormsModule,
     CommonModule,
     NgbModalModule,
-    FlatpickrModule.forRoot(),
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+    SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
     FullCalendarModule,
     MatTableModule,
     BrowserAnimationsModule,
     MatTableModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatProgressSpinnerModule
   ],
-  providers: [authInterceptorProviders],
+  providers: [
+    authInterceptorProviders,
+    { provide: LOCALE_ID, useValue: 'it'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
