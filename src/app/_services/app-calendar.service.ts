@@ -27,16 +27,22 @@ export class AppCalendarService {
 
   getEvents(lesson: any, actions: CalendarSchedulerEventAction[]): Promise<CalendarSchedulerEvent[]> {
     let lessons = lesson;
-    console.log("lessons", lessons);
+
     const data: CalendarSchedulerEvent[] | PromiseLike<CalendarSchedulerEvent[]> = [];
     lessons.forEach((value: any)=>{
-      console.log("value", value)
+      let lessonRefactored = this.lessonService.matchPairs(value);
+      let contentString: string = '';
+
+      lessonRefactored.pairs.forEach((pair : any)=>{
+        contentString += pair.riderInfo['riderName'].toString() + ' ' + pair.riderInfo['riderSurname'].toString() + ' - ' + pair.horseInfo['horseName'].toString() + '<br>';
+      })
+
       let event = <CalendarSchedulerEvent>{
         id: value._id,
         start: new Date(value.beginDate),
         end: new Date(value.endDate),
-        title: 'coachID' + value.coachId,
-        content: value.pairs,
+        title: 'Istruttore: ' + lessonRefactored.coach['coachName'] + ' ' + lessonRefactored.coach['coachSurname'],
+        content: contentString,
         color: { primary: '#E0E0E0', secondary: '#EEEEEE' },
         actions: actions,
         isClickable: true,
@@ -47,7 +53,6 @@ export class AppCalendarService {
           afterEnd: true
         }
       }
-      console.log("event", event)
       data.push(event);
     })
     const events = [
@@ -290,8 +295,6 @@ export class AppCalendarService {
         isDisabled: false
       }
     ];
-
-    console.log("events[0]", events[0])
 
     return new Promise(resolve => setTimeout(() => resolve(data), 3000));
   }

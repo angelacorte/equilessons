@@ -24,10 +24,58 @@ export class LessonService {
     return this.http.get(baseURL + '/lesson/' + clubId, httpOptions);
   }
 
+  getLessonsInfos(clubId: any): Observable<any>{
+    return this.http.get(baseURL + '/lesson/getInfo/' + clubId, httpOptions);
+  }
+
+
   // getEvents(actions: CalendarSchedulerEventAction[]) {
   //
   // }
   /*getEvents(actions: CalendarSchedulerEventAction[]): Observable<any> {
     return throwError("method to implement");
   }*/
+  matchPairs(lesson: any):any {
+    let pairs = lesson['pairs'];
+    let riders_in_lesson = lesson['riders_in_lesson'];
+    let horses_in_lesson = lesson['horses_in_lesson'];
+    let lessonRefactored = {
+      beginDate: lesson.beginDate,
+      endDate: lesson.endDate,
+      arenaName: lesson.arena[0]['arenaName'],
+      coach: {
+        coachName: lesson.coach[0]['name'],
+        coachSurname: lesson.coach[0]['surname']
+      },
+      pairs: []
+    };
+
+    pairs.forEach((value: any)=>{
+      riders_in_lesson.forEach((rider: { _id: string; name: string; surname: string; })=>{
+        if(rider._id === value.riderId){
+          let riderInfo = {
+            riderId: rider._id,
+            riderName:rider.name,
+            riderSurname:rider.surname
+          }
+
+          horses_in_lesson.forEach((horse: { _id: string; horseName: string; })=>{
+            if(horse._id === value.horseId){
+              let horseInfo = {
+                horseId: horse._id,
+                horseName: horse.horseName
+              }
+              let couple = {
+                riderInfo: riderInfo,
+                horseInfo: horseInfo
+              }
+              // @ts-ignore
+              lessonRefactored.pairs.push(couple);
+            }
+          })
+        }
+      })
+    })
+    return lessonRefactored;
+  }
 }

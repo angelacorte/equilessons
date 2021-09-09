@@ -65,6 +65,103 @@ exports.getLessonByCoachID = function (req,res){
 
 }
 
-/*exports. = function (req,res){
+exports.getLessonsInfos = function (req,res) {
 
-}*/
+  let pipeline = [
+    {
+      $match: {
+        "clubId": new ObjectId(req.params.clubId)
+      }
+    },
+     {
+      $lookup: {
+        from: 'horses',
+        localField: 'pairs.horseId',
+        foreignField: '_id',
+        as: 'horses_in_lesson'
+      }
+    }, {
+      $lookup: {
+        from: 'users',
+        localField: 'pairs.riderId',
+        foreignField: '_id',
+        as: 'riders_in_lesson'
+      }
+    }, {
+      $lookup: {
+        from: 'arenas',
+        localField: 'arenaId',
+        foreignField: '_id',
+        as: 'arena'
+      }
+    }, {
+      $lookup: {
+        from: 'users',
+        localField: 'coachId',
+        foreignField: '_id',
+        as: 'coach'
+      }
+    }, {
+      $project: {
+        'riders_in_lesson._id': 1,
+        'riders_in_lesson.name': 1,
+        'riders_in_lesson.surname': 1,
+        'horses_in_lesson.horseName': 1,
+        'horses_in_lesson._id': 1,
+        'arena.arenaName': 1,
+        'coach.name': 1,
+        'coach.surname': 1,
+        'beginDate': 1,
+        'endDate': 1,
+        'pairs': 1
+      }
+    }
+  ];
+
+  Lesson.aggregate(pipeline).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    console.log("getLessonsInfos", result);
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}
+
+/*db.lessons.aggregate([
+  {
+    "$lookup": {
+      "from": "users",
+      "localField": "pairs.riderId",
+      "foreignField": "_id",
+      "as": "riders in lesson",
+      "pipeline": [
+        {
+          "$project": {
+            "name": 1,
+            "surname": 1
+          }
+        }
+      ]
+    },
+  }
+])
+
+db.lessons.aggregate([
+  {
+    "$lookup": {
+      "from": "horses",
+      "localField": "pairs.horseId",
+      "foreignField": "_id",
+      "as": "horse in lesson",
+      "pipeline": [
+        {
+          "$project": {
+            "horseName": 1
+          }
+        }
+      ]
+    }
+  }
+])*/

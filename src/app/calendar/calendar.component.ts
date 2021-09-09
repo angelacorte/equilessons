@@ -190,6 +190,7 @@ export class CalendarComponent implements OnInit {
   }
 
   eventClicked(action: string, event: CalendarSchedulerEvent): void {
+    console.log("TO IMPLEMENT AND SHOW THE INFOS");
     console.log('eventClicked Action', action);
     console.log('eventClicked Event', event);
   }
@@ -206,7 +207,7 @@ export class CalendarComponent implements OnInit {
   }
 
   private fetchData(){
-    this.lessonService.getClubsLessons(this.infos.user['clubId']).pipe(map(responseData =>{
+    this.lessonService.getLessonsInfos(this.infos.user['clubId']).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -218,7 +219,6 @@ export class CalendarComponent implements OnInit {
     })).subscribe(response=>{
       // @ts-ignore
       this.lessons = response;
-
       this.appService.getEvents(this.lessons,this.actions)
         .then((events: CalendarSchedulerEvent[]) => this.events = events);
     });
