@@ -24,7 +24,7 @@ module.exports = function (app){
   //---------------------------------CLUB---------------------------------
   app.route('/club')
     .get(clubController.getAllClubs)
-    .post(clubController.addClub);
+    .post(clubController.registerClub);
 
   app.route('/clubId/:id')
     .get(clubController.getClubById)

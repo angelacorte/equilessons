@@ -16,7 +16,6 @@ exports.signup = function(req, res) {
       res.status(409).send({"description": "email or username already in use"})
     }else{
       let newUser = new User(req.body);
-
       newUser.save(function(err, user) {
         if (err){
           res.send(err);

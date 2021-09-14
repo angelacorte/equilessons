@@ -25,7 +25,6 @@ let UserSchema = new Schema({
 
 UserSchema.pre("save", function(next) {
   let user = this;
-
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) return next();
 

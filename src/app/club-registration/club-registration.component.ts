@@ -23,9 +23,10 @@ export class ClubRegistrationComponent implements OnInit {
     clubName: '',
     clubEmail: '',
     clubTelephone: '',
+    clubPassword: ',',
     clubCity: '',
     clubAddress: '',
-    clubOwnerId: ''
+    //clubOwnerId: ''
   };
 
   isSuccessful = false;
@@ -33,16 +34,16 @@ export class ClubRegistrationComponent implements OnInit {
   errorMessage = '';
   submitted = false;
   isLoggedIn = false;
-  infos: any;
+  //infos: any;
 
   constructor(private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.isLoggedIn = !!this.tokenStorage.getToken();
+    /*this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if(this.isLoggedIn){
       this.infos = this.tokenStorage.getUser();
-    }
+    }*/
   }
 
   onSubmit(): void{
@@ -50,17 +51,23 @@ export class ClubRegistrationComponent implements OnInit {
     const registration = {
       clubName: this.form.clubName,
       clubEmail: this.form.clubEmail,
+      clubPassword: this.form.password,
       clubTelephone: this.form.clubTelephone,
       clubCity: this.form.clubCity,
       clubAddress: this.form.clubAddress,
-      clubOwnerId: this.infos.user._id
+      //clubOwnerId: this.infos.user._id
     };
 
-    const role = 'club-owner';
+/*    const role = 'club-owner';
     let tmpRole = this.infos.user['roles'];
-    tmpRole.push(role);
+    tmpRole.push(role);*/
 
     this.clubService.registration(registration).subscribe(response=>{
+
+
+    });
+
+    /*this.clubService.registration(registration).subscribe(response=>{
         this.submitted = true;
         console.log("response club service registration ", response);
         this.userService.changeClub(registration.clubOwnerId, response._id).subscribe(r=>{
@@ -87,6 +94,6 @@ export class ClubRegistrationComponent implements OnInit {
         this.errorMessage = err.error.message;
         this.isRegistrationFailed = true;
         console.log(err);
-      })
+      })*/
   }
 }

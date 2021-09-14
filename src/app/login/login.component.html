@@ -5,7 +5,7 @@
           (ngSubmit)="f.form.valid && onSubmit()"
           #f="ngForm"
           novalidate>
-      <h2 class="d-flex justify-content-center col-md-4">Effettua l'accesso!</h2>
+      <h1 class="title d-flex justify-content-center col-md-4">Effettua l'accesso!</h1>
       <div class="form-group"> <!--text-center content-center col-md-6 offset-md-3-->
         <div class="d-flex justify-content-center col-md-4 mt-4"> <!--d-flex flex-row col-6-->
           <input id="username" type="text" class="form-control" name="username" placeholder="Username"
@@ -26,10 +26,18 @@
           </div>
         </div>
         <div class="d-flex justify-content-center col-md-4 mt-2">
-          <button class="btn col-md-6 mt-2">Login</button>
+          <button class="btn col-md-6 mt-2">Entra</button>
         </div>
-        <div class="d-flex justify-content-center col-md-4 align-self-center">
-          <a class="mt-4" href="/signup">Devo effettuare la registrazione</a>
+        <div class="d-flex flex-column justify-content-center col-md-4 align-self-center">
+          <div class="flex-row align-self-center mt-3">
+            <a class="mt-4" href="/signup">Devi ancora effettuare la registrazione?</a>
+          </div>
+          <div class="flex-row align-self-center mt-3">
+            <p>Oppure</p>
+          </div>
+          <div class="flex-row align-self-center">
+            <a class="mt-4" href="/newClub">Registra il tuo circolo ippico!</a>
+          </div>
         </div>
         <div class="form-group">
           <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
