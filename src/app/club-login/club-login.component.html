@@ -1,0 +1,54 @@
+<div class="container mt-5 align-self-center flex-wrap">
+  <form
+    *ngIf="!isLoggedIn"
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate>
+    <h1 class="title d-flex justify-content-center col-md-4">LOGIN CIRCOLO IPPICO</h1>
+    <div class="form-group"> <!--text-center content-center col-md-6 offset-md-3-->
+      <div class="d-flex justify-content-center col-md-4 mt-4"> <!--d-flex flex-row col-6-->
+        <input id="clubEmail" type="text" class="form-control" name="clubEmail" placeholder="Email"
+               [(ngModel)]="form.clubEmail" required #clubEmail="ngModel"
+        />
+        <div class="alert alert-danger" role="alert" *ngIf="clubEmail.errors && f.submitted">
+          Inserisci l'email!
+        </div>
+      </div>
+      <div class="d-flex justify-content-center col-md-4 mt-2">
+        <input id="clubPassword" type="password" class="form-control" name="clubPassword" placeholder="Password"
+               [(ngModel)]="form.clubPassword" required minlength="4" #clubPassword="ngModel"/>
+        <div class="alert alert-danger" role="alert" *ngIf="clubPassword.errors && f.submitted">
+          <div *ngIf="clubPassword.errors.required">Inserisci la password!</div>
+          <div *ngIf="clubPassword.errors.minlength">
+            La password deve essere di almeno 4 caratteri
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center col-md-4 mt-2">
+        <button class="btn col-md-6 mt-2">Entra</button>
+      </div>
+      <div class="d-flex flex-column justify-content-center col-md-4 align-self-center">
+        <div class="flex-row align-self-center mt-3">
+          <a class="mt-4" href="/newClub">Devi ancora effettuare la registrazione?</a>
+        </div>
+        <div class="flex-row align-self-center mt-3">
+          <p>Oppure</p>
+        </div>
+        <div class="flex-row align-self-center">
+          <a class="mt-4" href="/login">Entra come utente!</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
+          Login failed: {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </form>
+  <!--
+      <div class="alert alert-success" *ngIf="isLoggedIn">
+        Welcome back!
+      </div>-->
+
+</div>
