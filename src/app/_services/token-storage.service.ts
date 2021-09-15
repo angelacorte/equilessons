@@ -35,4 +35,14 @@ export class TokenStorageService {
     }
     return {};
   }
+
+  public isClub(): boolean{
+    const user = this.getUser();
+    console.log("isclub user", user);
+    if(user.user === undefined){
+      return true;
+    }
+    return false;
+  }
+
 }

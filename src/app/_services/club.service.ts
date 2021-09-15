@@ -16,6 +16,10 @@ export class ClubService {
 
   constructor(private http: HttpClient) { }
 
+  clubLogin(data:any):Observable<any>{
+    return this.http.post(baseURL + '/login', data, httpOptions);
+  }
+
   registration(data:any): Observable<any>{ //id:any (owner's id)  /$(id)
     return this.http.post(baseURL, data, httpOptions);
   }

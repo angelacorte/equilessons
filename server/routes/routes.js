@@ -26,8 +26,11 @@ module.exports = function (app){
     .get(clubController.getAllClubs)
     .post(clubController.registerClub);
 
+  app.route('/club/login')
+    .post(clubController.clubLogin);
+
   app.route('/clubId/:id')
-    .get(clubController.getClubById)
+    .get(clubController.getClubById);
 
   app.route('/clubName/:clubName')
     .get(clubController.getClubByName); //returns club's info

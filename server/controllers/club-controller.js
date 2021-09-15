@@ -18,7 +18,7 @@ function generateAccessToken(clubId){
   })
 }
 
-exports.login = function (req,res) {
+exports.clubLogin = function (req,res) {
   Club.getAuthenticated(req.body.clubEmail, req.body.clubPassword, function (err, club, reason) {
     if (err) {
       throw err;

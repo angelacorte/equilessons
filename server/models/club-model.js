@@ -8,7 +8,7 @@ let ClubSchema = new Schema({
   clubName: {type:String, unique:true, required:true},
   clubEmail: {type:String, unique:true, required:true},
   clubPassword:{type:String, required:true},
-  clubTelephone:{type:Number, unique:true, required:true},
+  clubTelephone:{type:Number, required:true},
   clubCity: {type: String, required: true},
   clubAddress: {type: String, required: true},
   //clubOwnerId:{type:Schema.Types.ObjectId, ref:"User", required:true},
@@ -30,14 +30,14 @@ ClubSchema.pre("save", function (next){
     bcrypt.hash(club.clubPassword, salt, function(err, hash) {
       if (err) return next(err);
       // override the cleartext password with the hashed one
-      club.clubPassword = hash
+      club.clubPassword = hash;
       next();
     });
   });
 });
 
 ClubSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+  bcrypt.compare(candidatePassword, this.clubPassword, function (err, isMatch) {
     if (err) return cb(err);
     cb(null, isMatch);
   });
@@ -45,22 +45,21 @@ ClubSchema.methods.comparePassword = function (candidatePassword, cb) {
 
 let reasons = ClubSchema.statics.failedLogin = { NOT_FOUND: 0, PASSWORD_INCORRECT: 1, MAX_ATTEMPTS: 2 };
 
-
 ClubSchema.statics.getAuthenticated = function (email, password, cb){
-  this.findOne({clubEmail:email}, function (err,user) {
+  this.findOne({clubEmail:email}, function (err,club) {
     if(err){
       return cb(err);
     }
-    if(!user){
+    if(!club){
       return  cb(null, null, reasons.NOT_FOUND);
     }
 
-    user.comparePassword(password, function (err,isMatch) {
+    club.comparePassword(password, function (err,isMatch) {
       if(err){
         return cb(err);
       }
       if(isMatch){
-        return cb(null,user);
+        return cb(null,club);
       }
     })
   })

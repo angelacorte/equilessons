@@ -10,6 +10,7 @@ import {HorseRegistrationComponent} from "./horse-registration/horse-registratio
 import {CalendarComponent} from "./calendar/calendar.component";
 import {NewArenaComponent} from "./new-arena/new-arena.component";
 import {NewLessonComponent} from "./new-lesson/new-lesson.component";
+import {ClubLoginComponent} from "./club-login/club-login.component";
 
 const routes: Routes = [
   {path: '', redirectTo:'home', pathMatch:'full'},
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'calendar', component: CalendarComponent},
   {path: 'newArena', component: NewArenaComponent},
   {path: 'newLesson', component: NewLessonComponent},
+  {path: 'clubLogin', component: ClubLoginComponent},
   {path: `**`, component: PageNotFoundComponent},
 ];
 

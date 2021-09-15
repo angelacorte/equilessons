@@ -23,7 +23,7 @@ export class ClubRegistrationComponent implements OnInit {
     clubName: '',
     clubEmail: '',
     clubTelephone: '',
-    clubPassword: ',',
+    clubPassword: '',
     clubCity: '',
     clubAddress: '',
     //clubOwnerId: ''
@@ -35,6 +35,7 @@ export class ClubRegistrationComponent implements OnInit {
   submitted = false;
   isLoggedIn = false;
   //infos: any;
+  isSignUpFailed = true;
 
   constructor(private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService, private userService: UserService) { }
 
@@ -51,7 +52,7 @@ export class ClubRegistrationComponent implements OnInit {
     const registration = {
       clubName: this.form.clubName,
       clubEmail: this.form.clubEmail,
-      clubPassword: this.form.password,
+      clubPassword: this.form.clubPassword,
       clubTelephone: this.form.clubTelephone,
       clubCity: this.form.clubCity,
       clubAddress: this.form.clubAddress,
@@ -63,9 +64,17 @@ export class ClubRegistrationComponent implements OnInit {
     tmpRole.push(role);*/
 
     this.clubService.registration(registration).subscribe(response=>{
-
-
-    });
+      console.log("registration", registration);
+      console.log("response", response)
+        this.isSuccessful = true;
+        this.isSignUpFailed = false;
+        // this.reloadPage();
+      },
+      err => {
+        this.errorMessage = err.error.message;
+        this.isSignUpFailed = true;
+      }
+    );
 
     /*this.clubService.registration(registration).subscribe(response=>{
         this.submitted = true;

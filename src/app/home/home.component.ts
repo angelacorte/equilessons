@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   isLoggedIn = false;
   infos: any;
   user: any;
+  isClub = false;
 
   constructor(private userService: UserService, private tokenStorage:TokenStorageService) { }
 
@@ -23,7 +24,14 @@ export class HomeComponent implements OnInit {
 
     if(this.isLoggedIn) {
       this.infos = this.tokenStorage.getUser();
-      this.user = this.infos['user'];
+      this.isClub = this.tokenStorage.isClub();
+      console.log("isclub", this.isClub)
+      if(this.infos.user === undefined){
+        this.user = this.infos.club;
+        console.log("user", this.user)
+      }else{
+        this.user = this.infos['user'];
+      }
     }
     this.userService.getPublicContent().subscribe(
       data => {

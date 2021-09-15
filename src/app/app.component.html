@@ -18,18 +18,17 @@
           <a class="nav-link dropdown-item" (click)="logout()">Logout</a>
         </div>
       </li>
-
     </ul>
-    <!--
-
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Cerca circolo ippico" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
-    </form>
-    -->
   </div>
   <!-- -->
-
+  <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+    <li class="nav-item" *ngIf="!isLoggedIn">
+      <a class="nav-link dropdown-item" href="/login" routerLink="login">Login utente</a>
+    </li>
+    <li class="nav-item" *ngIf="!isLoggedIn">
+      <a class="nav-link dropdown-item" href="/clubLogin" routerLink="clubLogin">Login circolo ippico</a>
+    </li>
+  </ul>
 
   <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
     <li class="nav-item" *ngIf="isLoggedIn">

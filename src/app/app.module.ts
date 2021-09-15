@@ -34,6 +34,8 @@ import {CalendarComponent} from "./calendar/calendar.component";
 import * as moment from 'moment';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import localeIt from '@angular/common/locales/it';
+import { ClubLoginComponent } from './club-login/club-login.component';
+import {A11yModule} from "@angular/cdk/a11y";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -48,27 +50,29 @@ registerLocaleData(localeIt);
     HorseRegistrationComponent,
     CalendarComponent,
     NewLessonComponent,
-    NewArenaComponent
+    NewArenaComponent,
+    ClubLoginComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    RouterModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    CommonModule,
-    NgbModalModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
-    SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
-    FullCalendarModule,
-    MatTableModule,
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        RouterModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        CommonModule,
+        NgbModalModule,
+        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+        SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
+        FullCalendarModule,
+        MatTableModule,
+        BrowserAnimationsModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        A11yModule
+    ],
   providers: [
     authInterceptorProviders,
     { provide: LOCALE_ID, useValue: 'it'}],
