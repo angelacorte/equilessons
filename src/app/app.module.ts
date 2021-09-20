@@ -36,6 +36,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import localeIt from '@angular/common/locales/it';
 import { ClubLoginComponent } from './club-login/club-login.component';
 import {A11yModule} from "@angular/cdk/a11y";
+import { AddCoachComponent } from './add-coach/add-coach.component';
+import { NotAllowedComponent } from './not-allowed/not-allowed.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -51,7 +53,9 @@ registerLocaleData(localeIt);
     CalendarComponent,
     NewLessonComponent,
     NewArenaComponent,
-    ClubLoginComponent
+    ClubLoginComponent,
+    AddCoachComponent,
+    NotAllowedComponent
   ],
     imports: [
         BrowserModule,

@@ -64,19 +64,14 @@ export class NewLessonComponent implements OnInit {
     let beginDate = new Date(this.form.lessonDate.toString() + ' ' + this.form.lessonHour.toString());
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
     let pairs: { riderId: any; horseId: any; }[] = [];
-    console.log("newdate", beginDate);
-    console.log("tmp", endDate)
 
     this.lesson.forEach((val: any) =>{
-      console.log("lesson foreach val", val);
       let pair = {
         riderId: val.riderInfo['riderId'],
         horseId: val.horseInfo['horseId']
       }
-      console.log("pair", pair)
       pairs.push(pair);
     })
-    console.log("pairs", pairs)
 
     const lesson = {
       beginDate: beginDate,
@@ -87,7 +82,6 @@ export class NewLessonComponent implements OnInit {
       pairs: pairs,
       //color: this.form.color
     }
-    console.log("lesson", lesson);
 
     this.lessonService.createLesson(lesson).subscribe(response=>{
       this.submitted = true;
@@ -163,7 +157,6 @@ export class NewLessonComponent implements OnInit {
   }
 
   addRiderToList(riderId: any, horseId: any) {
-    console.log("click 1")
     this.riders.forEach((value => {
       // @ts-ignore
       if(value['_id'] === riderId && !this.lesson.some(obj=>obj['riderId'] === riderId)){

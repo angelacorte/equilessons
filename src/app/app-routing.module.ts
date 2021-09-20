@@ -11,6 +11,8 @@ import {CalendarComponent} from "./calendar/calendar.component";
 import {NewArenaComponent} from "./new-arena/new-arena.component";
 import {NewLessonComponent} from "./new-lesson/new-lesson.component";
 import {ClubLoginComponent} from "./club-login/club-login.component";
+import {AddCoachComponent} from "./add-coach/add-coach.component";
+import {NotAllowedComponent} from "./not-allowed/not-allowed.component";
 
 const routes: Routes = [
   {path: '', redirectTo:'home', pathMatch:'full'},
@@ -24,6 +26,8 @@ const routes: Routes = [
   {path: 'newArena', component: NewArenaComponent},
   {path: 'newLesson', component: NewLessonComponent},
   {path: 'clubLogin', component: ClubLoginComponent},
+  {path: 'addCoach', component: AddCoachComponent},
+  {path: 'notAllowed', component: NotAllowedComponent},
   {path: `**`, component: PageNotFoundComponent},
 ];
 

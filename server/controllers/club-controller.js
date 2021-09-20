@@ -229,6 +229,7 @@ exports.getClubAthletes = function (req,res) {
   });
 }
 
+//TODO change - look for ids in club's array coaches, instead of searching in user's roles
 //db.users.aggregate([{$match:{"clubId":ObjectId("60f702d3329ccb26f26937a0"), "roles":"coach"}}])
 exports.getCoachByClubId = function (req,res) {
   User.find( {"clubId":req.params.clubId,"roles":"coach"},{"name":1, "surname":1}).then(result=>{
