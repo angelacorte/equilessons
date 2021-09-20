@@ -208,7 +208,7 @@ exports.registerClub = function (req,res) {
 exports.addCoach = function (req,res){
   console.log("addcoach club-controller req.body", req.body.clubId);
 
-  Club.updateOne({_id:req.body.clubId},{$push:{clubCoach: req.body.id}}).then(result=>{
+  Club.updateOne({_id:req.body.clubId},{clubCoach: req.body.coaches}).then(result=>{
     if(result.ok !== 1){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -232,11 +232,32 @@ exports.getClubAthletes = function (req,res) {
 //TODO change - look for ids in club's array coaches, instead of searching in user's roles
 //db.users.aggregate([{$match:{"clubId":ObjectId("60f702d3329ccb26f26937a0"), "roles":"coach"}}])
 exports.getCoachByClubId = function (req,res) {
-  User.find( {"clubId":req.params.clubId,"roles":"coach"},{"name":1, "surname":1}).then(result=>{
+
+  let pipeline = [
+    {
+      '$match': {
+        '_id': new ObjectId(req.params.clubId)
+      }
+    }, {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'clubCoach',
+        'foreignField': '_id',
+        'as': 'clubCoaches'
+      }
+    }, {
+      '$project': {
+        'clubCoaches.name': 1,
+        'clubCoaches.surname': 1,
+        'clubCoaches._id': 1
+      }
+    }
+  ];
+
+  Club.aggregate( pipeline).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log("getCoachByClubId", result);
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);

@@ -28,9 +28,10 @@ export class AddCoachComponent implements OnInit {
   isLoggedIn = false;
   infos: any;
   displayedColumns = ['checkbox', 'istruttore'];
-  coaches: {_id: any, name: any, surname: any}[] = [];
+  coaches:{_id: any, name: any, surname: any}[]= [];
   coachId: any;
   users = [];
+  toUpdate: {coachId: any}[]= [];
 
   constructor(private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
@@ -46,7 +47,20 @@ export class AddCoachComponent implements OnInit {
   }
 
   onSubmit() {
-    return false;
+    console.log("coaches updated", this.coaches);
+    this.coaches.forEach((value)=>{
+      this.toUpdate.push(value._id);
+    })
+    console.log("toupdate", this.toUpdate)
+    this.clubService.addCoach(this.toUpdate, this.infos.club['_id']).subscribe(response=>{
+      this.submitted = true;
+      this.isSuccessful = true;
+      window.location.reload();
+    }, err => {
+      this.errorMessage = err.error.message;
+      console.log(err);
+    })
+
   }
 
   isUserInList(id: any):boolean {
@@ -56,6 +70,7 @@ export class AddCoachComponent implements OnInit {
 
   addCoachToList(coachId: any) {
     this.users.forEach((value => {
+      // @ts-ignore
       if(value['_id'] === coachId && !this.coaches.some(obj=>obj['_id'] === coachId)){
         let coach = {
           _id: value['_id'],
@@ -80,9 +95,7 @@ export class AddCoachComponent implements OnInit {
       }
       return dataArray;
     })).subscribe(response=>{
-      // @ts-ignore
-      this.coaches = response;
-      console.log("coaches", this.coaches)
+      this.coaches = response[0].clubCoaches;
     });
 
     this.clubService.getClubAthletes(this.infos.club['_id']).pipe(map(responseData =>{
@@ -108,6 +121,7 @@ export class AddCoachComponent implements OnInit {
         if(this.coaches[index] === coachId){
           this.coaches.splice(index, 1);
           this.table.renderRows();
+          console.log("this.coaches", this.coaches)
         }
       });
     }
