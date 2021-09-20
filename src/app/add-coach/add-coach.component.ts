@@ -51,7 +51,6 @@ export class AddCoachComponent implements OnInit {
     this.coaches.forEach((value)=>{
       this.toUpdate.push(value._id);
     })
-    console.log("toupdate", this.toUpdate)
     this.clubService.addCoach(this.toUpdate, this.infos.club['_id']).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
@@ -121,7 +120,6 @@ export class AddCoachComponent implements OnInit {
         if(this.coaches[index] === coachId){
           this.coaches.splice(index, 1);
           this.table.renderRows();
-          console.log("this.coaches", this.coaches)
         }
       });
     }
