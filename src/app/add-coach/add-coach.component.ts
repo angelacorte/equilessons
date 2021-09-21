@@ -39,7 +39,7 @@ export class AddCoachComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if(this.isLoggedIn && this.tokenStorage.isClub()) {
-      this.infos = this.tokenStorage.getUser();
+      this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
       this.fetchData();
     }else{
       window.location.assign('/notAllowed');

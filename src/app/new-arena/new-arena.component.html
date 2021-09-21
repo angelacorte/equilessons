@@ -26,9 +26,38 @@
 
     </div>
 
+    <div class="mt-5" *ngIf="arenas.length != 0"> <!--[style.display]="'true'"-->
+      <h3>Campi utilizzabili:</h3>
+      <mat-table [dataSource]="arenas" class="mat-elevation-z8 mb-5">
+        <ng-container matColumnDef="checkbox">
+          <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+          <mat-cell *matCellDef="let a">               <!--<td  *ngFor="let les of lesson">-->
+            <input
+              type="checkbox"
+              class="form-check-input"
+              value="true"
+              checked
+              (change)="isArenaUnchecked($event, a)"
+              id="isCoach">
+          </mat-cell>
+        </ng-container>
 
-    <div class="form-row mt-4" *ngIf="arenas.length != 0"> <!--[style.display]="'true'"-->
-      <h4>Campi:</h4>
+        <ng-container matColumnDef="arenaName">
+          <mat-header-cell *matHeaderCellDef> Denominazione </mat-header-cell>
+          <mat-cell *matCellDef="let a"> {{a['arenaName']}}  </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+      </mat-table>
+      <button class="btn col-md-4" (click)="onSubmit()">Conferma</button>
+
+    </div>
+
+    <!--<div class="form-row mt-4" *ngIf="arenas.length != 0"> [style.display]="'true'"-->
+      <!--<h4>Campi:</h4>
       <div class="col-md-8">
         <ul>
           <li *ngFor="let arena of arenas">
@@ -44,7 +73,7 @@
 
     <div class="alert alert-warning" *ngIf="f.submitted && isRegistrationFailed">
       Signup failed!<br />{{ errorMessage }}
-    </div>
+    </div>-->
   </form>
 
 

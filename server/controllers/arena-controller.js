@@ -25,7 +25,8 @@ exports.getArenaByName = function (req,res){ //gets all the info of an arena by 
 //db.clubs.aggregate([{ $match:{"_id":ObjectId("60f702d3329ccb26f26937a0")}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasClub"}}])
 
 exports.addArena = function (req,res){
-  Arena.insertMany(req.body.newArenas).then(result=>{
+  let docs = req.body;
+  Arena.insertMany(docs).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
