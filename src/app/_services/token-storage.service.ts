@@ -38,11 +38,19 @@ export class TokenStorageService {
 
   public isClub(): boolean{
     const user = this.getUser();
-    console.log("isclub user", user);
     if(user.user === undefined){
       return true;
     }
     return false;
   }
 
+  public getInfos(isClub:boolean):any{
+    let user;
+    if(isClub){
+      user = this.getUser().club;
+    }else{
+      user = this.getUser().user;
+    }
+    return user;
+  }
 }

@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   isLoggedIn = false;
   infos:any;
   user:any;
+  isClub: boolean = false;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private clubService: ClubService) { }
 
@@ -29,14 +30,17 @@ export class ProfileComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if(this.isLoggedIn){
-      this.updateInfos();
-      this.fetchData();
-      console.log("profile ng oninit infos", this.infos)
+      this.isClub = this.tokenStorage.isClub();
+      this.infos = this.tokenStorage.getInfos(this.isClub);
+
+      if(!this.isClub) this.fetchData();
+
+      //this.updateInfos();
     }
   }
 
   private fetchData() {
-    this.userService.getUserRoles(this.infos.user._id).pipe(map(responseData=>{
+    this.userService.getUserRoles(this.infos._id).pipe(map(responseData=>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -52,34 +56,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  private updateInfos(){
-    console.log("updateinfo");
+  /*private updateInfos(){
     //console.log("clubid before", this.infos.user['clubId']);
     this.infos = this.tokenStorage.getUser();
     //this.infos.user['clubId'] = this.infos.clubId;
     console.log("clubid updateinfos after tokenstorage get user", this.infos.user['clubId']);
-  }
+  }*/
 
-  addCoach() {
-    let role = 'coach';
-    let tmpRole = this.infos.user['roles'];
-    tmpRole.push(role);
-    //this.tokenStorage.modifyUserClub(this.infos.user['clubId']);
-    this.updateInfos();
-    console.log("addcoach clubid ", this.infos.user['clubId']);
-    this.clubService.addCoach(this.infos.user['clubId'], this.infos.user['_id']).subscribe(response=>{
-        this.userService.addRole(role, this.infos.user._id).subscribe(resp =>{
-          this.infos.user['roles'] = tmpRole;
-          this.tokenStorage.saveUser(this.infos);
-          console.log("updated user");
-          window.location.reload();
-          },
-          e => {
-            console.log(e);
-          })
-      },
-      err => {
-        console.log(err);
-      })
-  }
 }

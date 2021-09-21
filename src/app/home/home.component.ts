@@ -23,16 +23,10 @@ export class HomeComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if(this.isLoggedIn) {
-      this.infos = this.tokenStorage.getUser();
       this.isClub = this.tokenStorage.isClub();
-      console.log("isclub", this.isClub)
-      if(this.infos.user === undefined){
-        this.user = this.infos.club;
-        console.log("user", this.user)
-      }else{
-        this.user = this.infos['user'];
-      }
+      this.infos = this.tokenStorage.getInfos(this.isClub);
     }
+
     this.userService.getPublicContent().subscribe(
       data => {
         this.content = data;

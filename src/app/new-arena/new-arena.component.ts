@@ -22,6 +22,7 @@ export class NewArenaComponent implements OnInit {
   isLoggedIn = false;
   infos: any;
   arenas = [];
+  //isClub: boolean = false;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private arenaService: ArenaService) {
 
@@ -30,9 +31,10 @@ export class NewArenaComponent implements OnInit {
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
-    if(this.isLoggedIn) {
-      this.infos = this.tokenStorage.getUser();
-      this.form.clubId = this.infos.user['clubId'];
+    if(this.isLoggedIn && this.tokenStorage.isClub()) {
+      this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
+    }else{
+      window.location.assign('/notAllowed');
     }
   }
 
