@@ -22,4 +22,12 @@ export class ArenaService {
   getClubArenas(clubId: any): Observable<any>{
     return this.http.get(baseURL + '/' + clubId, httpOptions);
   }
+
+  removeArena(arenasId: any[]): Observable<any>{
+    let options = {
+      options: httpOptions,
+      body: arenasId
+    }
+    return this.http.delete(baseURL, options);
+  }
 }

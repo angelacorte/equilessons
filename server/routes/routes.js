@@ -21,6 +21,9 @@ module.exports = function (app){
   app.route('/arena')
     .post(/*loginController.authenticate,*/ arenaController.addArena);
 
+  app.route('/arena')
+    .delete(arenaController.removeArena);
+
   //---------------------------------CLUB---------------------------------
   app.route('/club')
     .get(clubController.getAllClubs)

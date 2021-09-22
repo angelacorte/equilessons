@@ -28,6 +28,7 @@ export class NewArenaComponent implements OnInit {
   infos: any;
   arenas = [];
   toUpdate: {clubId:any, arenaName:string}[] = [];
+  toRemove: {arenaId: any}[] = [];
   //isClub: boolean = false;
   displayedColumns = ['checkbox', 'arenaName'];
 
@@ -56,9 +57,24 @@ export class NewArenaComponent implements OnInit {
       }
       newArenas.push(arena);
     })*/
+    console.log("this.toupdate", this.toUpdate);
+
     this.arenaService.addArena(this.toUpdate).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
+      console.log("this.toupdate", this.toUpdate);
+      if(this.toRemove.length > 0){
+        this.arenaService.removeArena(this.toRemove).subscribe(resp =>{
+          console.log("this.toRemove",this.toRemove)
+          window.location.reload();
+        }, err => {
+          this.errorMessage = err.error.message;
+          this.isRegistrationFailed = true;
+          console.log(err);
+        })
+      }else {
+        window.location.reload();
+      }
     }, err => {
       this.errorMessage = err.error.message;
       this.isRegistrationFailed = true;
@@ -71,25 +87,31 @@ export class NewArenaComponent implements OnInit {
       _id: '',
       arenaName: value
     };
-
     // @ts-ignore
     this.arenas.push(arena);
-
-    console.log("this.infos", this.infos._id)
     let up = {
       clubId: this.infos._id,
       arenaName: arena.arenaName
     }
     this.toUpdate.push(up);
     this.table.renderRows();
-    console.log("arenas update", this.toUpdate)
   }
 
   isArenaUnchecked(e: any, arenaId:any) {
-
+    if(!e.target.checked){
+      this.arenas.forEach((item, index)=>{
+        if(this.arenas[index] === arenaId){
+          this.arenas.splice(index, 1);
+          this.toRemove.push(arenaId);
+          this.table.renderRows();
+          console.log("this.arenas", this.arenas)
+        }
+      });
+    }
   }
 
   private fetchData() {
+    console.log("fetch data this.infos._id", this.infos._id)
     this.arenaService.getClubArenas(this.infos._id).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
