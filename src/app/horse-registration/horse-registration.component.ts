@@ -40,6 +40,7 @@ export class HorseRegistrationComponent implements OnInit {
   riders = [];
   riderId: any;
   mainId: any;
+  isClub: boolean = false;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
 
@@ -47,14 +48,22 @@ export class HorseRegistrationComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if(this.isLoggedIn) {
-      this.infos = this.tokenStorage.getUser();
-      this.form.ownerId = this.infos.user['_id'];
+      this.isClub = this.tokenStorage.isClub();
+      this.infos = this.tokenStorage.getInfos(this.isClub);
+      this.form.ownerId = this.infos._id;
       this.fetchData();
     }
   }
 
   private fetchData(){
-    this.userService.getUsersByClub(this.infos.user['clubId']).pipe(map(responseData => {
+    let clubId;
+
+    if(this.isClub) {
+      clubId = this.infos._id
+    }else{
+      clubId = this.infos.clubId
+    }
+    this.userService.getUsersByClub(clubId).pipe(map(responseData => {
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -67,7 +76,7 @@ export class HorseRegistrationComponent implements OnInit {
       // @ts-ignore
       this.users = response;
       this.users.forEach((item,index)=>{
-        if(item['_id'] === this.infos.user['_id']){
+        if(item['_id'] === this.infos._id){
           this.users.splice(index, 1);
         }
       });
@@ -76,6 +85,7 @@ export class HorseRegistrationComponent implements OnInit {
 
   onSubmit(): void{
 
+    //TODO modificare circa tutto credo
     const role = 'horse-owner';
     let tmpRole = this.infos.user['roles'];
     const form = {

@@ -51,7 +51,7 @@ export class AddCoachComponent implements OnInit {
     this.coaches.forEach((value)=>{
       this.toUpdate.push(value._id);
     })
-    this.clubService.addCoach(this.toUpdate, this.infos.club['_id']).subscribe(response=>{
+    this.clubService.addCoach(this.toUpdate, this.infos._id).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
       window.location.reload();
@@ -84,7 +84,7 @@ export class AddCoachComponent implements OnInit {
   }
 
   private fetchData() {
-    this.clubService.getClubCoaches(this.infos.club['_id']).pipe(map(responseData =>{
+    this.clubService.getClubCoaches(this.infos._id).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -97,7 +97,7 @@ export class AddCoachComponent implements OnInit {
       this.coaches = response[0].clubCoaches;
     });
 
-    this.clubService.getClubAthletes(this.infos.club['_id']).pipe(map(responseData =>{
+    this.clubService.getClubAthletes(this.infos._id).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
