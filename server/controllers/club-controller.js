@@ -219,7 +219,7 @@ exports.addCoach = function (req,res){
 }
 
 exports.getClubAthletes = function (req,res) {
-  User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1}).then(result=>{
+  User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1, email:1, phoneNumber:1}).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
