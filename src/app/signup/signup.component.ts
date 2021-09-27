@@ -1,16 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../_services/auth.service";
-import { FormGroup, FormControl } from '@angular/forms';
 import {map} from "rxjs/operators";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
-
-const baseURL = 'http://localhost:5050';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
 
 @Component({
   selector: 'app-signup',
@@ -27,7 +20,7 @@ export class SignupComponent implements OnInit {
     birthday: "",
     username: "",
     password: "",
-    telephone: "",
+    phoneNumber: "",
     taxcode: "",
     city: "",
     address: "",
@@ -42,9 +35,13 @@ export class SignupComponent implements OnInit {
   errorMessage = '';
   isSelected = false;
 
-  constructor(private authService: AuthService, private http: HttpClient, private clubService: ClubService) { }
+  constructor(private authService: AuthService, private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
+
+    if(!!this.tokenStorage.getToken()){ //if user is logged in
+      window.location.assign('home');
+    }
     this.fetchData();
   }
 
@@ -67,7 +64,7 @@ export class SignupComponent implements OnInit {
 
   onSubmit(): void{
 
-    const {
+    /*const {
       name,
       surname,
       email,
@@ -81,21 +78,11 @@ export class SignupComponent implements OnInit {
       nrFise,
       clubId,
       isOwner
-    } = this.form;
+    } = this.form;*/
 
-    this.authService.signup(name,
-      surname,
-      email,
-      birthday,
-      username,
-      password,
-      phoneNumber,
-      taxcode,
-      city,
-      address,
-      nrFise,
-      clubId,
-      isOwner).subscribe(
+    let user = this.form;
+
+    this.authService.signup(user).subscribe(
         data => {
           this.isSuccessful = true;
           this.isSignUpFailed = false;

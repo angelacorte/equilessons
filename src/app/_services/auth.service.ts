@@ -24,30 +24,17 @@ export class AuthService {
     }, httpOptions);
   }
 
-  signup(name:string, surname:string, email:string, birthday:string, username:string, password:string, phoneNumber:number, taxcode:string,
-         city:string, address:string, nrFise:string, clubId:string, isOwner:boolean): Observable<any>{
-    let roles = [];
+  signup(data:any): Observable<any>{
+    //let roles = [];
 
-    if(isOwner){
-      roles.push("horse-owner");
-    }else{
-      roles.push("pupil");
+    if(data.email !== undefined){
+      if(data.isOwner){
+        data.roles.push("horse-owner");
+      }else{
+        data.roles.push("pupil");
+      }
     }
-    return this.http.post(baseURL + '/signup', {
-      name,
-      surname,
-      email,
-      birthday,
-      username,
-      password,
-      phoneNumber,
-      taxcode,
-      city,
-      address,
-      nrFise,
-      clubId,
-      isOwner,
-      roles
-    }, httpOptions);
+
+    return this.http.post(baseURL + '/signup', data, httpOptions);
   }
 }

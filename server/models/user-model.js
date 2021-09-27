@@ -7,15 +7,15 @@ let SALT_WORK_FACTOR = 10;
 let UserSchema = new Schema({
   name: {type: String, required: true},
   surname: {type: String, required: true},
-  email: {type: String, unique: true, required: true},
-  birthday: {type: Date, required: true},
-  username: {type: String, unique:true, required: true},
+  email: {type: String, unique: true},
+  birthday: {type: Date},
+  username: {type: String, unique:true},
   password: {type: String, required: true},
-  phoneNumber: {type: Number, required: true},
-  taxcode: {type:String, required:true, unique:true},
-  city: {type: String, required: true},
-  address: {type: String, required: true},
-  nrFise : {type: String, required: true, unique:true},
+  phoneNumber: {type: Number, required: true, unique:true},
+  taxcode: {type:String, unique:true},
+  city: {type: String},
+  address: {type: String},
+  nrFise : {type: String, unique:true},
   clubId: {type: Schema.Types.ObjectId, ref:"Club", required: true},
   isOwner: {type: Boolean, default:false},
   roles: {type: Array , default:"pupil"},
@@ -52,11 +52,12 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 let reasons = UserSchema.statics.failedLogin = { NOT_FOUND: 0, PASSWORD_INCORRECT: 1, MAX_ATTEMPTS: 2 };
 
-UserSchema.statics.getAuthenticated = function (usernameOrEmail, password, cb) {
+UserSchema.statics.getAuthenticated = function (input, password, cb) {
   this.findOne({
     $or:[
-      {username:usernameOrEmail},
-      {email:usernameOrEmail}
+      {username:input},
+      {email:input},
+      {phoneNumber:input}
     ]
   }, function (err,user) {
     if(err){
