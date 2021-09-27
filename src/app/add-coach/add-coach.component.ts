@@ -47,7 +47,6 @@ export class AddCoachComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("coaches updated", this.coaches);
     this.coaches.forEach((value)=>{
       this.toUpdate.push(value._id);
     })

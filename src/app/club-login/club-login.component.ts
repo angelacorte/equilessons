@@ -1,16 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ErrorStateMatcher} from "@angular/material/core";
-import {FormControl, FormGroupDirective, NgForm, Validators} from "@angular/forms";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
 
-/** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  }
-}
 @Component({
   selector: 'app-club-login',
   templateUrl: './club-login.component.html',
@@ -33,16 +24,15 @@ export class ClubLoginComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.tokenStorage.getToken()){
-
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
     }
   }
 
   onSubmit() {
-    let registration = this.form;
+    let login = this.form;
 
-    this.clubService.clubLogin(registration).subscribe(data=>{
+    this.clubService.clubLogin(login).subscribe(data=>{
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data);
 

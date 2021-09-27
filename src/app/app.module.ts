@@ -38,6 +38,8 @@ import { ClubLoginComponent } from './club-login/club-login.component';
 import {A11yModule} from "@angular/cdk/a11y";
 import { AddCoachComponent } from './add-coach/add-coach.component';
 import { NotAllowedComponent } from './not-allowed/not-allowed.component';
+import { TempUserComponent } from './temp-user/temp-user.component';
+import { ShowUsersComponent } from './show-users/show-users.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -55,7 +57,9 @@ registerLocaleData(localeIt);
     NewArenaComponent,
     ClubLoginComponent,
     AddCoachComponent,
-    NotAllowedComponent
+    NotAllowedComponent,
+    TempUserComponent,
+    ShowUsersComponent
   ],
     imports: [
         BrowserModule,
