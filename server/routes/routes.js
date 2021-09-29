@@ -91,4 +91,7 @@ module.exports = function (app){
 
   app.route('/user/:clubId')
     .get(userController.getUsersByClub);
+
+  app.route('/user')
+    .delete(userController.removeUser);
 }

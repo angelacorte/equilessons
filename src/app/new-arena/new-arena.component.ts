@@ -57,15 +57,12 @@ export class NewArenaComponent implements OnInit {
       }
       newArenas.push(arena);
     })*/
-    console.log("this.toupdate", this.toUpdate);
 
     this.arenaService.addArena(this.toUpdate).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
-      console.log("this.toupdate", this.toUpdate);
       if(this.toRemove.length > 0){
         this.arenaService.removeArena(this.toRemove).subscribe(resp =>{
-          console.log("this.toRemove",this.toRemove)
           window.location.reload();
         }, err => {
           this.errorMessage = err.error.message;

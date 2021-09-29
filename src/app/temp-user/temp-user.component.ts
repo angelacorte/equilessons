@@ -15,7 +15,6 @@ export class TempUserComponent implements OnInit {
     name: "",
     surname: "",
     phoneNumber: "",
-    password: "",
     clubId: ""
   };
 
@@ -56,7 +55,5 @@ export class TempUserComponent implements OnInit {
 
   }
 
-  reloadPage(): void {
-    window.location.assign('/clubUsers');
-  }
+
 }
