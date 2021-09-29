@@ -44,7 +44,7 @@
     "jquery": "^3.6.0",
     "mongodb": "^3.6.8",
     "mongoose": "^5.13.2",
-    "nodemon": "^2.0.12",
+    "nodemon": "^2.0.13",
     "passport-remember-me": "^0.0.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",

@@ -40,6 +40,7 @@ import { AddCoachComponent } from './add-coach/add-coach.component';
 import { NotAllowedComponent } from './not-allowed/not-allowed.component';
 import { TempUserComponent } from './temp-user/temp-user.component';
 import { ShowUsersComponent } from './show-users/show-users.component';
+import {MatExpansionModule} from "@angular/material/expansion";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -79,7 +80,8 @@ registerLocaleData(localeIt);
         MatFormFieldModule,
         MatInputModule,
         MatProgressSpinnerModule,
-        A11yModule
+        A11yModule,
+        MatExpansionModule
     ],
   providers: [
     authInterceptorProviders,
