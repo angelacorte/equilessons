@@ -5,6 +5,8 @@ import {LessonService} from "../_services/lesson.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
 import {map} from "rxjs/operators";
+import {AuthService} from "../_services/auth.service";
+import {UserService} from "../_services/user.service";
 
 @Component({
   selector: 'app-show-users',
@@ -21,12 +23,13 @@ export class ShowUsersComponent implements OnInit {
   };
 
   users:any = [];
-  tmpUsers:any = [];
+  errorMessage = '';
   isLoggedIn = false;
   infos: any;
-  displayedColumns = ['checkbox', 'utente', 'numero_di_telefono'];
+  toRemove: any = [];
+  displayedColumns = ['checkbox', 'utente', 'numero_di_telefono', 'utente_temporaneo'];
 
-  constructor(private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
+  constructor(private userService: UserService, private authService: AuthService, private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -51,14 +54,22 @@ export class ShowUsersComponent implements OnInit {
       return dataArray;
     })).subscribe(response=>{
       response.forEach(value => {
+        let u = {
+          userId: value._id,
+          name: value.name,
+          surname: value.surname,
+          email: value.email,
+          phoneNumber: value.phoneNumber,
+          tmp: ''
+        }
         if(value.email === undefined){
-          this.tmpUsers.push(value);
+          u.tmp = "<mat-icon>done</mat-icon>";
+          this.users.push(u)
         }else{
-          this.users.push(value);
+          this.users.push(u);
         }
       })
       console.log("users", this.users);
-      console.log("tmpUsers", this.tmpUsers);
     });
   }
 
@@ -67,10 +78,49 @@ export class ShowUsersComponent implements OnInit {
   }
 
   isUserUnchecked(e: any, userId: any) {
-    console.log("TO IMPLEMENT")
+    if(!e.target.checked) {
+      // @ts-ignore
+      this.users.some((value, index)=> {
+        if(value.userId === userId && value.email === undefined){
+          this.users.splice(index,1)
+          this.toRemove.push(userId);
+          this.table.renderRows();
+        }
+      })
+    }
   }
 
   update() {
-    console.log("TO IMPLEMENT")
+    if(this.toRemove.length > 0){
+      this.userService.removeUser(this.toRemove).subscribe(resp =>{
+        window.location.reload();
+      }, err => {
+        this.errorMessage = err.error.message;
+        console.log(err);
+      })
+    }
+  }
+
+  isUserTmp(userId: any):boolean {
+    // @ts-ignore
+    return this.users.some(obj=>obj.userId === userId && obj.tmp !== '');
+  }
+
+  onSubmit() {
+    let tmpUser = this.form;
+    tmpUser.clubId = this.infos._id;
+
+    this.authService.signup(tmpUser).subscribe(
+      data => {
+        this.reloadPage();
+      },
+      err => {
+        this.errorMessage = err.error.message;
+      }
+    );
+  }
+
+  reloadPage(): void {
+    window.location.assign('/showUsers');
   }
 }

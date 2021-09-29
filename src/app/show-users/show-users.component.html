@@ -1,7 +1,71 @@
-<div class="container mt-2">
+<div class="container mt-5">
 
   <h1>Gestione utenti</h1>
-  <div class="mt-5" *ngIf="users.length != 0"> <!--[style.display]="'true'"-->
+
+  <mat-accordion>
+    <mat-expansion-panel
+      (closed)="true"> <!--(opened)="panelOpenState = true"-->
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Aggiungi un utente temporaneo
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <form
+        name="form"
+        (ngSubmit)="f.form.valid && onSubmit()"
+        #f="ngForm"
+        novalidate
+      >
+        <div class="form-row">
+          <div class="col-md-5 mt-2">
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              id="name"
+              placeholder="Nome"
+              [(ngModel)]="form.name"
+              required
+            />
+          </div>
+          <div class="col-md-5 mt-2">
+            <input
+              type="text"
+              class="form-control"
+              name="surname"
+              id="surname"
+              placeholder="Cognome"
+              [(ngModel)]="form.surname"
+              required
+            />
+          </div>
+
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-5 mt-2">
+            <input
+              type="tel"
+              class="form-control"
+              name="phoneNumber"
+              id="phoneNumber"
+              placeholder="Numero di telefono"
+              [(ngModel)]="form.phoneNumber"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group mt-4">
+          <button class="btn col-md-4">Conferma</button>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="mt-2" *ngIf="users.length != 0"> <!--[style.display]="'true'"-->
+    <h5 class="text-secondary">Per rimuovere un utente temporaneo dalla lista basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
+
     <mat-table [dataSource]="users" class="mat-elevation-z8 mb-5">
       <ng-container matColumnDef="checkbox">
         <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
@@ -11,15 +75,15 @@
             class="form-check-input"
             value="true"
             checked
-            disabled
-            (click)="showInfos(u.userId)"
-            > <!--id="userId"-->
+            [disabled]="!isUserTmp(u.userId)"
+            (click)="isUserUnchecked($event, u.userId)"
+          > <!--id="userId"-->
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="utente">
         <mat-header-cell *matHeaderCellDef> Utente </mat-header-cell>
-        <mat-cell *matCellDef="let u"> {{u['name']}} {{u['surname']}}   </mat-cell>
+        <mat-cell *matCellDef="let u" (click)="showInfos(u.userId)"> {{u['name']}} {{u['surname']}}   </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="numero_di_telefono">
@@ -27,43 +91,15 @@
         <mat-cell *matCellDef="let u"> {{u['phoneNumber']}}  </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="utente_temporaneo">
+        <mat-header-cell *matHeaderCellDef> Utente temporaneo </mat-header-cell>
+        <mat-cell *matCellDef="let u" > {{u.tmp}}  </mat-cell>
+      </ng-container>
+
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
     </mat-table>
+    <button class="btn col-md-4" (click)="update()">Aggiorna</button>
   </div>
-
-    <div class="mt-5" *ngIf="tmpUsers.length != 0"> <!--[style.display]="'true'"-->
-      <h1>Utenti temporanei</h1>
-      <h5 class="text-secondary">Per rimuovere un utente dalla lista basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
-      <mat-table [dataSource]="tmpUsers" class="mat-elevation-z8 mb-5">
-        <ng-container matColumnDef="checkbox">
-          <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
-          <mat-cell *matCellDef="let u">               <!--<td  *ngFor="let les of lesson">-->
-            <input
-              type="checkbox"
-              class="form-check-input"
-              value="true"
-              checked
-              (change)="isUserUnchecked($event, u)"
-              id="userId">
-          </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="utente">
-          <mat-header-cell *matHeaderCellDef> Utente </mat-header-cell>
-          <mat-cell *matCellDef="let u"> {{u['name']}} {{u['surname']}}   </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="numero_di_telefono">
-          <mat-header-cell *matHeaderCellDef> Numero di telefono </mat-header-cell>
-          <mat-cell *matCellDef="let u"> {{u['phoneNumber']}}  </mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
-      </mat-table>
-      <button class="btn col-md-4" (click)="update()">Aggiorna</button>
-    </div>
 </div>
