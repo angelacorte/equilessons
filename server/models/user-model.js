@@ -7,15 +7,15 @@ let SALT_WORK_FACTOR = 10;
 let UserSchema = new Schema({
   name: {type: String, required: true},
   surname: {type: String, required: true},
-  email: {type: String, unique: true},
+  email: {type: String},
   birthday: {type: Date},
-  username: {type: String, unique:true},
-  password: {type: String, required: true},
+  username: {type: String},
+  password: {type: String},
   phoneNumber: {type: Number, required: true, unique:true},
-  taxcode: {type:String, unique:true},
+  taxcode: {type:String},
   city: {type: String},
   address: {type: String},
-  nrFise : {type: String, unique:true},
+  nrFise : {type: String},
   clubId: {type: Schema.Types.ObjectId, ref:"Club", required: true},
   isOwner: {type: Boolean, default:false},
   roles: {type: Array , default:"pupil"},
@@ -25,8 +25,9 @@ let UserSchema = new Schema({
 
 UserSchema.pre("save", function(next) {
   let user = this;
+
   // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) return next();
+  if (!user.isModified('password') && user.password === undefined) return next();
 
   // generate a salt
   bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
