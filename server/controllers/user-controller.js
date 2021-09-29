@@ -65,11 +65,25 @@ exports.changeClub = function (req,res) {
 }
 
 //delete one user
-exports.deleteOneUser = function (req,res){
-
+exports.removeUser = function (req,res){
+  let opts = {
+    _id: {
+      $in:req.body
+    }
+  }
+  User.deleteMany(opts).then(result=>{
+    console.log(result);
+    if(result.deletedCount < 1){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
 };
 
 //update user info
 exports.updateUser = function (req,res){
 
 };
+
