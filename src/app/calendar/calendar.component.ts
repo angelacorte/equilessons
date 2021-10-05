@@ -28,6 +28,9 @@ import {LessonService} from "../_services/lesson.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {map} from "rxjs/operators";
 import {AppCalendarService} from "../_services/app-calendar.service";
+import {DialogUserViewComponent} from "../dialog-user-view/dialog-user-view.component";
+import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
+import {MatDialog} from "@angular/material/dialog";
 // import {addMonths} from "@syncfusion/ej2-angular-schedule";
 
 @Component({
@@ -102,7 +105,7 @@ export class CalendarComponent implements OnInit {
   // @ts-ignore
   @ViewChild(CalendarSchedulerViewComponent) calendarScheduler: CalendarSchedulerViewComponent;
 
-  constructor(@Inject(LOCALE_ID) locale: string,private lessonService: LessonService, private tokenStorage: TokenStorageService, private appService: AppCalendarService, private dateAdapter: DateAdapter) {
+  constructor(@Inject(LOCALE_ID) locale: string, public dialog: MatDialog, private lessonService: LessonService, private tokenStorage: TokenStorageService, private appService: AppCalendarService, private dateAdapter: DateAdapter) {
     this.locale = locale;
 
     // this.dayModifier = ((day: SchedulerViewDay): void => {
@@ -190,8 +193,7 @@ export class CalendarComponent implements OnInit {
   }
 
   eventClicked(action: string, event: CalendarSchedulerEvent): void {
-    console.log("TO IMPLEMENT AND SHOW THE INFOS");
-    console.log('eventClicked Action', action);
+    this.getLessonInfo();
     console.log('eventClicked Event', event);
   }
 
@@ -244,5 +246,12 @@ export class CalendarComponent implements OnInit {
     //this.actions
     //.then((events: CalendarSchedulerEvent[]) => this.events = events);
   }*/
+  private getLessonInfo() {
+    console.log("TO IMPLEMENT");
+    let dialogRef = this.dialog.open(DialogLessonViewComponent, {
+      width: '600px',
+      /*data: response*/
+    });
+  }
 }
 
