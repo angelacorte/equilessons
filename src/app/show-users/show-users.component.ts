@@ -7,6 +7,8 @@ import {ClubService} from "../_services/club.service";
 import {map} from "rxjs/operators";
 import {AuthService} from "../_services/auth.service";
 import {UserService} from "../_services/user.service";
+import {MatDialog} from "@angular/material/dialog";
+import {DialogViewComponent} from "../dialog-view/dialog-view.component";
 
 @Component({
   selector: 'app-show-users',
@@ -29,7 +31,7 @@ export class ShowUsersComponent implements OnInit {
   toRemove: any = [];
   displayedColumns = ['checkbox', 'utente', 'numero_di_telefono', 'utente_temporaneo'];
 
-  constructor(private userService: UserService, private authService: AuthService, private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
+  constructor(public dialog: MatDialog, private userService: UserService, private authService: AuthService, private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -60,10 +62,10 @@ export class ShowUsersComponent implements OnInit {
           surname: value.surname,
           email: value.email,
           phoneNumber: value.phoneNumber,
-          tmp: ''
+          tmp: false
         }
         if(value.email === undefined){
-          u.tmp = "<mat-icon>done</mat-icon>";
+          u.tmp = true;
           this.users.push(u)
         }else{
           this.users.push(u);
@@ -74,7 +76,27 @@ export class ShowUsersComponent implements OnInit {
   }
 
   showInfos(userId: any) {
-    console.log("TO IMPLEMENT")
+    this.userService.getUserById(userId).pipe(map(responseData =>{
+      return responseData;
+    })).subscribe(response=>{
+      if(response.horse.length > 0){
+        this.userService.getUserHorses(response._id).pipe(map(respData =>{
+          return respData;
+        })).subscribe(resp=>{
+          response.horse = resp[0].horses_infos;
+          let dialogRef = this.dialog.open(DialogViewComponent, {
+            width: '600px',
+            data: response
+          });
+        })
+      } else{
+        let dialogRef = this.dialog.open(DialogViewComponent, {
+          width: '600px',
+          data: response
+        });
+      }
+
+    });
   }
 
   isUserUnchecked(e: any, userId: any) {
@@ -101,10 +123,10 @@ export class ShowUsersComponent implements OnInit {
     }
   }
 
-  isUserTmp(userId: any):boolean {
+/*  isUserTmp(userId: any):boolean {
     // @ts-ignore
     return this.users.some(obj=>obj.userId === userId && obj.tmp !== '');
-  }
+  }*/
 
   onSubmit() {
     let tmpUser = this.form;
@@ -122,5 +144,9 @@ export class ShowUsersComponent implements OnInit {
 
   reloadPage(): void {
     window.location.assign('/showUsers');
+  }
+
+  openDialog(userId: any) {
+
   }
 }

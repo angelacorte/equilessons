@@ -75,7 +75,7 @@
             class="form-check-input"
             value="true"
             checked
-            [disabled]="!isUserTmp(u.userId)"
+            [disabled]="!u.tmp"
             (click)="isUserUnchecked($event, u.userId)"
           > <!--id="userId"-->
         </mat-cell>
@@ -83,7 +83,10 @@
 
       <ng-container matColumnDef="utente">
         <mat-header-cell *matHeaderCellDef> Utente </mat-header-cell>
-        <mat-cell *matCellDef="let u" (click)="showInfos(u.userId)"> {{u['name']}} {{u['surname']}}   </mat-cell>
+        <mat-cell *matCellDef="let u">
+          <button mat-button (click)="showInfos(u.userId)"> {{u['name']}} {{u['surname']}}</button>
+
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="numero_di_telefono">
@@ -93,7 +96,9 @@
 
       <ng-container matColumnDef="utente_temporaneo">
         <mat-header-cell *matHeaderCellDef> Utente temporaneo </mat-header-cell>
-        <mat-cell *matCellDef="let u" > {{u.tmp}}  </mat-cell>
+        <mat-cell *matCellDef="let u" >
+          <mat-icon *ngIf="u.tmp == true">done</mat-icon>
+        </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
