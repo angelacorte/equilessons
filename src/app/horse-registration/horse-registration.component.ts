@@ -87,7 +87,9 @@ export class HorseRegistrationComponent implements OnInit {
 
     //TODO modificare circa tutto credo
     const role = 'horse-owner';
-    let tmpRole = this.infos.user['roles'];
+    let tmpRole: any;
+    if(!this.isClub) tmpRole = this.infos['roles'];
+
     const form = {
       horseName:this.form.horseName,
       horseMicrochip: this.form.horseMicrochip,
@@ -101,7 +103,7 @@ export class HorseRegistrationComponent implements OnInit {
     this.horseService.horseRegistration(form).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
-      if(!tmpRole.includes(role)){
+      if(!this.isClub && !tmpRole.includes(role)){
         tmpRole.push(role);
         this.userService.addRole(role, form.ownerId).subscribe(resp=>{
           this.infos.user['roles'] = tmpRole;
@@ -118,16 +120,18 @@ export class HorseRegistrationComponent implements OnInit {
   }
 
   isOwnerRider(e: any) {
-    let rider = {
-      _id: this.infos.user['_id'],
-      name: this.infos.user['name'],
-      surname: this.infos.user['surname'],
-    }
-    if(e.target.checked){ // && !this.riders.some(obj=>obj['_id'] === rider['_id'])
-      // @ts-ignore
-      this.riders.push(rider);
-    }else{
-      this.removeDoc(rider);
+    if(!this.isClub){
+      let rider = {
+        _id: this.infos['_id'],
+        name: this.infos['name'],
+        surname: this.infos['surname'],
+      }
+      if(e.target.checked){ // && !this.riders.some(obj=>obj['_id'] === rider['_id'])
+        // @ts-ignore
+        this.riders.push(rider);
+      }else{
+        this.removeDoc(rider);
+      }
     }
   }
 
@@ -147,9 +151,9 @@ export class HorseRegistrationComponent implements OnInit {
 
   isClubOwnerChecked(e: any) {
     if(e.target.checked){
-      this.form.ownerId = this.infos.user['clubId'];
+      this.form.ownerId = this.infos['clubId'];
     }else{
-      this.form.ownerId = this.infos.user['_id'];
+      this.form.ownerId = this.infos['_id'];
     }
   }
 

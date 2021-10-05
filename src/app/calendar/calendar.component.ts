@@ -72,6 +72,7 @@ export class CalendarComponent implements OnInit {
   isLoggedIn = false;
   infos: any;
   lessons = [];
+  isClub: boolean = false;
 
 
   actions: CalendarSchedulerEventAction[] = [
@@ -127,10 +128,9 @@ export class CalendarComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if(this.isLoggedIn) {
-      this.infos = this.tokenStorage.getUser();
+      this.isClub = this.tokenStorage.isClub();
+      this.infos = this.tokenStorage.getInfos(this.isClub);
       this.fetchData();
-
-
     }
   }
 
@@ -207,7 +207,11 @@ export class CalendarComponent implements OnInit {
   }
 
   private fetchData(){
-    this.lessonService.getLessonsInfos(this.infos.user['clubId']).pipe(map(responseData =>{
+    let id: any;
+    if(this.isClub) id = this.infos._id
+      else id = this.infos.clubId
+
+    this.lessonService.getLessonsInfos(id).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
