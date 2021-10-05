@@ -41,6 +41,11 @@ import { NotAllowedComponent } from './not-allowed/not-allowed.component';
 import { TempUserComponent } from './temp-user/temp-user.component';
 import { ShowUsersComponent } from './show-users/show-users.component';
 import {MatExpansionModule} from "@angular/material/expansion";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import { DialogViewComponent } from './dialog-view/dialog-view.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatListModule} from "@angular/material/list";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -60,7 +65,8 @@ registerLocaleData(localeIt);
     AddCoachComponent,
     NotAllowedComponent,
     TempUserComponent,
-    ShowUsersComponent
+    ShowUsersComponent,
+    DialogViewComponent
   ],
     imports: [
         BrowserModule,
@@ -81,7 +87,11 @@ registerLocaleData(localeIt);
         MatInputModule,
         MatProgressSpinnerModule,
         A11yModule,
-        MatExpansionModule
+        MatExpansionModule,
+        MatIconModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatListModule
     ],
   providers: [
     authInterceptorProviders,
