@@ -160,7 +160,7 @@
         <input
           type="checkbox"
           class="form-check-input"
-          [value]="form.coachId"
+          [value]="coachId"
           (change)="isCoach($event)"
           id="coachId"
           checked>
@@ -168,7 +168,7 @@
       </div>
     </div>
 
-    <div class="input-group col-md-5 mt-4" *ngIf="infos['_id'] !== form.coachId">
+    <div class="input-group col-md-5 mt-4" *ngIf="isClub || form.coachId != infos._id">
       <div class="input-group-prepend">
         <label class="input-group-text" for="otherCoachId">Scegli l'istruttore</label>
       </div>
@@ -196,34 +196,41 @@
 
     <div class="mt-5" *ngIf="lesson.length != 0"> <!--[style.display]="'true'"-->
       <h3>Lezione composta da:</h3>
-        <mat-table [dataSource]="lesson" class="mat-elevation-z8 mb-5">
-          <ng-container matColumnDef="checkbox">
-            <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
-              <mat-cell *matCellDef="let les">               <!--<td  *ngFor="let les of lesson">-->
-              <input
-                  type="checkbox"
-                  class="form-check-input"
-                  value="true"
-                  checked
-                  (change)="isRiderUnchecked($event, les)"
-                  id="isRider">
-              </mat-cell>
-          </ng-container>
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="checkbox">
+          <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+            <mat-cell *matCellDef="let les">               <!--<td  *ngFor="let les of lesson">-->
+            <input
+                type="checkbox"
+                class="form-check-input"
+                value="true"
+                checked
+                (change)="isRiderUnchecked($event, les)"
+                id="isRider">
+            </mat-cell>
+        </ng-container>
 
-          <ng-container matColumnDef="allievo">
-            <mat-header-cell *matHeaderCellDef> Allievo </mat-header-cell>
-            <mat-cell *matCellDef="let les"> {{les.riderInfo['surname']}} {{les.riderInfo['name']}}   </mat-cell>
-          </ng-container>
+        <ng-container matColumnDef="allievo">
+          <mat-header-cell *matHeaderCellDef> Allievo </mat-header-cell>
+          <mat-cell *matCellDef="let les"> {{les.riderInfo['surname']}} {{les.riderInfo['name']}}   </mat-cell>
+        </ng-container>
 
-          <ng-container matColumnDef="cavallo">
-            <mat-header-cell *matHeaderCellDef> Cavallo assegnato </mat-header-cell>
-            <mat-cell *matCellDef="let les">  {{les.horseInfo['horseName']}}</mat-cell>
-          </ng-container>
+        <ng-container matColumnDef="cavallo">
+          <mat-header-cell *matHeaderCellDef> Cavallo assegnato </mat-header-cell>
+          <mat-cell *matCellDef="let les">  {{les.horseInfo['horseName']}}</mat-cell>
+        </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-        </mat-table>
+      </mat-table>
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 20]"
+        [length]="lesson.length"
+        showFirstLastButtons
+        aria-label="Seleziona pagina">
+      </mat-paginator>
 
       <div class="form-group mt-3 mb-5">
         <button class="btn col-md-4" (click)="onSubmit()">Crea</button>

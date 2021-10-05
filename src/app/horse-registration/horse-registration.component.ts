@@ -94,11 +94,14 @@ export class HorseRegistrationComponent implements OnInit {
       horseName:this.form.horseName,
       horseMicrochip: this.form.horseMicrochip,
       ownerId: this.form.ownerId,
-      clubId: this.infos.user['clubId'],
+      clubId: '',
       horseBirthday: this.form.horseBirthday,
       riders: this.riders,
       scholastic: this.form.scholastic
     }
+    if(!this.isClub){
+      form.clubId = this.infos.clubId;
+    }else form.clubId = this.infos._id;
 
     this.horseService.horseRegistration(form).subscribe(response=>{
       this.submitted = true;
@@ -106,7 +109,7 @@ export class HorseRegistrationComponent implements OnInit {
       if(!this.isClub && !tmpRole.includes(role)){
         tmpRole.push(role);
         this.userService.addRole(role, form.ownerId).subscribe(resp=>{
-          this.infos.user['roles'] = tmpRole;
+          this.infos['roles'] = tmpRole;
           this.tokenStorage.saveUser(this.infos);
         }, error =>{
           console.log(error);
@@ -151,7 +154,8 @@ export class HorseRegistrationComponent implements OnInit {
 
   isClubOwnerChecked(e: any) {
     if(e.target.checked){
-      this.form.ownerId = this.infos['clubId'];
+      if(this.isClub) this.form.ownerId = this.infos['_id'];
+      else this.form.ownerId = this.infos['clubId'];
     }else{
       this.form.ownerId = this.infos['_id'];
     }

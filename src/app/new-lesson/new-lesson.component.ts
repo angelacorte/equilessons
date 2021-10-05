@@ -9,6 +9,8 @@ import {ClubService} from "../_services/club.service";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {validateEvents} from "angular-calendar/modules/common/util";
 import {LessonService} from "../_services/lesson.service";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-new-lesson',
@@ -16,8 +18,15 @@ import {LessonService} from "../_services/lesson.service";
   styleUrls: ['./new-lesson.component.css']
 })
 export class NewLessonComponent implements OnInit {
-  // @ts-ignore
-  @ViewChild(MatTable) table: MatTable<any>;
+
+  @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
+  @ViewChild(MatSort, {static:false})
+  set sort(value: MatSort) {
+    if (this.dataSource){
+      this.dataSource.sort = value;
+    }
+  }
+  @ViewChild(MatPaginator, {static:false}) paginator!: MatPaginator;
 
   form:any = {
     lessonDate: '',
@@ -32,6 +41,7 @@ export class NewLessonComponent implements OnInit {
     //color: ''
   }
 
+  dataSource:any;
   isSuccessful = false;
   isRegistrationFailed = false;
   errorMessage = '';
@@ -57,17 +67,10 @@ export class NewLessonComponent implements OnInit {
 
     if(this.isLoggedIn && this.isClub) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
-      console.log("infos", this.infos)
       this.fetchData();
     }else{
       window.location.assign('/notAllowed');
     }
-
-    /*if(this.isLoggedIn) {
-      this.infos = this.tokenStorage.getUser();
-      //this.form.coachId = this.infos.user['_id'];
-      this.fetchData();
-    }*/
   }
 
   onSubmit(): void {
@@ -87,13 +90,11 @@ export class NewLessonComponent implements OnInit {
       beginDate: beginDate,
       endDate: endDate,
       arenaId: this.form.arenaId,
-      coachId: this.form.coachId,
+      coachId: this.coachId,
       clubId: this.infos['_id'],
       pairs: pairs,
       //color: this.form.color
     }
-
-    console.log("submit lesson", lesson);
 
     this.lessonService.createLesson(lesson).subscribe(response=>{
       this.submitted = true;
@@ -198,6 +199,10 @@ export class NewLessonComponent implements OnInit {
             this.lesson.push(pair);
             this.form.horseId = '';
             this.form.riderId = '';
+            this.dataSource = new MatTableDataSource(this.lesson);
+            this.dataSource.data = this.lesson;
+            this.dataSource.sort;
+            this.dataSource.paginator = this.paginator;
             this.table.renderRows();
           }
         }))
