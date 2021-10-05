@@ -47,17 +47,27 @@ export class NewLessonComponent implements OnInit {
   displayedColumns = ['checkbox', 'allievo', 'cavallo'];
   coaches: {_id: any, name: any, surname: any}[] = [];
   coachId: any;
+  isClub: boolean = false;
 
   constructor(private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
+    this.isClub = this.tokenStorage.isClub();
 
-    if(this.isLoggedIn) {
-      this.infos = this.tokenStorage.getUser();
-      this.form.coachId = this.infos.user['_id'];
+    if(this.isLoggedIn && this.isClub) {
+      this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
+      console.log("infos", this.infos)
       this.fetchData();
+    }else{
+      window.location.assign('/notAllowed');
     }
+
+    /*if(this.isLoggedIn) {
+      this.infos = this.tokenStorage.getUser();
+      //this.form.coachId = this.infos.user['_id'];
+      this.fetchData();
+    }*/
   }
 
   onSubmit(): void {
@@ -78,10 +88,12 @@ export class NewLessonComponent implements OnInit {
       endDate: endDate,
       arenaId: this.form.arenaId,
       coachId: this.form.coachId,
-      clubId: this.infos.user['clubId'],
+      clubId: this.infos['_id'],
       pairs: pairs,
       //color: this.form.color
     }
+
+    console.log("submit lesson", lesson);
 
     this.lessonService.createLesson(lesson).subscribe(response=>{
       this.submitted = true;
@@ -94,7 +106,7 @@ export class NewLessonComponent implements OnInit {
   }
 
   private fetchData() {
-    this.arenaService.getClubArenas(this.infos.user['clubId']).pipe(map(responseData =>{
+    this.arenaService.getClubArenas(this.infos['_id']).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -108,7 +120,7 @@ export class NewLessonComponent implements OnInit {
       this.arenas = response;
     });
 
-    this.clubService.getClubAthletes(this.infos.user['clubId']).pipe(map(responseData =>{
+    this.clubService.getClubAthletes(this.infos['_id']).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -120,9 +132,10 @@ export class NewLessonComponent implements OnInit {
     })).subscribe(response=>{
       // @ts-ignore
       this.riders = response;
+      console.log("this.riders", this.riders)
     });
 
-    this.horseService.getScholasticHorses(this.infos.user['clubId']).pipe(map(responseData =>{
+    this.horseService.getScholasticHorses(this.infos['_id']).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -134,9 +147,10 @@ export class NewLessonComponent implements OnInit {
     })).subscribe(response=>{
       // @ts-ignore
       this.horses = response;
+      console.log("this.horses", this.horses)
     });
 
-    this.clubService.getClubCoaches(this.infos.user['clubId']).pipe(map(responseData =>{
+    this.clubService.getClubCoaches(this.infos['_id']).pipe(map(responseData =>{
       const dataArray = [];
       for ( const key in responseData){
         if(responseData.hasOwnProperty(key)){
@@ -147,12 +161,15 @@ export class NewLessonComponent implements OnInit {
       return dataArray;
     })).subscribe(response=>{
       // @ts-ignore
-      this.coaches = response;
-      this.coaches.forEach((item,index)=>{
-        if(item['_id'] === this.infos.user['_id']){
-          this.coaches.splice(index, 1);
-        }
-      });
+      this.coaches = response[0].clubCoaches;
+      if(!this.isClub){
+        this.coaches.forEach((item,index)=>{
+          if(item['_id'] === this.infos['_id']){
+            this.coaches.splice(index, 1);
+          }
+        });
+      }
+      console.log("this.coaches", this.coaches)
     });
   }
 
@@ -202,7 +219,7 @@ export class NewLessonComponent implements OnInit {
 
   isCoach(e: any) {
     if(e.target.checked){
-      this.form.coachId = this.infos.user['_id'];
+      this.form.coachId = this.infos['_id'];
     }else{
       this.form.coachId = this.coachId;
     }

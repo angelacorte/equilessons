@@ -21,7 +21,7 @@ exports.addHorse = function (req,res){
 }
 
 exports.getScholasticHorses = function (req,res) {
-  Horse.find({clubId:req.params.clubId, scholastic:true}).then(result =>{
+  Horse.find({clubId:new ObjectId(req.params.clubId), scholastic:true}).then(result =>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }

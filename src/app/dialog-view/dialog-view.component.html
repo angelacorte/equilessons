@@ -28,11 +28,10 @@
   </div>
   <div *ngIf="horses">
     <h5 class="text-secondary">Cavalli collegati:</h5>
-    <mat-list role="list">
-      <mat-list-item *ngFor="let h of horses" role="listitem" (click)="horseInfo(h._id)">
-        <button mat-button>{{h.horseName}}</button>
-      </mat-list-item>
-    </mat-list>
+    <mat-action-list role="list">
+      <button mat-list-item *ngFor="let h of horses" role="listitem" (click)="horseInfo(h._id)">{{h.horseName}}
+      </button>
+    </mat-action-list>
   </div>
 </div>
 <div mat-dialog-actions>

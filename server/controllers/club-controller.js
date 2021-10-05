@@ -92,7 +92,6 @@ exports.authenticate = function authenticateToken(req,res,next) {
   })
 }
 
-
 exports.token = function (req,res){
   const refreshToken = req.body.token;
   if(refreshToken == null){
@@ -192,7 +191,6 @@ exports.registerClub = function (req,res) {
       res.status(409).send({"description": "email already in use"})
     }else{
       let newClub = new Club(req.body);
-      console.log("newClub", newClub)
       newClub.save(function(err, club) {
         if (err){
           res.send(err);
@@ -206,8 +204,6 @@ exports.registerClub = function (req,res) {
 }
 
 exports.addCoach = function (req,res){
-  console.log("addcoach club-controller req.body", req.body.clubId);
-
   Club.updateOne({_id:req.body.clubId},{clubCoach: req.body.coaches}).then(result=>{
     if(result.ok !== 1){
       return res.status(500).send({message: "an error occurred"});

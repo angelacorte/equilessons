@@ -31,7 +31,10 @@
   </ul>
 
   <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
-    <li class="nav-item" *ngIf="isLoggedIn">
+    <li class="nav-item">
+      <a class="nav-link dropdown-item" href="/newLesson">Aggiungi lezione</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link dropdown-item" href="/horseRegistration" routerLink="horseRegistration">Registra cavallo</a>
     </li>
     <li class="nav-item">
