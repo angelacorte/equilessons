@@ -7,10 +7,19 @@ let Lesson = db.lesson;
 let Role = db.role;
 let User = db.user;
 const bcrypt = require("bcrypt");
+const {ObjectID, ObjectId} = require("mongodb");
 
 //find one user
-exports.getUserByName = function (req,res){
-
+exports.getUserById = function (req,res){
+  User.findOne({_id:new ObjectID(req.params.userId)},{password:0, token:0,__v:0}).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    console.log(result)
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
 };
 
 //find all users
@@ -86,4 +95,37 @@ exports.removeUser = function (req,res){
 exports.updateUser = function (req,res){
 
 };
+
+exports.getUserHorses = function (req,res){
+  let pipeline = [
+    {
+      '$match': {
+        '_id': new ObjectId(req.params.userId)
+      }
+    },{
+      '$lookup': {
+        'from': 'horses',
+        'localField': 'horse',
+        'foreignField': '_id',
+        'as': 'horses_infos'
+      }
+    }, {
+      '$project': {
+        '_id': 1,
+        "horses_infos._id":1,
+        "horses_infos.horseName":1
+      }
+    }
+  ];
+
+  User.aggregate(pipeline).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+
+}
 

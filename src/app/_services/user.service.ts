@@ -45,6 +45,14 @@ export class UserService {
   changeClub(userId:any, clubId:any): Observable<any>{
     return this.http.post(baseURL + '/user/changeClub', {userId, clubId});
   }
+
+  getUserById(userId:any): Observable<any>{
+    return this.http.get(baseURL + '/userinfo/' + userId, httpOptions);
+  }
+
+  getUserHorses(userId:any): Observable<any>{
+    return this.http.get(baseURL + '/userhorse/' + userId, httpOptions);
+  }
   /*
   get(id: any): Observable<User> {
     return this.http.get(`${baseUrl}/${id}`);

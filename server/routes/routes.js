@@ -94,4 +94,10 @@ module.exports = function (app){
 
   app.route('/user')
     .delete(userController.removeUser);
+
+  app.route('/userinfo/:userId')
+    .get(userController.getUserById);
+
+  app.route('/userhorse/:userId')
+    .get(userController.getUserHorses);
 }
