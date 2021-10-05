@@ -122,7 +122,6 @@ exports.getLessonsInfos = function (req,res) {
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log("getLessonsInfos", result);
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);

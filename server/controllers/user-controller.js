@@ -15,7 +15,6 @@ exports.getUserById = function (req,res){
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log(result)
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
@@ -43,8 +42,6 @@ exports.getUserRoles = function (req,res) {
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log("getuserroles result ", result)
-
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
@@ -81,7 +78,6 @@ exports.removeUser = function (req,res){
     }
   }
   User.deleteMany(opts).then(result=>{
-    console.log(result);
     if(result.deletedCount < 1){
       return res.status(500).send({message: "an error occurred"});
     }
