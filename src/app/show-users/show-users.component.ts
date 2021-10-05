@@ -1,5 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTable} from "@angular/material/table";
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {HttpClient} from "@angular/common/http";
 import {LessonService} from "../_services/lesson.service";
 import {TokenStorageService} from "../_services/token-storage.service";
@@ -9,16 +15,24 @@ import {AuthService} from "../_services/auth.service";
 import {UserService} from "../_services/user.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogViewComponent} from "../dialog-view/dialog-view.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-show-users',
   templateUrl: './show-users.component.html',
   styleUrls: ['./show-users.component.css']
 })
-export class ShowUsersComponent implements OnInit {
+export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
-  // @ts-ignore
-  @ViewChild(MatTable) table: MatTable<any>;
+  @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
+  @ViewChild(MatSort, {static:false})
+  set sort(value: MatSort) {
+    if (this.dataSource){
+      this.dataSource.sort = value;
+    }
+  }
+  @ViewChild(MatPaginator, {static:false}) paginator!: MatPaginator;
 
   form:any = {
     userId:''
@@ -30,6 +44,7 @@ export class ShowUsersComponent implements OnInit {
   infos: any;
   toRemove: any = [];
   displayedColumns = ['checkbox', 'utente', 'numero_di_telefono', 'utente_temporaneo'];
+  dataSource:any;
 
   constructor(public dialog: MatDialog, private userService: UserService, private authService: AuthService, private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
@@ -71,7 +86,11 @@ export class ShowUsersComponent implements OnInit {
           this.users.push(u);
         }
       })
-      console.log("users", this.users);
+      this.dataSource = new MatTableDataSource(this.users);
+      this.dataSource.data = this.users;
+      this.dataSource.sort;
+      this.dataSource.paginator = this.paginator;
+      console.log("this.users", this.users);
     });
   }
 
@@ -123,11 +142,6 @@ export class ShowUsersComponent implements OnInit {
     }
   }
 
-/*  isUserTmp(userId: any):boolean {
-    // @ts-ignore
-    return this.users.some(obj=>obj.userId === userId && obj.tmp !== '');
-  }*/
-
   onSubmit() {
     let tmpUser = this.form;
     tmpUser.clubId = this.infos._id;
@@ -149,4 +163,12 @@ export class ShowUsersComponent implements OnInit {
   openDialog(userId: any) {
 
   }
+
+/*  ngAfterViewInit(): void {
+    console.log("ngAfterContentInit this.users", this.users);
+    this.dataSource = new MatTableDataSource(this.users);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }*/
+
 }

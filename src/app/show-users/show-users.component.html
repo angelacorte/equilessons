@@ -63,10 +63,10 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <div class="mt-2" *ngIf="users.length != 0"> <!--[style.display]="'true'"-->
+  <div class="mt-2"> <!--[style.display]="'true'"-->
     <h5 class="text-secondary">Per rimuovere un utente temporaneo dalla lista basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
 
-    <mat-table [dataSource]="users" class="mat-elevation-z8 mb-5">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <ng-container matColumnDef="checkbox">
         <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
         <mat-cell *matCellDef="let u">               <!--<td  *ngFor="let les of lesson">-->
@@ -103,8 +103,14 @@
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
     </mat-table>
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      [length]="users.length"
+                   showFirstLastButtons
+                   aria-label="Seleziona pagina">
+    </mat-paginator>
     <button class="btn col-md-4" (click)="update()">Aggiorna</button>
   </div>
 </div>

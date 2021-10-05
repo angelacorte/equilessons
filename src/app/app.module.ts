@@ -46,6 +46,7 @@ import {MatButtonModule} from "@angular/material/button";
 import { DialogViewComponent } from './dialog-view/dialog-view.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatListModule} from "@angular/material/list";
+import {MatPaginatorModule} from "@angular/material/paginator";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -91,7 +92,8 @@ registerLocaleData(localeIt);
         MatIconModule,
         MatButtonModule,
         MatDialogModule,
-        MatListModule
+        MatListModule,
+        MatPaginatorModule
     ],
   providers: [
     authInterceptorProviders,
