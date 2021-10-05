@@ -43,10 +43,12 @@ import { ShowUsersComponent } from './show-users/show-users.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import { DialogViewComponent } from './dialog-view/dialog-view.component';
+import { DialogUserViewComponent } from './dialog-user-view/dialog-user-view.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatListModule} from "@angular/material/list";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { DialogLessonViewComponent } from './dialog-lesson-view/dialog-lesson-view.component';
+import { DialogHorseViewComponent } from './dialog-horse-view/dialog-horse-view.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -67,7 +69,9 @@ registerLocaleData(localeIt);
     NotAllowedComponent,
     TempUserComponent,
     ShowUsersComponent,
-    DialogViewComponent
+    DialogUserViewComponent,
+    DialogLessonViewComponent,
+    DialogHorseViewComponent
   ],
     imports: [
         BrowserModule,

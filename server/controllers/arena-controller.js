@@ -38,7 +38,6 @@ exports.addArena = function (req,res){
 
 exports.getArenasByClubId = function (req,res){
   Arena.find({"clubId":req.params.clubId}, {"clubId":0}).then(result=>{
-    console.log(result);
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -55,7 +54,6 @@ exports.removeArena = function (req,res){
     }
   }
   Arena.deleteMany(opts).then(result=>{
-    console.log(result);
     if(result.deletedCount < 1){
       return res.status(500).send({message: "an error occurred"});
     }

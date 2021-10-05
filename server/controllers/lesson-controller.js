@@ -12,7 +12,6 @@ let ObjectId = require('mongodb').ObjectID;
 
 exports.createLesson = function (req,res){   //TODO add the coach who create the lesson, might be managed with sessions and authentication (tokens)
   let newLesson = new Lesson(req.body);
-  //lesson.coach =
   newLesson.save(function(err, user) {
     if (err){
       res.send(err);

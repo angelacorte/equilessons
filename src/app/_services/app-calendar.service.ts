@@ -55,7 +55,7 @@ export class AppCalendarService {
       }
       data.push(event);
     })
-    const events = [
+    /*const events = [
       <CalendarSchedulerEvent>{
         id: '1',
         start: addDays(startOfHour(new Date()), 1),
@@ -294,7 +294,7 @@ export class AppCalendarService {
         isClickable: true,
         isDisabled: false
       }
-    ];
+    ];*/
 
     return new Promise(resolve => setTimeout(() => resolve(data), 3000));
   }
