@@ -19,18 +19,18 @@ export interface DialogData{
 }
 
 @Component({
-  selector: 'app-dialog-view',
-  templateUrl: './dialog-view.component.html',
-  styleUrls: ['./dialog-view.component.css']
+  selector: 'app-dialog-user-view',
+  templateUrl: './dialog-user-view.component.html',
+  styleUrls: ['./dialog-user-view.component.css']
 })
-export class DialogViewComponent implements OnInit{
+export class DialogUserViewComponent implements OnInit{
 
   // @ts-ignore
   user: DialogData;
   horses: any;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogViewComponent>, private userService: UserService,
+    public dialogRef: MatDialogRef<DialogUserViewComponent>, private userService: UserService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   onClose(): void {

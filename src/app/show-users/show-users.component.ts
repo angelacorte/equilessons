@@ -14,9 +14,9 @@ import {map} from "rxjs/operators";
 import {AuthService} from "../_services/auth.service";
 import {UserService} from "../_services/user.service";
 import {MatDialog} from "@angular/material/dialog";
-import {DialogViewComponent} from "../dialog-view/dialog-view.component";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {DialogUserViewComponent} from '../dialog-user-view/dialog-user-view.component';
 
 @Component({
   selector: 'app-show-users',
@@ -103,13 +103,13 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
           return respData;
         })).subscribe(resp=>{
           response.horse = resp[0].horses_infos;
-          let dialogRef = this.dialog.open(DialogViewComponent, {
+          let dialogRef = this.dialog.open(DialogUserViewComponent, {
             width: '600px',
             data: response
           });
         })
       } else{
-        let dialogRef = this.dialog.open(DialogViewComponent, {
+        let dialogRef = this.dialog.open(DialogUserViewComponent, {
           width: '600px',
           data: response
         });
