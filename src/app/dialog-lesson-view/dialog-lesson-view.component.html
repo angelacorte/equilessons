@@ -1,1 +1,19 @@
-<p>dialog-lesson-view works!</p>
+<h1 mat-dialog-title>Informazioni sulla lezione</h1>
+<div mat-dialog-content>
+  <h5 class="text-secondary">Istruttore:</h5>
+  <p>{{lesson.coach['coachName']}} {{lesson.coach['coachSurname']}}</p>
+  <h5 class="text-secondary">Giorno</h5>
+  <p>{{lesson.beginDate | date :'EEEE, MMMM d, y' : '' :'it' }}</p>
+  <h5 class="text-secondary">Orario di inizio</h5>
+  <p>{{lesson.beginDate | date :'h:mm a' : '' :'it' }}</p>
+  <h5 class="text-secondary">Orario di fine</h5>
+  <p>{{lesson.endDate | date :'h:mm a' : '' :'it' }}</p>
+  <h5 class="text-secondary">Partecipanti:</h5>
+  <div >
+    <mat-action-list>
+      <mat-list-item></mat-list-item>
+    </mat-action-list>
+  </div>
+  <h5 class="text-secondary"></h5>
+
+</div>

@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UserService} from "../_services/user.service";
 import {map} from "rxjs/operators";
 
-export interface DialogData{
+export interface UserDialogData{
   name: string,
   surname: string,
   phoneNumber: number,
@@ -25,13 +25,12 @@ export interface DialogData{
 })
 export class DialogUserViewComponent implements OnInit{
 
-  // @ts-ignore
-  user: DialogData;
+  user!: UserDialogData;
   horses: any;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogUserViewComponent>, private userService: UserService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+    public dialogRef: MatDialogRef<DialogUserViewComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: UserDialogData) {}
 
   onClose(): void {
     this.dialogRef.close();

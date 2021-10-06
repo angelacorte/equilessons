@@ -43,6 +43,7 @@ export class AppCalendarService {
         end: new Date(value.endDate),
         title: 'Istruttore: ' + lessonRefactored.coach['coachName'] + ' ' + lessonRefactored.coach['coachSurname'],
         content: contentString,
+        data: value,
         color: { primary: '#E0E0E0', secondary: '#EEEEEE' },
         actions: actions,
         isClickable: true,

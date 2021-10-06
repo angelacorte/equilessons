@@ -193,7 +193,12 @@ export class CalendarComponent implements OnInit {
   }
 
   eventClicked(action: string, event: CalendarSchedulerEvent): void {
-    this.getLessonInfo();
+    this.lessons.some((obj)=>{
+      //@ts-ignore
+      if (obj._id === event.id){
+        this.getLessonInfo(obj);
+      }
+    })
     console.log('eventClicked Event', event);
   }
 
@@ -228,30 +233,35 @@ export class CalendarComponent implements OnInit {
       this.appService.getEvents(this.lessons,this.actions)
         .then((events: CalendarSchedulerEvent[]) => this.events = events);
     });
-
-
   }
-/*
-  ngOnInit(): void {
-    this.isLoggedIn = !!this.tokenStorage.getToken();
 
-    if(this.isLoggedIn) {
-      this.infos = this.tokenStorage.getUser();
-      this.fetchData();
-      /!*this.lessonService.getEvents(this.actions)
-        .then((events: CalendarSchedulerEvent[]) => this.events = events);*!/
-    }
+  private getLessonInfo(lesson: any) {
+    console.log("lesson", lesson);
+    let data = {
+      lesson: lesson,
+      icClub: this.isClub,
+      userId: this.infos['_id']
+    };
 
-
-    //this.actions
-    //.then((events: CalendarSchedulerEvent[]) => this.events = events);
-  }*/
-  private getLessonInfo() {
-    console.log("TO IMPLEMENT");
     let dialogRef = this.dialog.open(DialogLessonViewComponent, {
       width: '600px',
-      /*data: response*/
+      data: data
     });
   }
+  /*
+    ngOnInit(): void {
+      this.isLoggedIn = !!this.tokenStorage.getToken();
+
+      if(this.isLoggedIn) {
+        this.infos = this.tokenStorage.getUser();
+        this.fetchData();
+        /!*this.lessonService.getEvents(this.actions)
+          .then((events: CalendarSchedulerEvent[]) => this.events = events);*!/
+      }
+
+
+      //this.actions
+      //.then((events: CalendarSchedulerEvent[]) => this.events = events);
+    }*/
 }
 
