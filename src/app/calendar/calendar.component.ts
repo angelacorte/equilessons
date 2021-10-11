@@ -244,7 +244,7 @@ export class CalendarComponent implements OnInit {
     };
 
     let dialogRef = this.dialog.open(DialogLessonViewComponent, {
-      width: '600px',
+      width: '650px',
       data: data
     });
   }

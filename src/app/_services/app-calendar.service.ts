@@ -31,11 +31,11 @@ export class AppCalendarService {
     const data: CalendarSchedulerEvent[] | PromiseLike<CalendarSchedulerEvent[]> = [];
     lessons.forEach((value: any)=>{
       let lessonRefactored = this.lessonService.matchPairs(value);
-      let contentString: string = '';
+      let contentString: string = 'Clicca per ulteriori informazioni';
 
-      lessonRefactored.pairs.forEach((pair : any)=>{
+      /*lessonRefactored.pairs.forEach((pair : any)=>{
         contentString += pair.riderInfo['riderName'].toString() + ' ' + pair.riderInfo['riderSurname'].toString() + ' - ' + pair.horseInfo['horseName'].toString() + '<br>';
-      })
+      })*/
 
       let event = <CalendarSchedulerEvent>{
         id: value._id,

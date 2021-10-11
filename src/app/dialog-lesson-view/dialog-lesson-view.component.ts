@@ -1,17 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LessonService} from "../_services/lesson.service";
+import {LessonState} from "../_services/lesson.service";
 
-export interface LessonDialogData {
-  _id:any,
-  beginDate: any,
-  endDate: any,
-  arena: any,
-  coach: any,
-  horses_in_lesson: any,
-  riders_in_lesson: any,
-  pairs: any
-}
 
 @Component({
   selector: 'app-dialog-lesson-view',
@@ -20,18 +11,19 @@ export interface LessonDialogData {
 })
 export class DialogLessonViewComponent implements OnInit {
 
-  lesson!: LessonDialogData;
-  pairs !: any;
+  lesson!: LessonState;
   isClub !: any;
   userId !: any;
 
   constructor(
     public dialogRef: MatDialogRef<DialogLessonViewComponent>, private lessonService: LessonService,
-    @Inject(MAT_DIALOG_DATA) public data: LessonDialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data: LessonState) {}
+
 
   ngOnInit(): void {
     // @ts-ignore
     this.lesson = this.lessonService.matchPairs(this.data.lesson);
+
     // @ts-ignore
     this.isClub = this.data.isClub;
     // @ts-ignore
@@ -45,4 +37,7 @@ export class DialogLessonViewComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onModify(lessonId: any) {
+
+  }
 }

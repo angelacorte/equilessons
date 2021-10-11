@@ -8,12 +8,24 @@
   <p>{{lesson.beginDate | date :'h:mm a' : '' :'it' }}</p>
   <h5 class="text-secondary">Orario di fine</h5>
   <p>{{lesson.endDate | date :'h:mm a' : '' :'it' }}</p>
+  <h5 class="text-secondary">Campo prenotato:</h5>
+  <p>{{lesson.arenaName}}</p>
   <h5 class="text-secondary">Partecipanti:</h5>
-  <div >
-    <mat-action-list>
-      <mat-list-item></mat-list-item>
+  <div *ngIf="lesson">
+    <mat-action-list role="list">
+      <mat-list-item *ngFor="let p of lesson.pairs" role="listitem">
+        <a mat-list-item class="plain">{{p.riderInfo['riderName']}} {{p.riderInfo['riderSurname']}}</a>
+        <mat-icon>arrow_right_alt</mat-icon>
+        <a mat-list-item class="plain">{{p.horseInfo['horseName']}}</a>
+      </mat-list-item>
     </mat-action-list>
   </div>
-  <h5 class="text-secondary"></h5>
-
+  <div class="d-flex justify-content-between">
+    <div mat-dialog-actions>
+      <button mat-button (click)="onClose()">Chiudi</button>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onModify(lesson._id)">Modifica</button>
+    </div>
+  </div>
 </div>
