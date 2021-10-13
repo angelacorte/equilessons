@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
@@ -8,9 +8,11 @@ import {map} from "rxjs/operators";
 import {ClubService} from "../_services/club.service";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {validateEvents} from "angular-calendar/modules/common/util";
-import {LessonService} from "../_services/lesson.service";
+import {LessonService, LessonState} from "../_services/lesson.service";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {ActivatedRoute} from "@angular/router";
+import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 
 @Component({
   selector: 'app-new-lesson',
@@ -18,6 +20,7 @@ import {MatPaginator} from "@angular/material/paginator";
   styleUrls: ['./new-lesson.component.css']
 })
 export class NewLessonComponent implements OnInit {
+
 
   @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
   @ViewChild(MatSort, {static:false})
@@ -41,6 +44,7 @@ export class NewLessonComponent implements OnInit {
     //color: ''
   }
 
+  updateLesson !: LessonState;
   dataSource:any;
   isSuccessful = false;
   isRegistrationFailed = false;
@@ -52,8 +56,6 @@ export class NewLessonComponent implements OnInit {
   arenas = [];
   lesson: any = []; //{riderId: any, horseId: any}[]
   horses: any;
-  //riderId: any;
-  //horseId: any;
   displayedColumns = ['checkbox', 'allievo', 'cavallo'];
   coaches: {_id: any, name: any, surname: any}[] = [];
   coachId: any;
@@ -67,10 +69,27 @@ export class NewLessonComponent implements OnInit {
 
     if(this.isLoggedIn && this.isClub) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
+      if(this.lessonService.getLessonState()){ //means that a lesson has been passed to modify it
+        this.modifyLesson();
+      }
       this.fetchData();
     }else{
       window.location.assign('/notAllowed');
     }
+  }
+
+  private modifyLesson(){
+
+    this.updateLesson = this.lessonService.getLessonState();
+    console.log("this.updateLesson.beginDate", this.updateLesson.beginDate);
+    console.log("begin date to string", this.updateLesson.beginDate.toString());
+    let lessonDate = new Date(this.updateLesson.beginDate);
+    console.log("lessondate", lessonDate);
+    this.form.lessonDate = lessonDate.getFullYear() + '-' + (lessonDate.getMonth()+1) +'-'+ lessonDate.getDate();
+    this.form.lessonHour = lessonDate.getHours() +':'+ (lessonDate.getMinutes() < 10 ? '0' + lessonDate.getMinutes().toString() : lessonDate.getMinutes());
+
+    console.log("getLessonState()",this.lessonService.getLessonState())
+    console.log("this.form", this.form);
   }
 
   onSubmit(): void {
@@ -96,14 +115,14 @@ export class NewLessonComponent implements OnInit {
       //color: this.form.color
     }
 
-    this.lessonService.createLesson(lesson).subscribe(response=>{
+    /*this.lessonService.createLesson(lesson).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
     }, err => {
       this.errorMessage = err.error.message;
       this.isRegistrationFailed = true;
       console.log(err);
-    })
+    })*/
   }
 
   private fetchData() {

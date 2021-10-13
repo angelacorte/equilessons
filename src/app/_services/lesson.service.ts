@@ -9,6 +9,9 @@ const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
+let lessonData !: LessonState;
+const KEY = "lesson-data";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,6 +30,26 @@ export class LessonService {
   getLessonsInfos(clubId: any): Observable<any>{
     return this.http.get(baseURL + '/lesson/getInfo/' + clubId, httpOptions);
   }
+
+  saveLessonState(data: LessonState){
+    window.sessionStorage.setItem(KEY, JSON.stringify(data));
+  }
+
+  getLessonState():LessonState{
+    const lesson = window.sessionStorage.getItem(KEY);
+    if(lesson) return JSON.parse(lesson);
+    else return lessonData;
+  }
+
+  updateLesson(){
+
+  }
+
+  deleteLessonState(){
+    window.sessionStorage.removeItem(KEY);
+  }
+
+
 
 
   // getEvents(actions: CalendarSchedulerEventAction[]) {
@@ -78,4 +101,15 @@ export class LessonService {
     })
     return lessonRefactored;
   }
+}
+
+export interface LessonState {
+  _id:any,
+  beginDate: any,
+  endDate: any,
+  arenaName: any,
+  coach: any,
+  horses_in_lesson: any,
+  riders_in_lesson: any,
+  pairs: any
 }
