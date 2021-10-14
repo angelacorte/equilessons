@@ -193,8 +193,7 @@ export class CalendarComponent implements OnInit {
   }
 
   eventClicked(action: string, event: CalendarSchedulerEvent): void {
-    this.lessons.some((obj)=>{
-      //@ts-ignore
+    this.lessons.some((obj:any)=>{
       if (obj._id === event.id){
         this.getLessonInfo(obj);
       }

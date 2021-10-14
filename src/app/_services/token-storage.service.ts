@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {LessonService} from "./lesson.service";
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -8,9 +9,10 @@ const USER_KEY = 'auth-user';
 })
 export class TokenStorageService {
 
-  constructor() { }
+  constructor(private lessonService:LessonService) { }
 
   logout(): void{
+    this.lessonService.deleteLessonState();
     window.sessionStorage.clear();
   }
 

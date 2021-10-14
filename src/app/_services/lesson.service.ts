@@ -49,9 +49,6 @@ export class LessonService {
     window.sessionStorage.removeItem(KEY);
   }
 
-
-
-
   // getEvents(actions: CalendarSchedulerEventAction[]) {
   //
   // }
@@ -67,6 +64,7 @@ export class LessonService {
       endDate: lesson.endDate,
       arenaName: lesson.arena[0]['arenaName'],
       coach: {
+        coachId: lesson.coach[0]['_id'],
         coachName: lesson.coach[0]['name'],
         coachSurname: lesson.coach[0]['surname']
       },

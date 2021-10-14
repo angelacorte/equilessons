@@ -49,6 +49,11 @@ import {MatListModule} from "@angular/material/list";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import { DialogLessonViewComponent } from './dialog-lesson-view/dialog-lesson-view.component';
 import { DialogHorseViewComponent } from './dialog-horse-view/dialog-horse-view.component';
+import { DialogModifyLessonViewComponent } from './dialog-modify-lesson-view/dialog-modify-lesson-view.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatSelectModule} from "@angular/material/select";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatNativeDateModule} from "@angular/material/core";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -71,35 +76,41 @@ registerLocaleData(localeIt);
     ShowUsersComponent,
     DialogUserViewComponent,
     DialogLessonViewComponent,
-    DialogHorseViewComponent
+    DialogHorseViewComponent,
+    DialogModifyLessonViewComponent
   ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpClientModule,
-        RouterModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        CommonModule,
-        NgbModalModule,
-        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
-        SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
-        FullCalendarModule,
-        MatTableModule,
-        BrowserAnimationsModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatProgressSpinnerModule,
-        A11yModule,
-        MatExpansionModule,
-        MatIconModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatListModule,
-        MatPaginatorModule
-    ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    RouterModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    CommonModule,
+    NgbModalModule,
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+    SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
+    FullCalendarModule,
+    MatTableModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    A11yModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatListModule,
+    MatPaginatorModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatButtonToggleModule
+  ],
   providers: [
+    MatDatepickerModule,
     authInterceptorProviders,
     { provide: LOCALE_ID, useValue: 'it'}],
   bootstrap: [AppComponent]
