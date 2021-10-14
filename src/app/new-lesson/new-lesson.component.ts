@@ -63,34 +63,26 @@ export class NewLessonComponent implements OnInit {
 
   constructor(private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorage.getToken();
     this.isClub = this.tokenStorage.isClub();
 
-    if(this.isLoggedIn && this.isClub) {
-      this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
-      if(this.lessonService.getLessonState()){ //means that a lesson has been passed to modify it
-        this.modifyLesson();
-      }
-      this.fetchData();
-    }else{
-      window.location.assign('/notAllowed');
+    if (this.isLoggedIn && this.isClub) { //check on user's login
+      this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub()); //get the infos saved in the session
+
+      this.arenas = await this.getClubArenas(this.infos['_id']);
+      this.riders = await this.getClubAthletes(this.infos['_id']);
+      this.horses = await this.getScholasticHorses(this.infos['_id']);
+      this.coaches = await this.getClubCoaches(this.infos['_id']);
+
+      //this.fetchData() //get the data from the db
+
+    } else {
+      window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
-  private modifyLesson(){
 
-    this.updateLesson = this.lessonService.getLessonState();
-    console.log("this.updateLesson.beginDate", this.updateLesson.beginDate);
-    console.log("begin date to string", this.updateLesson.beginDate.toString());
-    let lessonDate = new Date(this.updateLesson.beginDate);
-    console.log("lessondate", lessonDate);
-    this.form.lessonDate = lessonDate.getFullYear() + '-' + (lessonDate.getMonth()+1) +'-'+ lessonDate.getDate();
-    this.form.lessonHour = lessonDate.getHours() +':'+ (lessonDate.getMinutes() < 10 ? '0' + lessonDate.getMinutes().toString() : lessonDate.getMinutes());
-
-    console.log("getLessonState()",this.lessonService.getLessonState())
-    console.log("this.form", this.form);
-  }
 
   onSubmit(): void {
     let beginDate = new Date(this.form.lessonDate.toString() + ' ' + this.form.lessonHour.toString());
@@ -115,82 +107,37 @@ export class NewLessonComponent implements OnInit {
       //color: this.form.color
     }
 
-    /*this.lessonService.createLesson(lesson).subscribe(response=>{
+    this.lessonService.createLesson(lesson).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
+      //delete lesson from session storage
     }, err => {
       this.errorMessage = err.error.message;
       this.isRegistrationFailed = true;
       console.log(err);
-    })*/
+    })
   }
 
-  private fetchData() {
-    this.arenaService.getClubArenas(this.infos['_id']).pipe(map(responseData =>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
-      }
-      return dataArray;
-    })).subscribe(response=>{
-      // @ts-ignore
-      this.arenas = response;
-    });
+  private async getClubArenas(id:any):Promise<any>{
+    return await this.arenaService.getClubArenas(id).toPromise();
+  }
 
-    this.clubService.getClubAthletes(this.infos['_id']).pipe(map(responseData =>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
-      }
-      return dataArray;
-    })).subscribe(response=>{
-      // @ts-ignore
-      this.riders = response;
-      console.log("this.riders", this.riders)
-    });
+  private async getClubAthletes(id:any):Promise<any>{
+    return await this.clubService.getClubAthletes(id).toPromise();
+  }
 
-    this.horseService.getScholasticHorses(this.infos['_id']).pipe(map(responseData =>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
-      }
-      return dataArray;
-    })).subscribe(response=>{
-      // @ts-ignore
-      this.horses = response;
-      console.log("this.horses", this.horses)
-    });
+  private async getScholasticHorses(id:any):Promise<any>{
+    return await this.horseService.getScholasticHorses(id).toPromise();
+  }
 
-    this.clubService.getClubCoaches(this.infos['_id']).pipe(map(responseData =>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
+  private async getClubCoaches(id:any):Promise<any>{ //remove user's id from coaches list if id is not referred to club
+    let coaches = await this.clubService.getClubCoaches(id).toPromise();
+    coaches.forEach((item:any,index:any)=>{
+      if(item['_id'] === this.infos['_id']){
+        this.coaches.splice(index, 1);
       }
-      return dataArray;
-    })).subscribe(response=>{
-      // @ts-ignore
-      this.coaches = response[0].clubCoaches;
-      if(!this.isClub){
-        this.coaches.forEach((item,index)=>{
-          if(item['_id'] === this.infos['_id']){
-            this.coaches.splice(index, 1);
-          }
-        });
-      }
-      console.log("this.coaches", this.coaches)
     });
+    return coaches;
   }
 
   addRiderToList(riderId: any, horseId: any) {
