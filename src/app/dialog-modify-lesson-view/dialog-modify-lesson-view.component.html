@@ -1,0 +1,103 @@
+<h1 mat-dialog-title>Informazioni sulla lezione</h1>
+<div mat-dialog-content>
+  <mat-label class="text-secondary">Istruttore</mat-label>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{form.coach['coachName']}} {{form.coach['coachSurname']}}</mat-panel-title>
+        <mat-panel-description>Modifica</mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field appearance="fill">
+        <mat-select class="custom-select"
+                    name="coachId"
+                    id="otherCoachId"
+                    [(ngModel)]="form.coach['coachId']">
+          <mat-option *ngFor="let coach of coaches"
+            [value]="coach['_id']">
+            {{coach['name']}} {{coach['surname']}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-button (click)="updateCoach()">Ok</button>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-label class="text-secondary mt-2">Giorno</mat-label>
+  <br>
+  <mat-form-field appearance="fill">
+    <input matInput
+           [matDatepicker]="picker"
+          [value]="form.lessonDate">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+    <!--<input matInput [matDatepicker]="picker" (focus)="picker.open()" readonly>
+    <mat-datepicker #picker></mat-datepicker>
+-->
+  <form>
+    <mat-label class="text-secondary">Orario</mat-label>
+    <input
+      type="time"
+      class="form-control"
+      name="lessonHour"
+      id="lessonHour"
+      placeholder="Ora"
+      [(ngModel)]="form.lessonHour"
+      required
+    />
+  </form>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Durata</mat-label>
+    <input matInput
+      type="tel"
+           class="form-control input-group-append"
+           aria-label="Durata personalizzata"
+           placeholder="Minuti"
+           name="lessonDuration"
+           [value]="form.lessonDuration"
+           [(ngModel)]="form.lessonDuration">
+  </mat-form-field>
+
+  <mat-label class="text-secondary">Campo prenotato</mat-label>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{form.arena['arenaName']}}</mat-panel-title>
+        <mat-panel-description>Modifica</mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field appearance="fill">
+        <mat-select class="custom-select"
+                    name="arenaId"
+                    id="arenaId"
+                    [(ngModel)]="form.arena['arenaId']">
+          <mat-option *ngFor="let arena of arenas"
+                      [value]="arena['_id']">
+            {{arena['arenaName']}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-button (click)="updateArena()">Ok</button>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+
+  <h5 class="text-secondary">Campo prenotato:</h5>
+  <p>{{form.arenaName}}</p>
+  <h5 class="text-secondary">Partecipanti:</h5>
+  <div *ngIf="form">
+    <mat-action-list role="list">
+      <mat-list-item *ngFor="let p of form.pairs" role="listitem">
+        <a mat-list-item class="plain">{{p.riderInfo['riderName']}} {{p.riderInfo['riderSurname']}}</a>
+        <mat-icon>arrow_right_alt</mat-icon>
+        <a mat-list-item class="plain">{{p.horseInfo['horseName']}}</a>
+      </mat-list-item>
+    </mat-action-list>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div mat-dialog-actions>
+      <button mat-button (click)="onClose()">Annulla</button>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onSave(form._id)">Salva</button>
+    </div>
+  </div>
+</div>
