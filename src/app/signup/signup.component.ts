@@ -26,14 +26,12 @@ export class SignupComponent implements OnInit {
     address: "",
     nrFise: "",
     clubId: "",
-    isOwner: false
   };
 
   clubs = [];
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
-  isSelected = false;
 
   constructor(private authService: AuthService, private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService) { }
 
@@ -63,23 +61,6 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit(): void{
-
-    /*const {
-      name,
-      surname,
-      email,
-      birthday,
-      username,
-      password,
-      phoneNumber,
-      taxcode,
-      city,
-      address,
-      nrFise,
-      clubId,
-      isOwner
-    } = this.form;*/
-
     let user = this.form;
 
     this.authService.signup(user).subscribe(
@@ -94,13 +75,4 @@ export class SignupComponent implements OnInit {
       }
     );
   }
-
-  isChecked() {
-    this.isSelected = true;
-    this.form.isOwner = this.isSelected;
-  }
-
-  // reloadPage(): void {
-  //   window.location.assign("/login");
-  // }
 }

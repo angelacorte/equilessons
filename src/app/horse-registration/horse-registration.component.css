@@ -12,3 +12,7 @@
 .title{
   color: #397367;
 }
+
+.list {
+  list-style: none;
+}

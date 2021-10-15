@@ -25,16 +25,6 @@ export class AuthService {
   }
 
   signup(data:any): Observable<any>{
-    //let roles = [];
-
-    if(data.email !== undefined){
-      if(data.isOwner){
-        data.roles.push("horse-owner");
-      }else{
-        data.roles.push("pupil");
-      }
-    }
-
     return this.http.post(baseURL + '/signup', data, httpOptions);
   }
 }

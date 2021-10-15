@@ -3,9 +3,6 @@ User = require("../models/user-model"); //password already with salt
 let jwt = require("jsonwebtoken");
 require('dotenv').config();
 
-//TODO find how to manage remember me, to make not necessary login every time one wants to visit the site
-
-
 function generateAccessToken(userId){
   return jwt.sign({userId}, process.env.ACCESS_TOKEN_SECRET,{
     expiresIn: '365d' // expires in 1 year

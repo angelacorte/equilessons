@@ -10,7 +10,7 @@ let User = db.user;
 let ObjectId = require('mongodb').ObjectID;
 
 
-exports.createLesson = function (req,res){   //TODO add the coach who create the lesson, might be managed with sessions and authentication (tokens)
+exports.createLesson = function (req,res){
   let newLesson = new Lesson(req.body);
   newLesson.save(function(err, user) {
     if (err){
@@ -127,40 +127,3 @@ exports.getLessonsInfos = function (req,res) {
     console.log("Error: ", err.message);
   });
 }
-
-/*db.lessons.aggregate([
-  {
-    "$lookup": {
-      "from": "users",
-      "localField": "pairs.riderId",
-      "foreignField": "_id",
-      "as": "riders in lesson",
-      "pipeline": [
-        {
-          "$project": {
-            "name": 1,
-            "surname": 1
-          }
-        }
-      ]
-    },
-  }
-])
-
-db.lessons.aggregate([
-  {
-    "$lookup": {
-      "from": "horses",
-      "localField": "pairs.horseId",
-      "foreignField": "_id",
-      "as": "horse in lesson",
-      "pipeline": [
-        {
-          "$project": {
-            "horseName": 1
-          }
-        }
-      ]
-    }
-  }
-])*/
