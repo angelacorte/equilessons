@@ -21,6 +21,7 @@
     </mat-expansion-panel>
   </mat-accordion>
 
+  <br>
   <mat-label class="text-secondary mt-2">Giorno</mat-label>
   <br>
   <mat-form-field appearance="fill">
@@ -46,6 +47,7 @@
     />
   </form>
 
+  <br>
   <mat-form-field appearance="fill">
     <mat-label>Durata</mat-label>
     <input matInput
@@ -58,6 +60,7 @@
            [(ngModel)]="form.lessonDuration">
   </mat-form-field>
 
+  <br>
   <mat-label class="text-secondary">Campo prenotato</mat-label>
   <mat-accordion>
     <mat-expansion-panel>
@@ -79,18 +82,67 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-
-  <h5 class="text-secondary">Campo prenotato:</h5>
-  <p>{{form.arenaName}}</p>
-  <h5 class="text-secondary">Partecipanti:</h5>
+  <br>
+  <mat-label class="text-secondary">Partecipanti:</mat-label>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Aggiungi partecipanti</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field appearance="fill">
+        <mat-select class="custom-select"
+                    name="riderId"
+                    id="riderId"
+                    [(ngModel)]="tmpRider">
+          <mat-option *ngFor="let rider of riders"
+                      [disabled]="checkParticipants(rider)"
+                      [value]="rider">
+            {{rider['name']}} {{rider['surname']}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="ml-2">
+      <mat-select class="custom-select"
+                    name="horseId"
+                    id="horseId"
+                    [(ngModel)]="tmpHorse">
+          <mat-option *ngFor="let horse of horses"
+                      [value]="horse">
+            {{horse['horseName']}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-button (click)="addPair()">Ok</button>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <p>{{alertmessage}}</p>
   <div *ngIf="form">
-    <mat-action-list role="list">
-      <mat-list-item *ngFor="let p of form.pairs" role="listitem">
-        <a mat-list-item class="plain">{{p.riderInfo['riderName']}} {{p.riderInfo['riderSurname']}}</a>
-        <mat-icon>arrow_right_alt</mat-icon>
-        <a mat-list-item class="plain">{{p.horseInfo['horseName']}}</a>
-      </mat-list-item>
-    </mat-action-list>
+    <mat-table [dataSource]="form.pairs" class="mat-elevation-z8">
+      <ng-container matColumnDef="bin">
+        <mat-header-cell *matHeaderCellDef> Rimuovi </mat-header-cell>
+        <mat-cell *matCellDef="let p">
+          <button mat-button>
+            <mat-icon (click)="deletePair(p.riderInfo['riderId'])">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="allievo">
+        <mat-header-cell *matHeaderCellDef> Allievo </mat-header-cell>
+        <mat-cell *matCellDef="let p"> {{p.riderInfo['riderName']}} {{p.riderInfo['riderSurname']}}   </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="cavallo">
+        <mat-header-cell *matHeaderCellDef> Cavallo assegnato </mat-header-cell>
+        <mat-cell *matCellDef="let p">  {{p.horseInfo['horseName']}}</mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      [length]="form.pairs.length"
+      showFirstLastButtons
+      aria-label="Seleziona pagina">
+    </mat-paginator>
   </div>
   <div class="d-flex justify-content-between">
     <div mat-dialog-actions>

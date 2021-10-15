@@ -1,16 +1,10 @@
 import {Component, OnInit, SimpleChanges} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {ClubService} from "../_services/club.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {map} from "rxjs/operators";
 import {HorseService} from "../_services/horse.service";
 
-const baseURL = 'http://localhost:5050';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
 
 @Component({
   selector: 'app-horse-registration',
@@ -39,7 +33,6 @@ export class HorseRegistrationComponent implements OnInit {
   users = [];
   riders = [];
   riderId: any;
-  mainId: any;
   isClub: boolean = false;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
@@ -85,7 +78,6 @@ export class HorseRegistrationComponent implements OnInit {
 
   onSubmit(): void{
 
-    //TODO modificare circa tutto credo
     const role = 'horse-owner';
     let tmpRole: any;
     if(!this.isClub) tmpRole = this.infos['roles'];

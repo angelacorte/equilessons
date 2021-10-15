@@ -7,6 +7,9 @@ import {ClubService} from "../_services/club.service";
 import {HorseService} from "../_services/horse.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatAccordion} from "@angular/material/expansion";
+import {MatTable} from "@angular/material/table";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-dialog-modify-lesson-view',
@@ -15,6 +18,14 @@ import {MatAccordion} from "@angular/material/expansion";
 })
 export class DialogModifyLessonViewComponent implements OnInit {
   @ViewChild(MatAccordion) accordion!: MatAccordion;
+  @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
+  @ViewChild(MatSort, {static:false})
+  set sort(value: MatSort) {
+    if (this.form.pairs){
+      this.form.pairs.sort = value;
+    }
+  }
+  @ViewChild(MatPaginator, {static:false}) paginator!: MatPaginator;
 
   form:any = {
     lessonDate: '',
@@ -30,9 +41,17 @@ export class DialogModifyLessonViewComponent implements OnInit {
       coachName: '',
       coachSurname: ''
     },
-    pairs: [],
-    riders: '',
-    horses: ''
+    pairs: [{
+      riderInfo:{
+        riderId: '',
+        riderName: '',
+        riderSurname: ''
+      },
+      horseInfo:{
+        horseId: '',
+        horseName: ''
+      }
+    }]
   }
 
   updateLesson !: LessonState;
@@ -42,6 +61,13 @@ export class DialogModifyLessonViewComponent implements OnInit {
   riders = [];
   horses = [];
   coaches = [];
+
+  tmpRider:any;
+  tmpHorse:any;
+
+  displayedColumns = ['bin', 'allievo', 'cavallo'];
+  alertmessage = '';
+
 
 
   constructor(public dialogRef: MatDialogRef<DialogModifyLessonViewComponent>,public dialog: MatDialog,private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef,
@@ -61,10 +87,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
       this.updateLesson = this.data;
 
-      console.log("this.arenas", this.arenas)
       await this.modifyLesson();
-
-      //this.fetchData() //get the data from the db
 
     } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
@@ -84,7 +107,6 @@ export class DialogModifyLessonViewComponent implements OnInit {
     this.form.lessonDuration = (lessonEndDate.valueOf() - lessonBeginDate.valueOf()) / 60000;
 
     //set the arenaId
-    console.log("this.updateLesson.arenaName",this.updateLesson.arenaName)
     await this.matchArena(this.updateLesson.arenaName).then((r:any)=>{
       this.form.arena['arenaId'] = r._id;
       this.form.arena['arenaName'] = r.arenaName;
@@ -93,8 +115,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
     //set the coachId
     this.form.coach = this.updateLesson.coach;
 
-    console.log("getLessonState()", this.lessonService.getLessonState())
-    console.log("this.form", this.form);
+    this.form.pairs = this.updateLesson.pairs;
+
   }
 
   private async getClubArenas(id:any):Promise<any>{
@@ -119,19 +141,9 @@ export class DialogModifyLessonViewComponent implements OnInit {
     return coaches[0].clubCoaches;
   }
 
-  // @ts-ignore
   private async matchArena(arenaName:any):Promise<any>{
     let arena:any;
-
-    await this.arenas.forEach((value:any) => {
-      console.log("value", value)
-      if (value.arenaName === arenaName) {
-        console.log("value.arenaName", value.arenaName)
-        console.log("arenaName", arenaName)
-        console.log("value.id", value._id)
-        arena = value;
-      }
-    });
+    await this.arenas.forEach((value:any) => {if (value.arenaName === arenaName) arena = value;});
     return arena;
   }
 
@@ -154,6 +166,39 @@ export class DialogModifyLessonViewComponent implements OnInit {
   updateArena() {
     this.arenas.forEach((value:any)=>{
       if(value._id === this.form.arena['arenaId']) this.form.arena['arenaName'] = value.arenaName
+    })
+  }
+
+  addPair() {
+    let tmpPair = {
+      riderInfo: {
+        riderId: this.tmpRider._id,
+        riderName: this.tmpRider.name,
+        riderSurname: this.tmpRider.surname
+      },
+      horseInfo:{
+        horseId: this.tmpHorse._id,
+        horseName: this.tmpHorse.horseName
+      }
+    }
+    this.form.pairs.push(tmpPair);
+    this.table.renderRows();
+  }
+
+  checkParticipants(riderInfo:any):boolean{
+    return this.form.pairs.some((obj:any) => {
+      if (obj.riderInfo.riderId === riderInfo._id)
+        return true;
+      return false;
+    });
+  }
+
+  deletePair(riderId: any) {
+    this.form.pairs.forEach((obj:any, index:any)=>{
+      if(obj.riderInfo.riderId === riderId){
+        this.form.pairs.splice(index,1);
+        this.table.renderRows();
+      }
     })
   }
 }
