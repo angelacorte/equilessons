@@ -1,6 +1,7 @@
 const mongoose = require(`mongoose`);
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
+User = require("../models/user-model");
 
 let SALT_WORK_FACTOR = 10;
 
@@ -18,7 +19,7 @@ let UserSchema = new Schema({
   nrFise : {type: String},
   clubId: {type: Schema.Types.ObjectId, ref:"Club", required: true},
   isOwner: {type: Boolean, default:false},
-  roles: {type: Array , default:"pupil"},
+  roles: {type: Array , default:[]},
   horse: [{type:Schema.Types.ObjectId, ref:"Horse"}], //refers to horses-model
   token : {type: String}
 });
@@ -54,11 +55,11 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
 let reasons = UserSchema.statics.failedLogin = { NOT_FOUND: 0, PASSWORD_INCORRECT: 1, MAX_ATTEMPTS: 2 };
 
 UserSchema.statics.getAuthenticated = function (input, password, cb) {
-  this.findOne({
+
+  User.findOne({
     $or:[
       {username:input},
-      {email:input},
-      {phoneNumber:input}
+      {email:input}
     ]
   }, function (err,user) {
     if(err){
