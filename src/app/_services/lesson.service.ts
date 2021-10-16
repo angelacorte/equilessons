@@ -41,8 +41,8 @@ export class LessonService {
     else return lessonData;
   }
 
-  updateLesson(){
-
+  updateLesson(lesson:any):Observable<any>{
+    return this.http.post(baseURL + '/lesson/update', lesson, httpOptions);
   }
 
   deleteLessonState(){
@@ -60,6 +60,7 @@ export class LessonService {
     let riders_in_lesson = lesson['riders_in_lesson'];
     let horses_in_lesson = lesson['horses_in_lesson'];
     let lessonRefactored = {
+      lessonId: lesson._id,
       beginDate: lesson.beginDate,
       endDate: lesson.endDate,
       arenaName: lesson.arena[0]['arenaName'],
@@ -102,7 +103,7 @@ export class LessonService {
 }
 
 export interface LessonState {
-  _id:any,
+  lessonId:any,
   beginDate: any,
   endDate: any,
   arenaName: any,

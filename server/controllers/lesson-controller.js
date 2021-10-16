@@ -29,7 +29,24 @@ exports.deleteLesson = function (req,res){     //TODO might send a notification 
 };
 
 exports.updateLesson = function (req,res){
+  console.log("req.body", req.body)
+ let update = {
+   beginDate: req.body.beginDate,
+   endDate: req.body.endDate,
+   arenaId: req.body.arenaId,
+   coachId: req.body.coachId,
+   clubId: req.body.clubId,
+   pairs: req.body.pairs
+ };
 
+ Lesson.updateOne({_id: new ObjectId(req.body._id)}, update).then(result=>{
+   if(result.ok !== 1){
+     return res.status(500).send({message: "an error occurred"});
+   }
+   return res.send(result);
+ }).catch(err=> {
+   console.log("Error: ", err.message);
+ });
 };
 
 exports.getLessonInfo = function (req,res){ //may needs req.query
@@ -49,7 +66,6 @@ exports.getLessonByClubID = function (req,res){
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log("getLessonByClubID", result);
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);

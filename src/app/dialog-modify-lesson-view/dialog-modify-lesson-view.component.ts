@@ -10,6 +10,8 @@ import {MatAccordion} from "@angular/material/expansion";
 import {MatTable} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 
 @Component({
   selector: 'app-dialog-modify-lesson-view',
@@ -61,16 +63,16 @@ export class DialogModifyLessonViewComponent implements OnInit {
   riders = [];
   horses = [];
   coaches = [];
+  submitted = false;
+
+  errorMessage = '';
 
   tmpRider:any;
   tmpHorse:any;
 
   displayedColumns = ['bin', 'allievo', 'cavallo'];
-  alertmessage = '';
 
-
-
-  constructor(public dialogRef: MatDialogRef<DialogModifyLessonViewComponent>,public dialog: MatDialog,private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef,
+  constructor(public dialogRef: MatDialogRef<DialogModifyLessonViewComponent>, private _snackBar: MatSnackBar, public dialog: MatDialog,private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef,
   @Inject(MAT_DIALOG_DATA) public data: any){ }
 
   async ngOnInit(): Promise<void> {
@@ -148,6 +150,55 @@ export class DialogModifyLessonViewComponent implements OnInit {
   }
 
   onSave(_id: any) {
+    console.log("this form on save", this.form);
+
+    this.form.lessonDate = new Date(this.form.lessonDate);
+    let beginDate = new Date(this.form.lessonDate.getFullYear()+' '+(this.form.lessonDate.getMonth()+1) +' '+this.form.lessonDate.getDate() + ' ' + this.form.lessonHour.toString()); //TODO non worka
+    let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
+
+    let pairs: { riderId: any; horseId: any; }[] = [];
+
+    this.form.pairs.forEach((val: any) =>{
+      let pair = {
+        riderId: val.riderInfo['riderId'],
+        horseId: val.horseInfo['horseId']
+      }
+      pairs.push(pair);
+    })
+
+    let clubId;
+    if(this.isClub) clubId = this.infos['_id'];
+    else clubId = this.infos['clubId'];
+
+    const lesson = {
+      _id: this.updateLesson.lessonId,
+      beginDate: beginDate,
+      endDate: endDate,
+      arenaId: this.form.arena['arenaId'],
+      coachId: this.form.coach['coachId'],
+      clubId: clubId,
+      pairs: pairs,
+    }
+
+    this.lessonService.updateLesson(lesson).subscribe(response=>{
+      this.onClose();
+      let snackBarRef = this._snackBar.open("Lezione aggiornata con successo", "Aggiorna pagina", {
+        duration: 3000
+      });
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.reload();
+      })
+    }, err => {
+      let snackBarRef = this._snackBar.open("Errore nell'aggiornamento della lezione", "Ok", {
+        duration: 3000
+      });
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.reload();
+      })
+      this.errorMessage = err.error.message;
+      console.log(err);
+    })
+
   }
 
   onClose() {
@@ -200,5 +251,17 @@ export class DialogModifyLessonViewComponent implements OnInit {
         this.table.renderRows();
       }
     })
+  }
+
+  onDelete() {
+    let today = new Date();
+    let lessonDay = new Date(this.updateLesson.beginDate);
+    if(today > lessonDay){
+      this._snackBar.open("Non è possibile cancellare una lezione passata", "Ok", {
+        duration: 5000
+      });
+    } else if( today <= lessonDay){
+      //TODO implement delete lesson
+    }
   }
 }

@@ -71,6 +71,9 @@ module.exports = function (app){
 
   app.route('/lesson/getInfo/:clubId')
     .get(lessonController.getLessonsInfos);
+
+  app.route('/lesson/update')
+    .post(lessonController.updateLesson);
   //---------------------------------ROLE---------------------------------
 
   //---------------------------------USER---------------------------------
