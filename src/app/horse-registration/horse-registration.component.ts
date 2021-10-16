@@ -4,6 +4,7 @@ import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {map} from "rxjs/operators";
 import {HorseService} from "../_services/horse.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -35,7 +36,7 @@ export class HorseRegistrationComponent implements OnInit {
   riderId: any;
   isClub: boolean = false;
 
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -98,6 +99,9 @@ export class HorseRegistrationComponent implements OnInit {
     this.horseService.horseRegistration(form).subscribe(response=>{
       this.submitted = true;
       this.isSuccessful = true;
+      let snackBarRef = this._snackBar.open("Registrazione con successo", "Ok", {
+        duration: 3000
+      });
       if(!this.isClub && !tmpRole.includes(role)){
         tmpRole.push(role);
         this.userService.addRole(role, form.ownerId).subscribe(resp=>{
@@ -107,7 +111,13 @@ export class HorseRegistrationComponent implements OnInit {
           console.log(error);
         })
       }
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.assign('/profile');
+      })
     }, err => {
+      this._snackBar.open("Non è stato possibile registrare il cavallo", "Ok", {
+        duration: 3000
+      });
       this.errorMessage = err.error.message;
       this.isRegistrationFailed = true;
       console.log(err);

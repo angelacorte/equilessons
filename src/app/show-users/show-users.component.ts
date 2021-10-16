@@ -17,6 +17,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {DialogUserViewComponent} from '../dialog-user-view/dialog-user-view.component';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-show-users',
@@ -46,7 +47,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   displayedColumns = ['checkbox', 'utente', 'numero_di_telefono', 'utente_temporaneo'];
   dataSource:any;
 
-  constructor(public dialog: MatDialog, private userService: UserService, private authService: AuthService, private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
+  constructor(public dialog: MatDialog, private _snackBar: MatSnackBar, private userService: UserService, private authService: AuthService, private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -148,27 +149,19 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
     this.authService.signup(tmpUser).subscribe(
       data => {
-        this.reloadPage();
+        let snackBarRef = this._snackBar.open("Registrazione con successo", "Ok", {
+          duration: 3000
+        });
+        snackBarRef.afterDismissed().subscribe(()=>{
+          window.location.reload();
+        })
       },
       err => {
+        this._snackBar.open("Non è stato possibile registare l'utente", "Ok", {
+          duration: 3000
+        });
         this.errorMessage = err.error.message;
       }
     );
   }
-
-  reloadPage(): void {
-    window.location.assign('/showUsers');
-  }
-
-  openDialog(userId: any) {
-
-  }
-
-/*  ngAfterViewInit(): void {
-    console.log("ngAfterContentInit this.users", this.users);
-    this.dataSource = new MatTableDataSource(this.users);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  }*/
-
 }

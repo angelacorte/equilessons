@@ -4,6 +4,7 @@ import {map} from "rxjs/operators";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-signup',
@@ -33,7 +34,7 @@ export class SignupComponent implements OnInit {
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService) { }
+  constructor(private authService: AuthService,private _snackBar: MatSnackBar, private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
 
@@ -67,11 +68,19 @@ export class SignupComponent implements OnInit {
         data => {
           this.isSuccessful = true;
           this.isSignUpFailed = false;
-          // this.reloadPage();
+          let snackBarRef = this._snackBar.open("Registrazione con successo", "Ok", {
+            duration: 5000
+          });
+          snackBarRef.afterDismissed().subscribe(()=>{
+            window.location.assign('/login');
+          })
         },
       err => {
-          this.errorMessage = err.error.message;
-          this.isSignUpFailed = true;
+        this._snackBar.open("La registrazione non è andata a buon fine", "Ok", {
+          duration: 5000
+        });
+        this.errorMessage = err.error.message;
+        this.isSignUpFailed = true;
       }
     );
   }

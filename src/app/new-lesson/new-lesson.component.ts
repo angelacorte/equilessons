@@ -13,6 +13,7 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {ActivatedRoute} from "@angular/router";
 import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-new-lesson',
@@ -44,12 +45,8 @@ export class NewLessonComponent implements OnInit {
     //color: ''
   }
 
-  updateLesson !: LessonState;
   dataSource:any;
   isSuccessful = false;
-  isRegistrationFailed = false;
-  errorMessage = '';
-  submitted = false;
   isLoggedIn = false;
   infos: any;
   riders = [];
@@ -61,7 +58,7 @@ export class NewLessonComponent implements OnInit {
   coachId: any;
   isClub: boolean = false;
 
-  constructor(private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
 
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -74,9 +71,6 @@ export class NewLessonComponent implements OnInit {
       this.riders = await this.getClubAthletes(this.infos['_id']);
       this.horses = await this.getScholasticHorses(this.infos['_id']);
       this.coaches = await this.getClubCoaches(this.infos['_id']);
-
-      //this.fetchData() //get the data from the db
-
     } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
@@ -97,23 +91,30 @@ export class NewLessonComponent implements OnInit {
       pairs.push(pair);
     })
 
+    let clubId;
+    if(this.isClub) clubId = this.infos['_id'];
+    else clubId = this.infos['clubId'];
+
     const lesson = {
       beginDate: beginDate,
       endDate: endDate,
       arenaId: this.form.arenaId,
       coachId: this.coachId,
-      clubId: this.infos['_id'],
+      clubId: clubId,
       pairs: pairs,
-      //color: this.form.color
     }
 
     this.lessonService.createLesson(lesson).subscribe(response=>{
-      this.submitted = true;
-      this.isSuccessful = true;
-      //delete lesson from session storage
+      let snackBarRef = this._snackBar.open("Lezione creata con successo", "Ok", {
+        duration: 3000
+      });
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.assign('/calendar');
+      })
     }, err => {
-      this.errorMessage = err.error.message;
-      this.isRegistrationFailed = true;
+      this._snackBar.open("Non è stato possibile creare la lezione", "Ok", {
+        duration: 3000
+      });
       console.log(err);
     })
   }
