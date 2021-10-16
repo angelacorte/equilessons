@@ -54,6 +54,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatNativeDateModule} from "@angular/material/core";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -107,7 +108,8 @@ registerLocaleData(localeIt);
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatSnackBarModule
   ],
   providers: [
     MatDatepickerModule,

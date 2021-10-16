@@ -27,7 +27,10 @@
   <mat-form-field appearance="fill">
     <input matInput
            [matDatepicker]="picker"
-          [value]="form.lessonDate">
+          [value]="form.lessonDate"
+           name="lessonDate"
+           id="lessonDate"
+           [(ngModel)]="form.lessonDate">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
@@ -113,7 +116,6 @@
       <button mat-button (click)="addPair()">Ok</button>
     </mat-expansion-panel>
   </mat-accordion>
-  <p>{{alertmessage}}</p>
   <div *ngIf="form">
     <mat-table [dataSource]="form.pairs" class="mat-elevation-z8">
       <ng-container matColumnDef="bin">
@@ -146,7 +148,10 @@
   </div>
   <div class="d-flex justify-content-between">
     <div mat-dialog-actions>
-      <button mat-button (click)="onClose()">Annulla</button>
+      <button mat-button (click)="onClose()">Annulla modifiche</button>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onDelete()">Cancella lezione</button>
     </div>
     <div mat-dialog-actions>
       <button mat-button (click)="onSave(form._id)">Salva</button>

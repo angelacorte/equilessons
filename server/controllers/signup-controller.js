@@ -42,7 +42,6 @@ exports.signup = function(req, res) {
       };
 
         User.updateOne({phoneNumber: newUser.phoneNumber}, update).then(result=>{
-          console.log("result", result);
           if(result.ok !== 1){
             return res.status(500).send({message: "an error occurred"});
           }
