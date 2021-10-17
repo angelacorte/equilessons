@@ -23,4 +23,8 @@ export class HorseService {
   getScholasticHorses(clubId: any): Observable<any>{
     return this.http.get(baseURL + '/getSchoolHorses/' + clubId, httpOptions);
   }
+
+  getAllHorses(clubId: any) {
+    return this.http.get(baseURL + '/horses/' + clubId, httpOptions);
+  }
 }

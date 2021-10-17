@@ -1,0 +1,57 @@
+<div class="container mt-5">
+
+  <h1>Gestione cavalli</h1>
+
+  <a class="btn col-md-3" href="/horseRegistration">Aggiungi un cavallo</a>
+
+  <div class="mt-2"> <!--[style.display]="'true'"-->
+    <h5 class="text-secondary">Per rimuovere un cavallo del circolo ippico dalla lista, basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
+
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="checkbox">
+        <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+        <mat-cell *matCellDef="let h">               <!--<td  *ngFor="let les of lesson">-->
+          <input
+            type="checkbox"
+            class="form-check-input"
+            value="true"
+            checked
+            [disabled]="!h.scholastic"
+            (click)="isHorseUnchecked($event, h.horseId)"
+          > <!--id="userId"-->
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="cavallo">
+        <mat-header-cell *matHeaderCellDef> Cavallo </mat-header-cell>
+        <mat-cell *matCellDef="let h">
+          <button mat-button (click)="showHorseInfos(h.horseId)"> {{h['horseName']}}</button>
+
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="proprietario">
+        <mat-header-cell *matHeaderCellDef> Proprietario </mat-header-cell>
+        <mat-cell *matCellDef="let h"> {{h.horseOwner['ownerName']}} {{h.horseOwner['ownerSurname']}} {{h.clubOwner['ownerName']}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="scuola">
+        <mat-header-cell *matHeaderCellDef> Destinato alla scuola </mat-header-cell>
+        <mat-cell *matCellDef="let h" >
+          <mat-icon *ngIf="h.scholastic == true">done</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      [length]="horses.length"
+      showFirstLastButtons
+      aria-label="Seleziona pagina">
+    </mat-paginator>
+    <button class="btn col-md-4" (click)="update()">Aggiorna</button>
+  </div>
+</div>

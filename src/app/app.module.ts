@@ -38,7 +38,6 @@ import { ClubLoginComponent } from './club-login/club-login.component';
 import {A11yModule} from "@angular/cdk/a11y";
 import { AddCoachComponent } from './add-coach/add-coach.component';
 import { NotAllowedComponent } from './not-allowed/not-allowed.component';
-import { TempUserComponent } from './temp-user/temp-user.component';
 import { ShowUsersComponent } from './show-users/show-users.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconModule} from "@angular/material/icon";
@@ -55,6 +54,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { HorseManagementComponent } from './horse-management/horse-management.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -73,12 +73,12 @@ registerLocaleData(localeIt);
     ClubLoginComponent,
     AddCoachComponent,
     NotAllowedComponent,
-    TempUserComponent,
     ShowUsersComponent,
     DialogUserViewComponent,
     DialogLessonViewComponent,
     DialogHorseViewComponent,
-    DialogModifyLessonViewComponent
+    DialogModifyLessonViewComponent,
+    HorseManagementComponent
   ],
   imports: [
     BrowserModule,

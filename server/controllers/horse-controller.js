@@ -41,3 +41,47 @@ exports.getHorseInfos = function (req,res){
     console.log("Error: ", err.message);
   });
 };
+
+exports.getHorses = function (req,res){
+  let pipeline = [
+    {
+      '$match': {
+        'clubId': new ObjectId(req.params.clubId)
+      }
+    }, {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'ownerId',
+        'foreignField': '_id',
+        'as': 'horseOwner'
+      }
+    }, {
+      '$lookup': {
+        'from': 'clubs',
+        'localField': 'ownerId',
+        'foreignField': '_id',
+        'as': 'clubOwner'
+      }
+    }, {
+      '$project': {
+        'horseOwner._id': 1,
+        'horseOwner.name': 1,
+        'horseOwner.surname': 1,
+        'horseName': 1,
+        'riders': 1,
+        'scholastic': 1,
+        'clubOwner.clubName': 1,
+        'clubOwner._id': 1
+      }
+    }
+  ];
+
+  Horse.aggregate(pipeline).then(result=>{
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}

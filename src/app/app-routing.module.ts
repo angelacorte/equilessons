@@ -13,8 +13,8 @@ import {NewLessonComponent} from "./new-lesson/new-lesson.component";
 import {ClubLoginComponent} from "./club-login/club-login.component";
 import {AddCoachComponent} from "./add-coach/add-coach.component";
 import {NotAllowedComponent} from "./not-allowed/not-allowed.component";
-import {TempUserComponent} from "./temp-user/temp-user.component";
 import {ShowUsersComponent} from "./show-users/show-users.component";
+import {HorseManagementComponent} from "./horse-management/horse-management.component";
 
 const routes: Routes = [
   {path: '', redirectTo:'home', pathMatch:'full'},
@@ -31,8 +31,8 @@ const routes: Routes = [
   {path: 'addCoach', component: AddCoachComponent},
   {path: 'notAllowed', component: NotAllowedComponent},
   {path: 'showUsers', component:ShowUsersComponent},
-  {path: 'tempUser', component:TempUserComponent},
-  {path: `**`, component: PageNotFoundComponent},
+  {path: 'showHorses', component:HorseManagementComponent},
+  {path: `**`, component: PageNotFoundComponent}
 ];
 
 @NgModule({
