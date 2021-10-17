@@ -1,6 +1,4 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   OnInit,
   ViewChild
@@ -10,7 +8,6 @@ import {HttpClient} from "@angular/common/http";
 import {LessonService} from "../_services/lesson.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
-import {map} from "rxjs/operators";
 import {AuthService} from "../_services/auth.service";
 import {UserService} from "../_services/user.service";
 import {MatDialog} from "@angular/material/dialog";

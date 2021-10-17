@@ -65,20 +65,10 @@ export class AddCoachComponent implements OnInit {
 
     await this.addCoach(this.toUpdate, this.infos._id).then((response:any)=>{
       if(response.ok === 1){
-        let snackBarRef = this._snackBar.open("Operazione effettuata con successo", "Aggiorna pagina", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
-        })
+        this.openSnackbar("Operazione effettuata con successo");
       }else{
         console.log(response);
-        let snackBarRef = this._snackBar.open("Errore nell'aggiornamento degli istruttori", "Aggiorna pagina", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
-        })
+        this.openSnackbar("Errore nell'aggiornamento degli istruttori");
       }
     });
   }
@@ -125,6 +115,15 @@ export class AddCoachComponent implements OnInit {
         }
       });
     }
+  }
+
+  private openSnackbar(message:any){
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=>{
+      window.location.reload();
+    })
   }
 
   private setDataSource(data:any){

@@ -60,28 +60,17 @@ export class NewArenaComponent implements OnInit {
     await this.addArena(this.toUpdate).then(()=> {
       if (this.toRemove.length > 0) {
         this.arenaService.removeArena(this.toRemove).subscribe(() => {
-          let snackBarRef = this._snackBar.open("Modifiche apportate con successo", "Ok", {
-            duration: 3000
-          });
-          snackBarRef.afterDismissed().subscribe(() => {
-            window.location.reload();
-          })
+          this.openSnackbar("Modifiche apportate con successo");
         }, err => {
           console.log(err);
+          this.openSnackbar("Errore nella rimozione dei campi");
         })
       } else {
-        let snackBarRef = this._snackBar.open("Modifiche apportate con successo", "Ok", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
-        })
+        this.openSnackbar("Modifiche apportate con successo");
       }
     }, err => {
-      this._snackBar.open("Errore nella modifica dei campi", "Ok", {
-        duration: 3000
-      });
       console.log(err);
+      this.openSnackbar("Errore nella modifica dei campi");
     })
   }
 
@@ -96,6 +85,7 @@ export class NewArenaComponent implements OnInit {
       arenaName: arena.arenaName
     }
     this.toUpdate.push(up);
+    this.setDataSource(this.arenas);
     this.table.renderRows();
   }
 
@@ -105,6 +95,7 @@ export class NewArenaComponent implements OnInit {
         if(this.arenas[index] === arenaId){
           this.arenas.splice(index, 1);
           this.toRemove.push(arenaId);
+          this.setDataSource(this.arenas);
           this.table.renderRows();
           console.log("this.arenas", this.arenas)
         }
@@ -125,5 +116,14 @@ export class NewArenaComponent implements OnInit {
     this.dataSource.data = data;
     this.dataSource.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  private openSnackbar(message:any){
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=>{
+      window.location.reload();
+    })
   }
 }
