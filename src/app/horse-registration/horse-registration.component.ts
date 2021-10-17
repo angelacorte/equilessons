@@ -46,6 +46,8 @@ export class HorseRegistrationComponent implements OnInit {
       this.infos = this.tokenStorage.getInfos(this.isClub);
       this.form.ownerId = this.infos._id;
       this.fetchData();
+    }else {
+      window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
