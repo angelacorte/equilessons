@@ -1,34 +1,36 @@
 <div class="container mt-5 align-self-auto">
-  <form
-    *ngIf="!isSuccessful"
-    name="form"
-    (ngSubmit)="f.form.valid && onSubmit()"
-    #f="ngForm"
-    novalidate
-  >
-    <h3 class="title">Aggiungi i campi adibiti alle lezioni</h3>
-    <div class="form-row col-md-6">
-      <div class="input-group mt-3">
+  <h1>Gestione campi</h1>
+  <mat-accordion>
+    <mat-expansion-panel
+      (closed)=true> <!--(opened)="panelOpenState = true"-->
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Aggiungi un campo adibito alle lezioni
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field appearance="fill">
+        <mat-label>Denominazione</mat-label>
         <input
+          matInput
           #arenaName
           type="text"
           class="form-control"
           name="arenaName"
           id="arenaName"
-          placeholder="Denominazione"
           [(ngModel)]="form.arenaName"
-          required
         />
-        <div class="input-group-append">
-          <button class="btn" (click)="addArenaToList(arenaName.value)" type="reset">Aggiungi</button>
-        </div>
+      </mat-form-field>
+      <div class="mt-1">
+        <button class="btn" (click)="addArenaToList(arenaName.value)" type="reset">Aggiungi</button>
       </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
-    </div>
-
-    <div class="mt-5" *ngIf="arenas.length != 0"> <!--[style.display]="'true'"-->
+    <div class="mt-5"> <!--[style.display]="'true'"-->
       <h3>Campi utilizzabili:</h3>
-      <mat-table [dataSource]="arenas" class="mat-elevation-z8 mb-5">
+      <h5 class="text-secondary">Per rimuovere un campo dalla lista basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
+
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="checkbox">
           <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
           <mat-cell *matCellDef="let a">               <!--<td  *ngFor="let les of lesson">-->
@@ -52,27 +54,15 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
       </mat-table>
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 20]"
+        [length]="arenas.length"
+        showFirstLastButtons
+        aria-label="Seleziona pagina">
+      </mat-paginator>
+
       <button class="btn col-md-4" (click)="onSubmit()">Conferma</button>
 
     </div>
-
-    <!--<div class="form-row mt-4" *ngIf="arenas.length != 0"> [style.display]="'true'"-->
-      <!--<h4>Campi:</h4>
-      <div class="col-md-8">
-        <ul>
-          <li *ngFor="let arena of arenas">
-            <label for="arenaName">{{arena}}</label>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="form-group mt-5">
-      <button class="btn col-md-2" (click)="onSubmit()">Conferma</button>
-    </div>
-
-    <div class="alert alert-warning" *ngIf="f.submitted && isRegistrationFailed">
-      Signup failed!<br />{{ errorMessage }}
-    </div>-->
-  </form>
 </div>

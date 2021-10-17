@@ -2,8 +2,11 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ArenaService} from "../_services/arena.service";
-import {map} from "rxjs/operators";
-import {MatTable} from "@angular/material/table";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatAccordion} from "@angular/material/expansion";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-new-arena',
@@ -12,69 +15,72 @@ import {MatTable} from "@angular/material/table";
 })
 export class NewArenaComponent implements OnInit {
 
-  // @ts-ignore
-  @ViewChild(MatTable) table: MatTable<any>;
+  @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
+  @ViewChild(MatSort, {static:false})
+  set sort(value: MatSort) {
+    if (this.dataSource){
+      this.dataSource.sort = value;
+    }
+  }
+  @ViewChild(MatPaginator, {static:false}) paginator!: MatPaginator;
+  @ViewChild(MatAccordion) accordion!: MatAccordion;
 
   form:any = {
-    arenaName:[],
+    arenaName:'',
     clubId: ""
   }
 
-  isSuccessful = false;
-  isRegistrationFailed = false;
-  errorMessage = '';
-  submitted = false;
+  dataSource:any;
+  displayedColumns = ['checkbox', 'arenaName'];
   isLoggedIn = false;
   infos: any;
-  arenas = [];
+  arenas:any[] = [];
   toUpdate: {clubId:any, arenaName:string}[] = [];
   toRemove: {arenaId: any}[] = [];
-  //isClub: boolean = false;
-  displayedColumns = ['checkbox', 'arenaName'];
 
-
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private arenaService: ArenaService) {
-
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private _snackBar: MatSnackBar,
+              private arenaService: ArenaService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
-    if(this.isLoggedIn && this.tokenStorage.isClub()) {
+    if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
-      this.fetchData();
-    }else{
+
+      this.arenas = await this.getArenas(this.infos._id);
+
+      this.setDataSource(this.arenas);
+    } else {
       window.location.assign('/notAllowed');
     }
   }
 
-  onSubmit(): void {
-    /*let newArenas: { arenaName: never; clubId: any; }[] = [];
-    this.arenas.forEach(value => {
-      let arena = {
-        arenaName: value,
-        clubId: this.form.clubId
-      }
-      newArenas.push(arena);
-    })*/
-
-    this.arenaService.addArena(this.toUpdate).subscribe(response=>{
-      this.submitted = true;
-      this.isSuccessful = true;
-      if(this.toRemove.length > 0){
-        this.arenaService.removeArena(this.toRemove).subscribe(resp =>{
-          window.location.reload();
+  async onSubmit(): Promise<void> {
+    await this.addArena(this.toUpdate).then(()=> {
+      if (this.toRemove.length > 0) {
+        this.arenaService.removeArena(this.toRemove).subscribe(() => {
+          let snackBarRef = this._snackBar.open("Modifiche apportate con successo", "Ok", {
+            duration: 3000
+          });
+          snackBarRef.afterDismissed().subscribe(() => {
+            window.location.reload();
+          })
         }, err => {
-          this.errorMessage = err.error.message;
-          this.isRegistrationFailed = true;
           console.log(err);
         })
-      }else {
-        window.location.reload();
+      } else {
+        let snackBarRef = this._snackBar.open("Modifiche apportate con successo", "Ok", {
+          duration: 3000
+        });
+        snackBarRef.afterDismissed().subscribe(() => {
+          window.location.reload();
+        })
       }
     }, err => {
-      this.errorMessage = err.error.message;
-      this.isRegistrationFailed = true;
+      this._snackBar.open("Errore nella modifica dei campi", "Ok", {
+        duration: 3000
+      });
       console.log(err);
     })
   }
@@ -84,7 +90,6 @@ export class NewArenaComponent implements OnInit {
       _id: '',
       arenaName: value
     };
-    // @ts-ignore
     this.arenas.push(arena);
     let up = {
       clubId: this.infos._id,
@@ -107,21 +112,18 @@ export class NewArenaComponent implements OnInit {
     }
   }
 
-  private fetchData() {
-    console.log("fetch data this.infos._id", this.infos._id)
-    this.arenaService.getClubArenas(this.infos._id).pipe(map(responseData =>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
-      }
-      return dataArray;
-    })).subscribe(response=>{
-      // @ts-ignore
-      this.arenas = response;
-      console.log("arenas", this.arenas);
-    });
+  private async addArena(data:any):Promise<any>{
+    return await this.arenaService.addArena(data).toPromise();
+  }
+
+  private async getArenas(clubId:any):Promise<any>{
+    return this.arenaService.getClubArenas(clubId).toPromise();
+  }
+
+  private setDataSource(data:any){
+    this.dataSource = new MatTableDataSource(data);
+    this.dataSource.data = data;
+    this.dataSource.sort;
+    this.dataSource.paginator = this.paginator;
   }
 }
