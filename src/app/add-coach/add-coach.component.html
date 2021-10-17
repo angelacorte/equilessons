@@ -1,37 +1,32 @@
 <div class="container mt-2">
-  <form
-    *ngIf="!isSuccessful"
-    name="form"
-    (ngSubmit)="f.form.valid && onSubmit()"
-    #f="ngForm"
-    novalidate
-  >
-    <div class="d-flex row col-md-12 mt-4">
-      <div class="d-flex-row input-group col-md-6">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="riderId">Istruttore</label>
-        </div>
-        <select
-          class="custom-select"
-          name="riderId"
-          id="riderId"
-          [(ngModel)]="form.coachId"
-          required>
-          <!--            <option [value]="'club-owner'">Possiedo un mio maneggio</option>-->
-          <option *ngFor="let user of users"
-                  [value]="user['_id']"
-                  [disabled]="isUserInList(user['_id'])">
-            {{user['surname']}} {{user['name']}}
-          </option>
-        </select>
 
-      </div>
-      <button class="d-flex-row btn col-md-2 mt'4" (click)="addCoachToList(form.coachId)" >Aggiungi</button>
+  <h1>Gestione istruttori</h1>
+    <div class="d-flex row col-md-5 mt-4">
+        <mat-label>Aggiungi istruttore</mat-label>
+        <mat-form-field appearance="fill">
+          <mat-select
+            class="custom-select"
+            name="riderId"
+            id="riderId"
+            [(ngModel)]="form.coachId"
+            required>
+            <!--            <option [value]="'club-owner'">Possiedo un mio maneggio</option>-->
+            <mat-option *ngFor="let user of users"
+                    [value]="user['_id']"
+                    [disabled]="isUserInList(user['_id'])">
+              {{user['surname']}} {{user['name']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      <button class="d-flex-row btn col-md-3 ml-1" (click)="addCoachToList(form.coachId)" >Aggiungi</button>
     </div>
 
-    <div class="mt-5" *ngIf="coaches.length != 0"> <!--[style.display]="'true'"-->
-      <h3>Istruttori abilitati:</h3>
-      <mat-table [dataSource]="coaches" class="mat-elevation-z8 mb-5">
+    <div class="mt-4"> <!--[style.display]="'true'"-->
+      <h2>Istruttori abilitati:</h2>
+      <h5 class="text-secondary">Al termine delle modifiche premere conferma</h5>
+
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="checkbox">
           <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
           <mat-cell *matCellDef="let c">               <!--<td  *ngFor="let les of lesson">-->
@@ -50,13 +45,17 @@
           <mat-cell *matCellDef="let c"> {{c['name']}} {{c['surname']}}   </mat-cell>
         </ng-container>
 
-
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-
       </mat-table>
-      <button class="btn col-md-4" (click)="onSubmit()">Conferma</button>
 
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 20]"
+        [length]="coaches.length"
+        showFirstLastButtons
+        aria-label="Seleziona pagina">
+      </mat-paginator>
+      <button class="btn col-md-4" (click)="onSubmit()">Conferma</button>
     </div>
-  </form>
 </div>
