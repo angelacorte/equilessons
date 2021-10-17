@@ -10,56 +10,45 @@
           Aggiungi un utente temporaneo
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <form
-        name="form"
-        (ngSubmit)="f.form.valid && onSubmit()"
-        #f="ngForm"
-        novalidate
-      >
-        <div class="form-row">
-          <div class="col-md-5 mt-2">
-            <input
-              type="text"
-              class="form-control"
-              name="name"
-              id="name"
-              placeholder="Nome"
-              [(ngModel)]="form.name"
-              required
-            />
-          </div>
-          <div class="col-md-5 mt-2">
-            <input
-              type="text"
-              class="form-control"
-              name="surname"
-              id="surname"
-              placeholder="Cognome"
-              [(ngModel)]="form.surname"
-              required
-            />
-          </div>
+      <mat-form-field appearance="fill">
+        <mat-label>Nome</mat-label>
+        <input
+          matInput
+          type="text"
+          class="form-control"
+          name="name"
+          id="name"
+          [(ngModel)]="form.name"
+          required/>
+      </mat-form-field><br>
+      <mat-form-field appearance="fill">
+        <mat-label>Cognome</mat-label>
+        <input
+          matInput
+          type="text"
+          class="form-control"
+          name="surname"
+          id="surname"
+          [(ngModel)]="form.surname"
+          required
+        />
+      </mat-form-field><br>
+      <mat-form-field appearance="fill">
+        <mat-label>Numero di telefono</mat-label>
+        <input
+          matInput
+          type="tel"
+          class="form-control"
+          name="phoneNumber"
+          id="phoneNumber"
+          [(ngModel)]="form.phoneNumber"
+          required
+        />
+      </mat-form-field>
 
-        </div>
-
-        <div class="form-row">
-          <div class="col-md-5 mt-2">
-            <input
-              type="tel"
-              class="form-control"
-              name="phoneNumber"
-              id="phoneNumber"
-              placeholder="Numero di telefono"
-              [(ngModel)]="form.phoneNumber"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="form-group mt-4">
-          <button class="btn col-md-4">Conferma</button>
-        </div>
-      </form>
+      <div class="mt-2">
+        <button class="btn col-md-3">Conferma</button>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 

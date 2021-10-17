@@ -47,31 +47,28 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   displayedColumns = ['checkbox', 'utente', 'numero_di_telefono', 'utente_temporaneo'];
   dataSource:any;
 
-  constructor(public dialog: MatDialog, private _snackBar: MatSnackBar, private userService: UserService, private authService: AuthService, private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
+  constructor(public dialog: MatDialog, private _snackBar: MatSnackBar, private userService: UserService,
+              private authService: AuthService, private http: HttpClient, private lessonService: LessonService,
+              private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
-    if(this.isLoggedIn && this.tokenStorage.isClub()) {
+    if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
-      this.fetchData();
-    }else{
+      await this.fetchUsers(this.infos._id);
+    } else {
       window.location.assign('/notAllowed');
     }
   }
 
-  private fetchData() {
-    this.clubService.getClubAthletes(this.infos._id).pipe(map(responseData =>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
-      }
-      return dataArray;
-    })).subscribe(response=>{
-      response.forEach(value => {
+  private async getAthletes(clubId:any):Promise<any>{
+    return this.clubService.getClubAthletes(clubId).toPromise();
+  }
+
+  private async fetchUsers(clubId:any){
+    this.getAthletes(clubId).then((response:any)=>{
+      response.forEach((value:any) => {
         let u = {
           userId: value._id,
           name: value.name,
@@ -87,45 +84,44 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
           this.users.push(u);
         }
       })
-      this.dataSource = new MatTableDataSource(this.users);
-      this.dataSource.data = this.users;
-      this.dataSource.sort;
-      this.dataSource.paginator = this.paginator;
-      console.log("this.users", this.users);
-    });
+      this.setDataSource(this.users);
+    })
   }
 
-  showInfos(userId: any) {
-    this.userService.getUserById(userId).pipe(map(responseData =>{
-      return responseData;
-    })).subscribe(response=>{
-      if(response.horse.length > 0){
-        this.userService.getUserHorses(response._id).pipe(map(respData =>{
-          return respData;
-        })).subscribe(resp=>{
+  private async getUserById(userId:any):Promise<any>{
+    return this.userService.getUserById(userId).toPromise();
+  }
+
+  private async getUserHorses(userId:any){
+    return this.userService.getUserHorses(userId).toPromise();
+  }
+
+  async showInfos(userId: any) {
+    await this.getUserById(userId).then(async (response: any) => {
+      if (response.horse.length > 0) {
+        await this.getUserHorses(userId).then((resp:any)=>{
           response.horse = resp[0].horses_infos;
-          let dialogRef = this.dialog.open(DialogUserViewComponent, {
+          this.dialog.open(DialogUserViewComponent, {
             width: '600px',
             data: response
           });
         })
-      } else{
-        let dialogRef = this.dialog.open(DialogUserViewComponent, {
+      }else {
+        this.dialog.open(DialogUserViewComponent, {
           width: '600px',
           data: response
         });
       }
-
-    });
+    })
   }
 
   isUserUnchecked(e: any, userId: any) {
     if(!e.target.checked) {
-      // @ts-ignore
-      this.users.some((value, index)=> {
+      this.users.some((value:any, index:number)=> {
         if(value.userId === userId && value.email === undefined){
           this.users.splice(index,1)
           this.toRemove.push(userId);
+          this.setDataSource(this.users);
           this.table.renderRows();
         }
       })
@@ -135,9 +131,10 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   update() {
     if(this.toRemove.length > 0){
       this.userService.removeUser(this.toRemove).subscribe(resp =>{
-        window.location.reload();
+        this.openSnackbar("Operazione avvenuta con successo");
+
       }, err => {
-        this.errorMessage = err.error.message;
+        this.openSnackbar("Qualcosa è andato storto");
         console.log(err);
       })
     }
@@ -149,19 +146,27 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
     this.authService.signup(tmpUser).subscribe(
       data => {
-        let snackBarRef = this._snackBar.open("Registrazione con successo", "Ok", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(()=>{
-          window.location.reload();
-        })
+        this.openSnackbar("Registrazione avvenuta con successo");
       },
       err => {
-        this._snackBar.open("Non è stato possibile registare l'utente", "Ok", {
-          duration: 3000
-        });
-        this.errorMessage = err.error.message;
+        this.openSnackbar("Non è stato possibile registare l'utente");
+        console.log(err);
       }
     );
+  }
+
+  private openSnackbar(message:any){
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=>{
+      window.location.reload();
+    })
+  }
+  private setDataSource(data:any){
+    this.dataSource = new MatTableDataSource(data);
+    this.dataSource.data = data;
+    this.dataSource.sort;
+    this.dataSource.paginator = this.paginator;
   }
 }
