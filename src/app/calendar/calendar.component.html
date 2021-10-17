@@ -24,26 +24,7 @@
     <div class="calendar-container" *ngIf="events">
       <div class="row mt-4">
         <div class="col-md-4 text-left">
-          <!--<button type="button" routerLink="add" class="btn btn-light m-1" *ngIf="isAdmin">
-              Aggiungi
-          </button>-->
-          <!--<div class="btn-group">
-              <button type="button" class="btn btn-primary"
-                  (click)="changeView('month')"
-                  [class.active]="view === 'month'">
-                  Mese
-              </button>
-              <button type="button" class="btn btn-primary"
-                  (click)="changeView('week')"
-                  [class.active]="view === 'week'">
-                  Settimana
-              </button>
-              <button type="button" class="btn btn-primary"
-                  (click)="changeView('day')"
-                  [class.active]="view === 'day'">
-                  Giorno
-              </button>
-          </div>-->
+          <a class="btn col-md-6" href="/newLesson">NUOVA LEZIONE</a>
         </div>
         <div class="col-md-4 text-center">
           <h3 class="mt-0">{{ viewDate | calendarSchedulerDate:(view + 'ViewTitle'):locale:weekStartsOn:excludeDays:viewDays:startsWithToday }}</h3>

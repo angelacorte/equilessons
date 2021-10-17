@@ -117,7 +117,7 @@
     </mat-expansion-panel>
   </mat-accordion>
   <div *ngIf="form">
-    <mat-table [dataSource]="form.pairs" class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <ng-container matColumnDef="bin">
         <mat-header-cell *matHeaderCellDef> Rimuovi </mat-header-cell>
         <mat-cell *matCellDef="let p">

@@ -7,11 +7,10 @@ import {ClubService} from "../_services/club.service";
 import {HorseService} from "../_services/horse.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatAccordion} from "@angular/material/expansion";
-import {MatTable} from "@angular/material/table";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 
 @Component({
   selector: 'app-dialog-modify-lesson-view',
@@ -19,6 +18,7 @@ import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-vie
   styleUrls: ['./dialog-modify-lesson-view.component.css']
 })
 export class DialogModifyLessonViewComponent implements OnInit {
+
   @ViewChild(MatAccordion) accordion!: MatAccordion;
   @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
   @ViewChild(MatSort, {static:false})
@@ -63,7 +63,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
   riders = [];
   horses = [];
   coaches = [];
-  submitted = false;
+  dataSource:any;
 
   errorMessage = '';
 
@@ -91,6 +91,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
       await this.modifyLesson();
 
+      this.setDataSource(this.form.pairs);
     } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
@@ -182,23 +183,11 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
     this.lessonService.updateLesson(lesson).subscribe(response=>{
       this.onClose();
-      let snackBarRef = this._snackBar.open("Lezione aggiornata con successo", "Aggiorna pagina", {
-        duration: 3000
-      });
-      snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.reload();
-      })
+      this.openSnackbar("Lezione aggiornata con successo");
     }, err => {
-      let snackBarRef = this._snackBar.open("Errore nell'aggiornamento della lezione", "Ok", {
-        duration: 3000
-      });
-      snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.reload();
-      })
-      this.errorMessage = err.error.message;
+      this.openSnackbar("Errore nell'aggiornamento della lezione");
       console.log(err);
     })
-
   }
 
   onClose() {
@@ -233,6 +222,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
       }
     }
     this.form.pairs.push(tmpPair);
+    this.setDataSource(this.form.pairs);
     this.table.renderRows();
   }
 
@@ -248,6 +238,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     this.form.pairs.forEach((obj:any, index:any)=>{
       if(obj.riderInfo.riderId === riderId){
         this.form.pairs.splice(index,1);
+        this.setDataSource(this.form.pairs);
         this.table.renderRows();
       }
     })
@@ -263,5 +254,21 @@ export class DialogModifyLessonViewComponent implements OnInit {
     } else if( today <= lessonDay){
       //TODO implement delete lesson
     }
+  }
+
+  private openSnackbar(message:any){
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=>{
+      window.location.reload();
+    })
+  }
+
+  private setDataSource(data:any){
+    this.dataSource = new MatTableDataSource(data);
+    this.dataSource.data = data;
+    this.dataSource.sort;
+    this.dataSource.paginator = this.paginator;
   }
 }
