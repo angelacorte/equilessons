@@ -6,6 +6,8 @@ require('dotenv').config();
 function generateAccessToken(userId){
   return jwt.sign({userId}, process.env.ACCESS_TOKEN_SECRET,{
     expiresIn: '365d' // expires in 1 year
+  }, function (err,token) {
+    console.log(err)
   })
 }
 
@@ -16,7 +18,7 @@ exports.login = function (req,res) {
     }
     if (user) {
       const accessToken = generateAccessToken(user._id);
-      const refreshToken = jwt.sign(JSON.stringify(user._id), process.env.REFRESH_TOKEN_SECRET);
+      const refreshToken = jwt.sign(JSON.stringify(user._id), process.env.REFRESH_TOKEN_SECRET, { algorithm: 'RS256' }, function(err, token){ console.log(err)}); //TODO error
 
       const filter = {"_id": user._id};
       const update = {"token": refreshToken};

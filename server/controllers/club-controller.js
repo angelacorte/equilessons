@@ -15,6 +15,8 @@ let ObjectId = require('mongodb').ObjectID;
 function generateAccessToken(clubId){
   return jwt.sign({clubId}, process.env.ACCESS_TOKEN_SECRET,{
     expiresIn: '365d' // expires in 1 year
+  }, function (err, token) {
+    console.log(err);
   })
 }
 
@@ -25,7 +27,7 @@ exports.clubLogin = function (req,res) {
     }
     if (club) {
       const accessToken = generateAccessToken(club._id);
-      const refreshToken = jwt.sign(JSON.stringify(club._id), process.env.REFRESH_TOKEN_SECRET);
+      const refreshToken = jwt.sign(JSON.stringify(club._id), process.env.REFRESH_TOKEN_SECRET, { algorithm: 'RS256' }, function (err, token){console.log(err)});
 
       const filter = {"_id": club._id};
       const update = {"token": refreshToken};
