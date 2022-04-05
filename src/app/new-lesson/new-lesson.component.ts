@@ -76,8 +76,6 @@ export class NewLessonComponent implements OnInit {
     }
   }
 
-
-
   onSubmit(): void {
     let beginDate = new Date(this.form.lessonDate.toString() + ' ' + this.form.lessonHour.toString());
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
@@ -138,7 +136,7 @@ export class NewLessonComponent implements OnInit {
         this.coaches.splice(index, 1);
       }
     });
-    return coaches;
+    return coaches[0].clubCoaches;
   }
 
   addRiderToList(riderId: any, horseId: any) {
