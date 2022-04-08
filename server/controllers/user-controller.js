@@ -9,7 +9,11 @@ let User = db.user;
 const bcrypt = require("bcrypt");
 const {ObjectID, ObjectId} = require("mongodb");
 
-//find one user
+/**
+ * Get user's infos by user ID
+ * @param req
+ * @param res
+ */
 exports.getUserById = function (req,res){
   User.findOne({_id:new ObjectID(req.params.userId)},{password:0, token:0,__v:0}).then(result=>{
     if(!result){
@@ -21,11 +25,11 @@ exports.getUserById = function (req,res){
   });
 };
 
-//find all users
-exports.getAllUsers = function (req,res){
-
-};
-
+/**
+ * Get all users subscribed to a club by its id
+ * @param req
+ * @param res
+ */
 exports.getUsersByClub = function (req,res) {
   User.find({clubId:req.params.clubId}, {name:1,surname:1}).then(result=>{
     if(!result){
@@ -37,6 +41,11 @@ exports.getUsersByClub = function (req,res) {
   });
 }
 
+/**
+ * Get the roles of a specific user
+ * @param req
+ * @param res
+ */
 exports.getUserRoles = function (req,res) {
   User.findOne({_id:req.params.id},{roles:1}).then(result=>{
     if(!result){
@@ -48,6 +57,11 @@ exports.getUserRoles = function (req,res) {
   });
 }
 
+/**
+ * Add a role to a specific user
+ * @param req
+ * @param res
+ */
 exports.addRole = function (req,res){
   User.updateOne({_id:req.body.id},{$push:{roles: req.body.role}}).then(result=>{
     if(result.ok !== 1){
@@ -59,6 +73,11 @@ exports.addRole = function (req,res){
   });
 }
 
+/**
+ * Change the club of a specific user
+ * @param req
+ * @param res
+ */
 exports.changeClub = function (req,res) {
   User.updateOne({_id:req.body.userId}, {clubId: req.body.clubId}).then(result=>{
     if(result.ok !== 1){
@@ -70,7 +89,11 @@ exports.changeClub = function (req,res) {
   });
 }
 
-//delete one user
+/**
+ * Delete a specific user
+ * @param req
+ * @param res
+ */
 exports.removeUser = function (req,res){
   let opts = {
     _id: {
@@ -87,11 +110,20 @@ exports.removeUser = function (req,res){
   });
 };
 
-//update user info
+/**
+ * Update user's infos
+ * @param req
+ * @param res
+ */
 exports.updateUser = function (req,res){
 
 };
 
+/**
+ * Get all the horses linked to a specific user
+ * @param req
+ * @param res
+ */
 exports.getUserHorses = function (req,res){
   let pipeline = [
     {

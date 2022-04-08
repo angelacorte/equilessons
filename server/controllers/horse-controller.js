@@ -9,7 +9,11 @@ let User = db.user;
 
 let ObjectId = require('mongodb').ObjectID;
 
-
+/**
+ * Add new horse, linked to the person who adds it and the club in which the owner is subscribed to
+ * @param req
+ * @param res
+ */
 exports.addHorse = function (req,res){
   let newHorse = new Horse(req.body);
   newHorse.save(function(err, horse) {
@@ -20,6 +24,11 @@ exports.addHorse = function (req,res){
   });
 }
 
+/**
+ * Get all horses that are dispatched to school's lessons
+ * @param req
+ * @param res
+ */
 exports.getScholasticHorses = function (req,res) {
   Horse.find({clubId:new ObjectId(req.params.clubId), scholastic:true}).then(result =>{
     if(!result){
@@ -31,6 +40,11 @@ exports.getScholasticHorses = function (req,res) {
   });
 }
 
+/**
+ * Get all the infos of a horse by its ID
+ * @param req
+ * @param res
+ */
 exports.getHorseInfos = function (req,res){
   Horse.find({_id:new ObjectId(req.params.horseId)}).then(result=>{
     if(!result){
@@ -42,6 +56,11 @@ exports.getHorseInfos = function (req,res){
   });
 };
 
+/**
+ * Get all horses inside a club, by club's ID
+ * @param req
+ * @param res
+ */
 exports.getHorses = function (req,res){
   let pipeline = [
     {

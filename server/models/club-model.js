@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
 let SALT_WORK_FACTOR = 10;
-
+/**
+ * Schema of a club for mongodb
+ */
 let ClubSchema = new Schema({
   clubName: {type:String, unique:true, required:true},
   clubEmail: {type:String, unique:true, required:true},

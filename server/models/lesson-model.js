@@ -1,6 +1,9 @@
 const mongoose = require(`mongoose`);
 const Schema = mongoose.Schema;
 
+/**
+ * Schema of a lesson for mongodb
+ */
 let  LessonSchema = new Schema({
   beginDate: {type: Date, required:true},
   endDate: {type: Date, required:true},

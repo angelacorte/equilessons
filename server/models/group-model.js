@@ -1,6 +1,9 @@
 const mongoose = require(`mongoose`);
 const Schema = mongoose.Schema;
 
+/**
+ * Schema of a group for mongodb
+ */
 let GroupSchema = new Schema({
   name: {type: String, required: true},
   participants: [{type:Schema.Types.ObjectId, ref:"User"}],

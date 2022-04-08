@@ -4,7 +4,11 @@ const User = db.user; //password already with salt
 const bcrypt = require("bcrypt");
 let SALT_WORK_FACTOR = 10;
 
-
+/**
+ * User registration
+ * @param req
+ * @param res
+ */
 exports.signup = function(req, res) {
   console.log("req.body.phoneNumber",req.body.phoneNumber);
   User.findOne({

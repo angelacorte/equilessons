@@ -1,6 +1,9 @@
 const mongoose = require(`mongoose`);
 const Schema = mongoose.Schema;
 
+/**
+ * Schema of a horse for mongodb
+ */
 let HorseSchema = new Schema({
   horseName: {type: String, required:true},
   //breed: {type: String, required:true}, //TODO look for a database or smth in which there are all breeds

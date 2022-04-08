@@ -3,6 +3,11 @@ User = require("../models/user-model"); //password already with salt
 let jwt = require("jsonwebtoken");
 require('dotenv').config();
 
+/**
+ * Create new access token
+ * @param userId
+ * @return {*}
+ */
 function generateAccessToken(userId){
   return jwt.sign({userId}, process.env.ACCESS_TOKEN_SECRET,{
     expiresIn: '365d' // expires in 1 year
@@ -11,7 +16,12 @@ function generateAccessToken(userId){
   })
 }
 
-exports.login = function (req,res) {
+/**
+ * Check on user login
+ * @param req
+ * @param res
+ */
+exports.login = function (req,res) { //TODO manage errors
   User.getAuthenticated(req.body.username, req.body.password, function (err, user, reason) {
     if (err) {
       throw err;
@@ -110,6 +120,11 @@ exports.token = function (req,res){
   });
 }
 
+/**
+ * User's logout, remove its token
+ * @param req
+ * @param res
+ */
 exports.logout = function (req,res) {
   const filter = { "token": req.body.token};
   const update = { "token": ""};

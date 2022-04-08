@@ -12,6 +12,11 @@ require('dotenv').config();
 
 let ObjectId = require('mongodb').ObjectID;
 
+/**
+ * Create new access token for club login
+ * @param clubId
+ * @return {*}
+ */
 function generateAccessToken(clubId){
   return jwt.sign({clubId}, process.env.ACCESS_TOKEN_SECRET,{
     expiresIn: '365d' // expires in 1 year
@@ -20,7 +25,12 @@ function generateAccessToken(clubId){
   })
 }
 
-exports.clubLogin = function (req,res) {
+/**
+ * Authenticate a club on login
+ * @param req
+ * @param res
+ */
+exports.clubLogin = function (req,res) { //TODO manage errors
   Club.getAuthenticated(req.body.clubEmail, req.body.clubPassword, function (err, club, reason) {
     if (err) {
       throw err;
@@ -63,6 +73,13 @@ exports.clubLogin = function (req,res) {
   });
 }
 
+/**
+ * Used for authentication, check if a token is valid
+ * @param req
+ * @param res
+ * @param next
+ * @return {*}
+ */
 exports.authenticate = function authenticateToken(req,res,next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1] //takes the token if exists
@@ -94,6 +111,12 @@ exports.authenticate = function authenticateToken(req,res,next) {
   })
 }
 
+/**
+ * Create new token
+ * @param req
+ * @param res
+ * @return {*}
+ */
 exports.token = function (req,res){
   const refreshToken = req.body.token;
   if(refreshToken == null){
@@ -118,6 +141,11 @@ exports.token = function (req,res){
   });
 }
 
+/**
+ * Club logout, remove access token
+ * @param req
+ * @param res
+ */
 exports.logout = function (req,res) {
   const filter = { "token": req.body.token};
   const update = { "token": ""};
@@ -134,6 +162,11 @@ exports.logout = function (req,res) {
   });
 }
 
+/**
+ * Get all clubs that have subscribed the platform
+ * @param req
+ * @param res
+ */
 exports.getAllClubs = function (req,res) {
   Club.find({},{_id:1,clubName:1}).then(result =>{
     if(!result){
@@ -145,6 +178,12 @@ exports.getAllClubs = function (req,res) {
   });
 }
 
+/**
+ * Get club's infos based on its name
+ * @param club
+ * @param req
+ * @param res
+ */
 exports.getClubByName = function (club, req,res){
   let clubN;
   console.log("club ", club)
@@ -163,6 +202,11 @@ exports.getClubByName = function (club, req,res){
   });
 }
 
+/**
+ * Get club's infos based on its ID
+ * @param req
+ * @param res
+ */
 exports.getClubById = function (req,res){
   Club.findOne({"_id":new ObjectId(req.params.id)}).then(result =>{
     if(!result){
@@ -174,7 +218,12 @@ exports.getClubById = function (req,res){
   });
 }
 
-exports.getClubArenas = function (req,res) { //gets all the arenas in a club
+/**
+ * Get all arenas of a club
+ * @param req
+ * @param res
+ */
+exports.getClubArenas = function (req,res) { //TODO maybe it's a duplicate, the other one is in arena-controller
   Club.aggregate([{$match:{"_id": req.params.id}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasInClub"}}]).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
@@ -185,6 +234,11 @@ exports.getClubArenas = function (req,res) { //gets all the arenas in a club
   });
 }
 
+/**
+ * Add new club to the database
+ * @param req
+ * @param res
+ */
 exports.registerClub = function (req,res) {
   Club.findOne({
     clubEmail:req.body.clubEmail
@@ -205,6 +259,11 @@ exports.registerClub = function (req,res) {
   });
 }
 
+/**
+ * Add new coach to the club
+ * @param req
+ * @param res
+ */
 exports.addCoach = function (req,res){
   Club.updateOne({_id:req.body.clubId},{clubCoach: req.body.coaches}).then(result=>{
     if(result.ok !== 1){
@@ -216,6 +275,11 @@ exports.addCoach = function (req,res){
   });
 }
 
+/**
+ * Get all people that have subscribed to a certain club (by clubs ID)
+ * @param req
+ * @param res
+ */
 exports.getClubAthletes = function (req,res) {
   User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1, email:1, phoneNumber:1}).then(result=>{
     if(!result){
@@ -228,6 +292,11 @@ exports.getClubAthletes = function (req,res) {
 }
 
 //db.users.aggregate([{$match:{"clubId":ObjectId("60f702d3329ccb26f26937a0"), "roles":"coach"}}])
+/**
+ * Get all the coach of a club, by clubs ID
+ * @param req
+ * @param res
+ */
 exports.getCoachByClubId = function (req,res) {
 
   let pipeline = [
@@ -262,6 +331,7 @@ exports.getCoachByClubId = function (req,res) {
 }
 
 /*
+IDEAS FOR AGGREGATE
 db.arenas.aggregate([{ $match:{"clubId":ObjectId("60f702d3329ccb26f26937a0")}},{$lookup:{from:"clubs",localField:"clubId",foreignField:"_id",as:"arenasClub
 
 //this finds all the arenas that a club has:

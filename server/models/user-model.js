@@ -5,6 +5,9 @@ User = require("../models/user-model");
 
 let SALT_WORK_FACTOR = 10;
 
+/**
+ * Schema of a user for mongodb
+ */
 let UserSchema = new Schema({
   name: {type: String, required: true},
   surname: {type: String, required: true},

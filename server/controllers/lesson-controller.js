@@ -9,7 +9,11 @@ let User = db.user;
 
 let ObjectId = require('mongodb').ObjectID;
 
-
+/**
+ * Create new lesson
+ * @param req
+ * @param res
+ */
 exports.createLesson = function (req,res){
   let newLesson = new Lesson(req.body);
   newLesson.save(function(err, user) {
@@ -20,6 +24,11 @@ exports.createLesson = function (req,res){
   });
 };
 
+/**
+ * Delete lesson from db
+ * @param req
+ * @param res
+ */
 exports.deleteLesson = function (req,res){     //TODO might send a notification to the participants who were listed into
   Lesson.deleteOne({_id:req.params._id}).then(result=>{
     res.status(200).send({message:"Lesson deleted"});
@@ -28,7 +37,12 @@ exports.deleteLesson = function (req,res){     //TODO might send a notification 
   });
 };
 
-exports.updateLesson = function (req,res){
+/**
+ * Update a specific lesson
+ * @param req
+ * @param res
+ */
+exports.updateLesson = function (req,res){ //TODO might send a notification to the participants who were listed into
   console.log("req.body", req.body)
  let update = {
    beginDate: req.body.beginDate,
@@ -49,18 +63,29 @@ exports.updateLesson = function (req,res){
  });
 };
 
-exports.getLessonInfo = function (req,res){ //may needs req.query
-
-};
-
+/**
+ * Get all the lessons where a specific user is signed to
+ * @param req
+ * @param res
+ */
 exports.getLessonByUserID = function (req,res){
 
 }
 
+/**
+ * Get all lessons signed to a specific arena
+ * @param req
+ * @param res
+ */
 exports.getLessonByArenaID = function (req,res){
 
 }
 
+/**
+ * Get all lessons of a club
+ * @param req
+ * @param res
+ */
 exports.getLessonByClubID = function (req,res){
   Lesson.find({"clubId": req.params.clubId}).sort({beginDate:1}).then(result=>{
     if(!result){
@@ -72,14 +97,20 @@ exports.getLessonByClubID = function (req,res){
   });
 }
 
-exports.getLessonByDate = function (req,res){
-
-}
-
+/**
+ * Get all lessons assigned to a coach by its ID
+ * @param req
+ * @param res
+ */
 exports.getLessonByCoachID = function (req,res){
 
 }
 
+/**
+ * Get all the infos of a lesson by its id
+ * @param req
+ * @param res
+ */
 exports.getLessonsInfos = function (req,res) {
 
   let pipeline = [
