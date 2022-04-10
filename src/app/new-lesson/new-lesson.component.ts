@@ -57,6 +57,7 @@ export class NewLessonComponent implements OnInit {
   coaches: {_id: any, name: any, surname: any}[] = [];
   coachId: any;
   isClub: boolean = false;
+  value: any;
 
   constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
 
@@ -86,9 +87,12 @@ export class NewLessonComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("value", this.value);
     let beginDate = new Date(this.form.lessonDate);
     beginDate.setHours(this.form.lessonHour.substring(0,2), this.form.lessonHour.substring(3,5));
+    console.log(this.form.lessonDuration);
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
+    console.log("begin " + beginDate + "\nend " + endDate);
     let pairs: { riderId: any; horseId: any; }[] = [];
 
     this.lesson.forEach((val: any) =>{

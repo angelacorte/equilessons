@@ -16,13 +16,13 @@
             [(ngModel)]="form.lessonDate"
             name="lessonDate"
             id="lessonDate"
-            disabled>
+            disabled
+            required>
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matSuffix [for]="lessonDate"></mat-datepicker-toggle>
           <mat-datepicker
             #lessonDate
-            disabled="false"
-            required></mat-datepicker>
+            disabled="false"></mat-datepicker>
         </mat-form-field>
       </div>
 
@@ -30,14 +30,14 @@
         <mat-form-field appearance="fill">
           <mat-label>Orario</mat-label>
           <input
-            matInput
-            type="time"
-            class="form-control"
-            name="lessonHour"
-            id="lessonHour"
-            placeholder="Ora"
             [(ngModel)]="form.lessonHour"
+            class="form-control"
+            id="lessonHour"
+            matInput
+            name="lessonHour"
+            placeholder="Ora"
             required
+            type="time"
           />
           <mat-hint>Formato 24h</mat-hint>
         </mat-form-field>
@@ -45,29 +45,15 @@
 
       <div class="col-md-3 d-flex row mt-4">
         <mat-label>Durata</mat-label>
-        <mat-radio-group aria-label="seleziona durata">
-          <mat-radio-button
-            class="mt-2"
-            id="lessonDuration60"
-            name="lessonDuration"
-            value="60"
-            [checked]=true
-            [(ngModel)]="form.lessonDuration">60 minuti
-          </mat-radio-button>
-          <mat-radio-button
-            class="mt-2"
-            id="lessonDuration30"
-            name="lessonDuration"
-            value="30"
-            [checked]=false
-            [(ngModel)]="form.lessonDuration">30 minuti
-          </mat-radio-button>
-          <mat-radio-button class="mt-1">
+        <mat-radio-group name="lessonDuration" [(ngModel)]="form.lessonDuration" aria-label="seleziona durata">
+          <mat-radio-button class="mt-2" name="lessonDuration" [value]="60" [checked]=true  [(ngModel)]="form.lessonDuration">60 minuti</mat-radio-button>
+          <mat-radio-button class="mt-2" name="lessonDuration" [value]="30"  [(ngModel)]="form.lessonDuration">30 minuti</mat-radio-button>
+          <mat-radio-button class="mt-2">
             <input type="tel"
-              class="form-control input-group-append"
-              aria-label="Durata personalizzata"
-              placeholder="Personalizza"
+              matInput
               name="lessonDuration"
+              aria-label="Durata personalizzata"
+              placeholder="Altro (minuti)"
               [(ngModel)]="form.lessonDuration">
           </mat-radio-button>
         </mat-radio-group>
