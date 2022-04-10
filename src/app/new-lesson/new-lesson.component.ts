@@ -1,18 +1,13 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
-import {UserService} from "../_services/user.service";
 import {HorseService} from "../_services/horse.service";
 import {ArenaService} from "../_services/arena.service";
-import {map} from "rxjs/operators";
 import {ClubService} from "../_services/club.service";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
-import {validateEvents} from "angular-calendar/modules/common/util";
-import {LessonService, LessonState} from "../_services/lesson.service";
+import {LessonService} from "../_services/lesson.service";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {ActivatedRoute} from "@angular/router";
-import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -157,17 +152,14 @@ export class NewLessonComponent implements OnInit {
 
   addRiderToList(riderId: any, horseId: any) {
     this.riders.forEach((value => {
-      // @ts-ignore
-      if(value['_id'] === riderId && !this.lesson.some(obj=>obj['riderId'] === riderId)){
+      if(value['_id'] === riderId && !this.lesson.some((obj: any)=>obj['riderId'] === riderId)){
         let rider = {
           riderId: value['_id'],
           name: value['name'],
           surname: value['surname']
         }
-        // @ts-ignore
-        this.horses.forEach((val =>{
-          // @ts-ignore
-          if(val['_id'] === horseId  && !this.lesson.some(obj=>obj['horseId'] === horseId)){
+        this.horses.forEach(((val: any) =>{
+          if(val['_id'] === horseId  && !this.lesson.some((obj: any)=>obj['horseId'] === horseId)){
             let horse = {
               horseId: val['_id'],
               horseName: val['horseName']
@@ -176,7 +168,6 @@ export class NewLessonComponent implements OnInit {
               riderInfo: rider,
               horseInfo: horse
             }
-            // @ts-ignore
             this.lesson.push(pair);
             this.form.horseId = '';
             this.form.riderId = '';
@@ -193,8 +184,7 @@ export class NewLessonComponent implements OnInit {
 
   isRiderUnchecked(e: any, pair: any) {
     if(!e.target.checked){
-      // @ts-ignore
-      this.lesson.forEach((item,index)=>{
+      this.lesson.forEach((item: any, index: number)=>{
         if(this.lesson[index] === pair){
           this.lesson.splice(index, 1);
           this.table.renderRows();
@@ -212,26 +202,20 @@ export class NewLessonComponent implements OnInit {
   }
 
   isRiderInList(id: any): boolean {
-    // @ts-ignore
-    return this.lesson.some(obj=>obj.riderInfo["riderId"] === id);
+    return this.lesson.some((obj: { riderInfo: { [x: string]: any; }; })=>obj.riderInfo["riderId"] === id);
 
   }
 
   isHorseInList(id: any) {
-    // @ts-ignore
-    return this.lesson.some(obj=>obj.horseInfo["horseId"] === id)
+    return this.lesson.some((obj: { horseInfo: { [x: string]: any; }; })=>obj.horseInfo["horseId"] === id)
   }
 
   isRider(rider: any) {
-    this.riders.some(obj=>{
-      // @ts-ignore
+    this.riders.some((obj: any)=>{
       if(obj._id === rider){
         this.form.riderId = rider;
-        // @ts-ignore
-        this.lesson.some(o=> {
-          // @ts-ignore
+        this.lesson.some((o: { horseInfo: { [x: string]: any; }; })=> {
           if (o.horseInfo['horseId'] !== obj.horse[0] && obj.horse.length > 0) {
-            // @ts-ignore
             this.form.horseId = obj.horse[0];
           }
         })
