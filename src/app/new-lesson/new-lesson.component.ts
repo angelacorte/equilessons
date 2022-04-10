@@ -64,20 +64,30 @@ export class NewLessonComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
     this.isClub = this.tokenStorage.isClub();
 
-    if (this.isLoggedIn && this.isClub) { //check on user's login
-      this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub()); //get the infos saved in the session
+    if(this.isLoggedIn) {
+      this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
+      if(this.isClub) {
+        this.form.clubId = this.infos['_id']
+      }else{
+        this.form.clubId = this.infos['clubId'];
+      }
 
-      this.arenas = await this.getClubArenas(this.infos['_id']);
-      this.riders = await this.getClubAthletes(this.infos['_id']);
-      this.horses = await this.getScholasticHorses(this.infos['_id']);
-      this.coaches = await this.getClubCoaches(this.infos['_id']);
-    } else {
+      if (this.isClub || this.tokenStorage.isCoach(this.infos)) { //check on user's login
+        this.arenas = await this.getClubArenas(this.form.clubId);
+        this.riders = await this.getClubAthletes(this.form.clubId);
+        this.horses = await this.getScholasticHorses(this.form.clubId);
+        this.coaches = await this.getClubCoaches(this.form.clubId);
+      } else {
+        window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
+      }
+    }else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
   onSubmit(): void {
-    let beginDate = new Date(this.form.lessonDate.toString() + ' ' + this.form.lessonHour.toString());
+    let beginDate = new Date(this.form.lessonDate);
+    beginDate.setHours(this.form.lessonHour.substring(0,2), this.form.lessonHour.substring(3,5));
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
     let pairs: { riderId: any; horseId: any; }[] = [];
 
@@ -89,26 +99,28 @@ export class NewLessonComponent implements OnInit {
       pairs.push(pair);
     })
 
-    let clubId;
-    if(this.isClub) clubId = this.infos['_id'];
-    else clubId = this.infos['clubId'];
-
     const lesson = {
       beginDate: beginDate,
       endDate: endDate,
       arenaId: this.form.arenaId,
       coachId: this.coachId,
-      clubId: clubId,
+      clubId: this.form.clubId,
       pairs: pairs,
     }
 
     this.lessonService.createLesson(lesson).subscribe(response=>{
-      let snackBarRef = this._snackBar.open("Lezione creata con successo", "Ok", {
-        duration: 3000
-      });
-      snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.assign('/calendar');
-      })
+      if(response.errors != undefined){
+        this._snackBar.open("Riempi i campi obbligatori.", "Ok", {
+          duration: 3000
+        });
+      }else{
+        let snackBarRef = this._snackBar.open("Lezione creata con successo", "Ok", {
+          duration: 3000
+        });
+        snackBarRef.afterDismissed().subscribe(()=>{
+          window.location.assign('/calendar');
+        })
+      }
     }, err => {
       this._snackBar.open("Non è stato possibile creare la lezione", "Ok", {
         duration: 3000
@@ -187,7 +199,7 @@ export class NewLessonComponent implements OnInit {
     }
   }
 
-  isCoach(e: any) {
+  checkCoach(e: any) {
     if(e.target.checked){
       this.form.coachId = this.infos['_id'];
     }else{

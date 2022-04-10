@@ -55,6 +55,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { HorseManagementComponent } from './horse-management/horse-management.component';
+import {MatRadioModule} from "@angular/material/radio";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -80,37 +81,38 @@ registerLocaleData(localeIt);
     DialogModifyLessonViewComponent,
     HorseManagementComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    RouterModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    CommonModule,
-    NgbModalModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
-    SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
-    FullCalendarModule,
-    MatTableModule,
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    A11yModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatButtonToggleModule,
-    MatSnackBarModule
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        RouterModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        CommonModule,
+        NgbModalModule,
+        CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+        SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
+        FullCalendarModule,
+        MatTableModule,
+        BrowserAnimationsModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        A11yModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatListModule,
+        MatPaginatorModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        MatButtonToggleModule,
+        MatSnackBarModule,
+        MatRadioModule
+    ],
   providers: [
     MatDatepickerModule,
     authInterceptorProviders,

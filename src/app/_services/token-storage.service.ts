@@ -40,10 +40,7 @@ export class TokenStorageService {
 
   public isClub(): boolean{
     const user = this.getUser();
-    if(user.user === undefined){
-      return true;
-    }
-    return false;
+    return user.user === undefined;
   }
 
   public getInfos(isClub:boolean):any{
@@ -54,5 +51,9 @@ export class TokenStorageService {
       user = this.getUser().user;
     }
     return user;
+  }
+
+  public isCoach(infos: any): boolean{
+    return infos['roles'].indexOf('coach') > -1;
   }
 }
