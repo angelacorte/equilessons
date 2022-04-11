@@ -104,7 +104,6 @@ export class NewLessonComponent implements OnInit {
       pairs: pairs,
       notes: this.form.notes
     }
-    console.log("lesson ", lesson);
     this.lessonService.createLesson(lesson).toPromise().then(response=>{
       if(response.errors != undefined){
         this._snackBar.open("Riempi i campi obbligatori.", "Ok", {
