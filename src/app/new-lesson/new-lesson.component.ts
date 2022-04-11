@@ -53,6 +53,7 @@ export class NewLessonComponent implements OnInit {
   coachId: any;
   isClub: boolean = false;
   value: any;
+  checked: boolean = true;
 
   constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
 
@@ -63,12 +64,13 @@ export class NewLessonComponent implements OnInit {
     if(this.isLoggedIn) {
       this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
       if(this.isClub) {
-        this.form.clubId = this.infos['_id']
+        this.form.clubId = this.infos['_id'];
       }else{
         this.form.clubId = this.infos['clubId'];
       }
 
       if (this.isClub || this.tokenStorage.isCoach(this.infos)) { //check on user's login
+        // this.checked = true;
         this.arenas = await this.getClubArenas(this.form.clubId);
         this.riders = await this.getClubAthletes(this.form.clubId);
         this.horses = await this.getScholasticHorses(this.form.clubId);
@@ -190,12 +192,8 @@ export class NewLessonComponent implements OnInit {
     }
   }
 
-  checkCoach(e: any) {
-    if(e.target.checked){
-      this.form.coachId = this.infos['_id'];
-    }else{
-      this.form.coachId = this.coachId;
-    }
+  checkCoach() {
+    this.checked = !this.checked;
   }
 
   isRiderInList(id: any): boolean {
@@ -217,7 +215,7 @@ export class NewLessonComponent implements OnInit {
           }
         })
       }
-    })
+    });
   }
 
   onReset() {

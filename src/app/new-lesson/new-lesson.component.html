@@ -6,9 +6,9 @@
     #f="ngForm"
     novalidate>
     <h2 class="title">Nuova lezione</h2>
-    <div class="col-md-12 mt-3">
-      <div class="input-group">
-        <mat-form-field appearance="fill">
+    <div class="input-group flex-column">
+      <div class="row">
+        <mat-form-field class="col p-2" appearance="fill">
           <mat-label>Data della lezione</mat-label>
           <input
             matInput
@@ -18,34 +18,31 @@
             id="lessonDate"
             disabled
             required>
-          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-hint>DD/MM/YYYY</mat-hint>
           <mat-datepicker-toggle matSuffix [for]="lessonDate"></mat-datepicker-toggle>
           <mat-datepicker
             #lessonDate
             disabled="false"></mat-datepicker>
         </mat-form-field>
+        <mat-form-field class="col p-2" appearance="fill">
+        <mat-label>Orario</mat-label>
+        <input
+          [(ngModel)]="form.lessonHour"
+          class="form-control"
+          id="lessonHour"
+          matInput
+          name="lessonHour"
+          placeholder="Ora"
+          required
+          type="time"
+        />
+        <mat-hint>Formato 24h</mat-hint>
+      </mat-form-field>
       </div>
-
-      <div class="input-group mt-2">
-        <mat-form-field appearance="fill">
-          <mat-label>Orario</mat-label>
-          <input
-            [(ngModel)]="form.lessonHour"
-            class="form-control"
-            id="lessonHour"
-            matInput
-            name="lessonHour"
-            placeholder="Ora"
-            required
-            type="time"
-          />
-          <mat-hint>Formato 24h</mat-hint>
-        </mat-form-field>
-      </div>
-
-      <div class="col-md-3 d-flex row mt-4">
-        <mat-label>Durata</mat-label>
-        <mat-radio-group name="lessonDuration" [(ngModel)]="form.lessonDuration" aria-label="seleziona durata">
+    </div>
+    <div class="flex-column input-group">
+        <mat-label>Durata:</mat-label>
+        <mat-radio-group class="row" name="lessonDuration" [(ngModel)]="form.lessonDuration" aria-label="seleziona durata">
           <mat-radio-button class="mt-2" name="lessonDuration" [value]="60" [checked]=true  [(ngModel)]="form.lessonDuration">60 minuti</mat-radio-button>
           <mat-radio-button class="mt-2" name="lessonDuration" [value]="30"  [(ngModel)]="form.lessonDuration">30 minuti</mat-radio-button>
           <mat-radio-button class="mt-2">
@@ -58,28 +55,52 @@
           </mat-radio-button>
         </mat-radio-group>
       </div>
+
+    <div class="flex-column input-group mt-3 p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Campo</mat-label>
+          <mat-select
+            class="custom-select"
+            name="arenaId"
+            id="arenaId"
+            [(ngModel)]="form.arenaId"
+            required>
+            <mat-option *ngFor="let arena of arenas"
+                        [value]="arena['_id']">
+              {{arena['arenaName']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill" *ngIf="isClub || !checked">
+          <mat-label>Istruttore</mat-label>
+          <mat-select
+            class="custom-select"
+            name="coachId"
+            id="otherCoachId"
+            [(ngModel)]="coachId"
+            required>
+            <mat-option  *ngFor="let coach of coaches"
+                         [value]="coach['_id']">
+              {{coach['surname']}} {{coach['name']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
-    <div class="input-group col-md-5 mt-4">
-      <mat-form-field appearance="fill">
-        <mat-label>Seleziona campo</mat-label>
-        <mat-select
-          class="custom-select"
-          name="arenaId"
-          id="arenaId"
-          [(ngModel)]="form.arenaId"
-          required>
-          <mat-option *ngFor="let arena of arenas"
-                      [value]="arena['_id']">
-            {{arena['arenaName']}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="flex-column input-group p-2" *ngIf="!isClub">
+      <mat-checkbox
+        id="coachId"
+        [checked]=checked
+        (change)="checkCoach()">
+        Sono l'istruttore.
+      </mat-checkbox>
     </div>
 
-    <div class="d-flex row col-md-12 mt-4">
-      <div class="d-flex-row input-group col-md-6 mt-3">
-        <mat-form-field appearance="fill">
+    <div class="flex-column input-group p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
           <mat-label>Seleziona allievo</mat-label>
           <mat-select
             class="custom-select"
@@ -94,10 +115,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-      </div>
-
-      <div class="d-flex-row input-group col-md-6 mt-3 ml-2">
-        <mat-form-field appearance="fill">
+        <mat-form-field class="col" appearance="fill">
           <mat-label>Seleziona cavallo</mat-label>
           <mat-select
             class="custom-select"
@@ -112,40 +130,14 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <button class="d-flex-row btn col-md-2 mt-3 ml-2" (click)="addRiderToList(form.riderId, form.horseId)" >Aggiungi</button>
-    </div>
-
-    <div class="col-md-8 mt-3" *ngIf="!isClub">
-      <div class="form-check">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          [value]="coachId"
-          (change)="checkCoach($event)"
-          id="coachId"
-          checked>
-        <label class="form-check-label" for="coachId">Sono l'istruttore.</label>
+      <div class="flex-row pl-2">
+        <button mat-fab class="btn" (click)="addRiderToList(form.riderId, form.horseId)" >
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
     </div>
 
-    <div class="input-group col-md-5 mt-4" *ngIf="isClub || form.coachId != infos._id">
-      <mat-form-field appearance="fill">
-        <mat-label>Seleziona istruttore</mat-label>
-        <mat-select
-          class="custom-select"
-          name="coachId"
-          id="otherCoachId"
-          [(ngModel)]="coachId"
-          required>
-          <mat-option  *ngFor="let coach of coaches"
-                       [value]="coach['_id']">
-            {{coach['surname']}} {{coach['name']}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div class="col-md-8">
+    <div class="d-flex row p-2">
       <mat-form-field appearance="fill">
         <mat-label>Note aggiuntive sulla lezione</mat-label>
         <textarea matInput name="notes" [(ngModel)]="form.notes" placeholder="Avvisi"></textarea>
@@ -190,9 +182,9 @@
         aria-label="Seleziona pagina">
       </mat-paginator>
 
-      <div class="form-group mt-3 mb-5">
-        <button class="btn col-md-4" >Crea</button>
-        <button class="btn col-md-4" (click)="onReset()" type="reset">Reset</button>
+      <div class="d-flex flex-row d-flex justify-content-around">
+        <button mat-button class="btn p-2 col-md-4" >Crea</button>
+        <button mat-button class="btn p-2 col-md-4" (click)="onReset()" type="reset">Reset</button>
       </div>
     </div>
   </form>

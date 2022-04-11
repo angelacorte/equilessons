@@ -57,6 +57,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { HorseManagementComponent } from './horse-management/horse-management.component';
 import {MatRadioModule} from "@angular/material/radio";
 import {MatMenuModule} from "@angular/material/menu";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -113,7 +114,8 @@ registerLocaleData(localeIt);
     MatButtonToggleModule,
     MatSnackBarModule,
     MatRadioModule,
-    MatMenuModule
+    MatMenuModule,
+    MatCheckboxModule
   ],
   providers: [
     MatDatepickerModule,
