@@ -112,7 +112,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <button class="d-flex-row btn col-md-4 mt-3 ml-2" (click)="addRiderToList(form.riderId, form.horseId)" >Aggiungi</button>
+      <button class="d-flex-row btn col-md-2 mt-3 ml-2" (click)="addRiderToList(form.riderId, form.horseId)" >Aggiungi</button>
     </div>
 
     <div class="col-md-8 mt-3" *ngIf="!isClub">
@@ -142,6 +142,13 @@
             {{coach['surname']}} {{coach['name']}}
           </mat-option>
         </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-8">
+      <mat-form-field appearance="fill">
+        <mat-label>Note aggiuntive sulla lezione</mat-label>
+        <textarea matInput name="notes" [(ngModel)]="form.notes" placeholder="Avvisi"></textarea>
       </mat-form-field>
     </div>
 

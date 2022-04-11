@@ -14,7 +14,8 @@ let  LessonSchema = new Schema({
     horseId: {type:Schema.Types.ObjectId, ref:"Horse"}
   }],
   //maxComponents: {type: Number, required: true},
-  clubId: {type:Schema.Types.ObjectId, ref:"Club", required: true} //object/reference of 'club model'
+  clubId: {type:Schema.Types.ObjectId, ref:"Club", required: true}, //object/reference of 'club model'
+  notes: {type: String, default:"Non ci sono note dell'istruttore."}
   //color: {type: String}
 });
 

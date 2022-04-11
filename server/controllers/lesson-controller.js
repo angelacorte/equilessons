@@ -50,7 +50,8 @@ exports.updateLesson = function (req,res){ //TODO might send a notification to t
    arenaId: req.body.arenaId,
    coachId: req.body.coachId,
    clubId: req.body.clubId,
-   pairs: req.body.pairs
+   pairs: req.body.pairs,
+   notes: req.body.notes
  };
 
  Lesson.updateOne({_id: new ObjectId(req.body._id)}, update).then(result=>{
@@ -160,7 +161,8 @@ exports.getLessonsInfos = function (req,res) {
         'coach.surname': 1,
         'beginDate': 1,
         'endDate': 1,
-        'pairs': 1
+        'pairs': 1,
+        'notes': 1
       }
     }
   ];

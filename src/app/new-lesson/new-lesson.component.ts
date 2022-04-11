@@ -82,12 +82,9 @@ export class NewLessonComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log("value", this.value);
     let beginDate = new Date(this.form.lessonDate);
     beginDate.setHours(this.form.lessonHour.substring(0,2), this.form.lessonHour.substring(3,5));
-    console.log(this.form.lessonDuration);
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
-    console.log("begin " + beginDate + "\nend " + endDate);
     let pairs: { riderId: any; horseId: any; }[] = [];
 
     this.lesson.forEach((val: any) =>{
@@ -105,6 +102,7 @@ export class NewLessonComponent implements OnInit {
       coachId: this.coachId,
       clubId: this.form.clubId,
       pairs: pairs,
+      notes: this.form.notes
     }
 
     this.lessonService.createLesson(lesson).subscribe(response=>{

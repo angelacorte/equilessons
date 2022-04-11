@@ -69,7 +69,8 @@ export class LessonService {
         coachName: lesson.coach[0]['name'],
         coachSurname: lesson.coach[0]['surname']
       },
-      pairs: []
+      pairs: [],
+      notes: lesson.notes
     };
 
     pairs.forEach((value: any)=>{
@@ -110,5 +111,6 @@ export interface LessonState {
   coach: any,
   horses_in_lesson: any,
   riders_in_lesson: any,
-  pairs: any
+  pairs: any,
+  notes: any
 }
