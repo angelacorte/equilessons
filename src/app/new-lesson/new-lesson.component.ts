@@ -104,8 +104,8 @@ export class NewLessonComponent implements OnInit {
       pairs: pairs,
       notes: this.form.notes
     }
-
-    this.lessonService.createLesson(lesson).subscribe(response=>{
+    console.log("lesson ", lesson);
+    this.lessonService.createLesson(lesson).toPromise().then(response=>{
       if(response.errors != undefined){
         this._snackBar.open("Riempi i campi obbligatori.", "Ok", {
           duration: 3000
@@ -123,7 +123,7 @@ export class NewLessonComponent implements OnInit {
         duration: 3000
       });
       console.log(err);
-    })
+    });
   }
 
   private async getClubArenas(id:any):Promise<any>{
