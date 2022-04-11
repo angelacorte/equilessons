@@ -1,11 +1,5 @@
 const db = require("../models");
-let Arena = db.arena;
-let Club = db.club;
-let Group = db.group;
-let Horse = db.horse;
 let Lesson = db.lesson;
-let Role = db.role;
-let User = db.user;
 
 let ObjectId = require('mongodb').ObjectID;
 
@@ -16,11 +10,11 @@ let ObjectId = require('mongodb').ObjectID;
  */
 exports.createLesson = function (req,res){
   let newLesson = new Lesson(req.body);
-  newLesson.save(function(err, user) {
+  newLesson.save(function(err, lesson) {
     if (err){
       res.send(err);
     }
-    res.status(200).json(user);
+    res.status(200).json(lesson);
   });
 };
 
@@ -70,7 +64,7 @@ exports.updateLesson = function (req,res){ //TODO might send a notification to t
  * @param res
  */
 exports.getLessonByUserID = function (req,res){
-
+  //TODO
 }
 
 /**
@@ -79,7 +73,7 @@ exports.getLessonByUserID = function (req,res){
  * @param res
  */
 exports.getLessonByArenaID = function (req,res){
-
+  //TODO
 }
 
 /**
@@ -104,7 +98,7 @@ exports.getLessonByClubID = function (req,res){
  * @param res
  */
 exports.getLessonByCoachID = function (req,res){
-
+  //TODO
 }
 
 /**

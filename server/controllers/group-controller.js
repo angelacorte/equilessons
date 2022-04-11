@@ -10,7 +10,7 @@ let User = db.user;
  * @param res
  */
 exports.createGroup = function (req,res){
-
+  //TODO
 }
 
 /**
@@ -19,7 +19,7 @@ exports.createGroup = function (req,res){
  * @param res
  */
 exports.updateGroup = function (req,res){
-
+  //TODO
 }
 
 /**
@@ -28,7 +28,7 @@ exports.updateGroup = function (req,res){
  * @param res
  */
 exports.deleteGroup = function (req,res){
-
+  //TODO
 }
 
 /**
@@ -37,6 +37,6 @@ exports.deleteGroup = function (req,res){
  * @param res
  */
 exports.getGroupInfo = function (req,res){
-
+  //TODO
 }
 
