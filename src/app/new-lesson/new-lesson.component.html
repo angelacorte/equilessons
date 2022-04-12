@@ -6,9 +6,9 @@
     #f="ngForm"
     novalidate>
     <h2 class="title">Nuova lezione</h2>
-    <div class="input-group flex-column">
+    <div class="input-group flex-column p-2">
       <div class="row">
-        <mat-form-field class="col p-2" appearance="fill">
+        <mat-form-field class="col" appearance="fill">
           <mat-label>Data della lezione</mat-label>
           <input
             matInput
@@ -21,10 +21,10 @@
           <mat-hint>DD/MM/YYYY</mat-hint>
           <mat-datepicker-toggle matSuffix [for]="lessonDate"></mat-datepicker-toggle>
           <mat-datepicker
-            #lessonDate
+          #lessonDate
             disabled="false"></mat-datepicker>
         </mat-form-field>
-        <mat-form-field class="col p-2" appearance="fill">
+        <mat-form-field class="col" appearance="fill">
         <mat-label>Orario</mat-label>
         <input
           [(ngModel)]="form.lessonHour"
@@ -40,7 +40,7 @@
       </mat-form-field>
       </div>
     </div>
-    <div class="flex-column input-group">
+    <div class="flex-column input-group p-2">
         <mat-label>Durata:</mat-label>
         <mat-radio-group class="row" name="lessonDuration" [(ngModel)]="form.lessonDuration" aria-label="seleziona durata">
           <mat-radio-button class="mt-2" name="lessonDuration" [value]="60" [checked]=true  [(ngModel)]="form.lessonDuration">60 minuti</mat-radio-button>
@@ -101,7 +101,7 @@
     <div class="flex-column input-group p-2">
       <div class="row">
         <mat-form-field class="col" appearance="fill">
-          <mat-label>Seleziona allievo</mat-label>
+          <mat-label>Allievo</mat-label>
           <mat-select
             class="custom-select"
             name="riderId"
@@ -116,7 +116,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="col" appearance="fill">
-          <mat-label>Seleziona cavallo</mat-label>
+          <mat-label>Cavallo</mat-label>
           <mat-select
             class="custom-select"
             name="horseId"
@@ -124,7 +124,7 @@
             [(ngModel)]="form.horseId">
             <mat-option  *ngFor="let horse of horses"
                          [value]="horse['_id']"
-                         [disabled]="isHorseInList(horse['_id'])">
+                         > <!--[disabled]="isHorseInList(horse['_id'])"-->
               {{horse['horseName']}}
             </mat-option>
           </mat-select>
@@ -144,7 +144,7 @@
       </mat-form-field>
     </div>
 
-    <div class="mt-5" *ngIf="lesson.length != 0">
+    <div class="mt-5 p-2" *ngIf="lesson.length != 0">
       <h3>Lezione composta da:</h3>
       <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="checkbox">
