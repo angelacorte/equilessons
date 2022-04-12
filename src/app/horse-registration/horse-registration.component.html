@@ -1,4 +1,4 @@
-<div class="container mt-5 align-self-auto">
+<div class="container mt-5">
 <!--     ngApp="horseRegistration">-->
   <form
     *ngIf="!isSuccessful"
@@ -7,134 +7,117 @@
     #f="ngForm"
     novalidate
   >
-    <h3 class="title">Registra il tuo cavallo!</h3>
-    <div class="form-row">
-      <div class="col-md-10 mt-2">
-        <label for="horseName">Nome</label>
-        <input
-          type="text"
-          class="form-control"
-          name="horseName"
-          id="horseName"
-          placeholder="Nome"
-          [(ngModel)]="form.horseName"
-          required
-        />
-      </div>
-      <div class="col-md-5 mt-2">
-        <label for="horseMicrochip">Microchip</label>
-        <input
-          type="text"
-          class="form-control"
-          name="horseMicrochip"
-          id="horseMicrochip"
-          placeholder="Microchip"
-          [(ngModel)]="form.horseMicrochip"
-          required
-        />
-      </div>
-    </div>
+    <h2 class="title">Registra il tuo cavallo!</h2>
 
-    <div class="form-row ">
-
-      <div class="col-md-5 mt-2">
-        <label for="horseBirthday">Data di nascita</label>
-        <input
-          type="date"
-          class="horseBirthday"
-          name="horseBirthday"
-          id="horseBirthday"
-          placeholder="Data di nascita"
-          [(ngModel)]="form.horseBirthday"
-          required
-        />
-      </div>
-    </div>
-    <div class="col-md-5 mt-2">
-      <label for="horseFise">Numero FISE</label>
-      <input
-        type="text"
-        class="form-control"
-        name="horseFise"
-        id="horseFise"
-        placeholder="Numero FISE (opzionale)"
-        [(ngModel)]="form.horseFise"
-      />
-    </div>
-
-    <div class="form-row">
-      <div class="col-md-8" *ngIf="!isClub">
-        <div class="form-check">
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Nome</mat-label>
           <input
-            type="checkbox"
-            class="form-check-input"
-            [value]="form.ownerId"
-            (change)="isOwnerRider($event)"
-            id="isOwnerRider"
-            [checked]=isInList(form.ownerId)>
-          <label class="form-check-label" for="isOwnerRider">Sono il suo cavaliere.</label>
-        </div>
-      </div>
-
-      <div class="col-md-5 mt-2">
-        <label for="riderId">Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</label>
-        <select
-          class="form-control"
-          name="riderId"
-          id="riderId"
-          [(ngModel)]="riderId"
-          >
-          <option *ngFor="let user of users"
-                  [value]="user['_id']"
-                  [disabled]="isInList(user['_id'])">
-            {{user['name']}} {{user['surname']}}
-          </option>
-        </select>
-        <button class="btn col-md-3" (click)="addRiderToList(riderId)">Aggiungi</button>
+             matInput
+             name="horseName"
+             id="horseName"
+             placeholder="Nome"
+             [(ngModel)]="form.horseName"
+             required>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Microchip</mat-label>
+          <input
+            matInput
+            name="horseMicrochip"
+            id="horseMicrochip"
+            placeholder="Microchip"
+            [(ngModel)]="form.horseMicrochip"
+            required>
+        </mat-form-field>
       </div>
     </div>
 
-    <div class="form-row" *ngIf="riders.length != 0"> <!--[style.display]="'true'"-->
-      <h4>Cavalieri selezionati:</h4>
-      <div class="col-md-8">
-        <ul role="listbox" class="list">
-          <li *ngFor="let rider of riders" role="option" aria-checked="true" >
-            <input
-              type="checkbox"
-              class="form-check-input"
-              value="true"
-              checked
-              (change)="isRiderUnchecked($event, rider)"
-              id="isRider">
-            <label class="form-check-label" for="isRider"> {{rider['name']}} {{rider['surname']}}</label>
-          </li>
-        </ul>
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Data di nascita</mat-label>
+          <input
+            matInput
+            [matDatepicker]="horseBirthday"
+            [(ngModel)]="form.horseBirthday"
+            name="horseBirthday"
+            id="horseBirthday"
+            disabled
+            required>
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="horseBirthday"></mat-datepicker-toggle>
+          <mat-datepicker
+            #horseBirthday
+            disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Numero FISE</mat-label>
+          <input
+            matInput
+            name="horseFise"
+            id="horseFise"
+            placeholder="Numero FISE (opzionale)"
+            [(ngModel)]="form.horseFise">
+        </mat-form-field>
+
       </div>
     </div>
 
-    <div class="form-row ">
-      <div class="col-md-8" *ngIf="isClub">
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            value="false"
-            (change)="isClubOwnerChecked($event)"
-            id="isClubOwner">
-          <label class="form-check-label" for="isClubOwner">Proprieta' del circolo ippico</label>
-        </div>
+    <div class="input-group flex-column p-2">
+      <div class="row"  *ngIf="!isClub">
+        <mat-checkbox
+          id="isOwnerRider"
+          [checked]=isOwnRider
+          (change)="isOwnerRider()">
+          Sono il suo cavaliere.
+        </mat-checkbox>
       </div>
+    </div>
 
-      <div class="col-md-8">
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            value="false"
-            (change)="isScholasticChecked($event)"
-            id="isScholastic">
-          <label class="form-check-label" for="isScholastic">Cavallo adibito a lezioni della scuola</label>
-        </div>
+    <div class="input-group flex-column p-2">
+      <div class="d-flex row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</mat-label>
+          <mat-select
+            name="riderId"
+            id="riderId"
+            [(ngModel)]="riderId">
+            <mat-option *ngFor="let user of users"
+                    [value]="user['_id']"
+                    [disabled]="isInList(user['_id'])">
+              {{user['name']}} {{user['surname']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-fab class=" btn" (click)="addRiderToList(riderId)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex-column p-2" *ngIf="riders.length != 0">
+      <mat-list class="row">
+        <mat-label>Cavalieri selezionati:</mat-label>
+        <mat-list-item *ngFor="let rider of riders">
+          <mat-checkbox
+            [checked]="isInList(rider['_id'])"
+            (change)="isRiderUnchecked(rider)"
+            id="isRider">
+            {{rider['name']}} {{rider['surname']}}
+          </mat-checkbox>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+    <div class="input-group flex-column p-2">
+      <div class="row" *ngIf="!isClub">
+        <mat-checkbox
+          (change)="isScholasticChecked()"
+          id="isScholastic">
+          Cavallo adibito a lezioni della scuola
+        </mat-checkbox>
       </div>
     </div>
 

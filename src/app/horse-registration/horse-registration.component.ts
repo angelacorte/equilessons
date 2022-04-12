@@ -35,6 +35,7 @@ export class HorseRegistrationComponent implements OnInit {
   riders = [];
   riderId: any;
   isClub: boolean = false;
+  isOwnRider: boolean = false;
 
   constructor(private http: HttpClient, private _snackBar: MatSnackBar, private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
 
@@ -96,7 +97,11 @@ export class HorseRegistrationComponent implements OnInit {
     }
     if(!this.isClub){
       form.clubId = this.infos.clubId;
-    }else form.clubId = this.infos._id;
+    }else {
+      form.clubId = this.infos._id;
+      form.ownerId = this.infos._id;
+      form.scholastic = true;
+    }
 
     this.horseService.horseRegistration(form).subscribe(response=>{
       this.submitted = true;
@@ -126,47 +131,45 @@ export class HorseRegistrationComponent implements OnInit {
     })
   }
 
-  isOwnerRider(e: any) {
-    if(!this.isClub){
-      let rider = {
+  isOwnerRider() {
+    this.isOwnRider = !this.isOwnRider;
+    if(this.isOwnRider){
+      this.addRiderToList(this.infos['_id']);
+    }else {
+      let val = {
         _id: this.infos['_id'],
         name: this.infos['name'],
-        surname: this.infos['surname'],
+        surname: this.infos['surname']
       }
-      if(e.target.checked){ // && !this.riders.some(obj=>obj['_id'] === rider['_id'])
-        // @ts-ignore
-        this.riders.push(rider);
-      }else{
-        this.removeDoc(rider);
-      }
+      this.removeDoc(val);
     }
   }
 
   addRiderToList(riderId: any) {
+    if(this.infos['_id'] === riderId){
+      let val = {
+        _id: riderId,
+        name: this.infos['name'],
+        surname: this.infos['surname']
+      }
+      // @ts-ignore
+      this.riders.push(val);
+    }
     this.users.forEach((value) => {
       if(value['_id'] === riderId && !this.riders.some(obj=>obj['_id'] === riderId)){
         this.riders.push(value);
+        console.log("riders ", this.riders);
       }
-    })
+    });
   }
 
-  isRiderUnchecked(e: any, rider: any) {
-    if(!e.target.checked){
-      this.removeDoc(rider);
-    }
+  isRiderUnchecked(rider: any) {
+    if(rider._id === this.infos._id) this.isOwnRider = false;
+    this.removeDoc(rider);
   }
 
-  isClubOwnerChecked(e: any) {
-    if(e.target.checked){
-      if(this.isClub) this.form.ownerId = this.infos['_id'];
-      else this.form.ownerId = this.infos['clubId'];
-    }else{
-      this.form.ownerId = this.infos['_id'];
-    }
-  }
-
-  isScholasticChecked(e: any){
-    this.form.scholastic = e.target.checked;
+  isScholasticChecked(){
+    this.form.scholastic = !this.form.scholastic;
   }
 
   private removeDoc(doc: any){
