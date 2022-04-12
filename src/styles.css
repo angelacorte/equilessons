@@ -3,12 +3,12 @@
 
 .btn{
   background: #001635;
-  color: #EAEAEA;
+  color: #FFFFFF;
   border-color: #001635;
 }
 
 .btn:hover{
-  color: #EAEAEA;
+  color: #FFFFFF;
   background: #397367;
 }
 

@@ -36,6 +36,8 @@ export class ProfileComponent implements OnInit {
       if(!this.isClub) this.fetchData();
 
       //this.updateInfos();
+    }else{
+      window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
