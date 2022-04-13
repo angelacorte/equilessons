@@ -150,6 +150,7 @@ exports.getLessonsInfos = function (req,res) {
         'horses_in_lesson.horseName': 1,
         'horses_in_lesson._id': 1,
         'arena.arenaName': 1,
+        'arena._id': 1,
         'coach._id':1,
         'coach.name': 1,
         'coach.surname': 1,

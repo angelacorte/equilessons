@@ -63,7 +63,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
   riders = [];
   horses = [];
   coaches = [];
-  dataSource:any;
+  dataSource = new MatTableDataSource(this.form.pairs);
 
   errorMessage = '';
 
@@ -90,8 +90,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
       this.updateLesson = this.data;
 
       await this.modifyLesson();
-
-      this.setDataSource(this.form.pairs);
+      this.dataSource.data = this.form.pairs;
     } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
@@ -111,6 +110,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
     //set the arenaId
     await this.matchArena(this.updateLesson.arenaName).then((r:any)=>{
+      console.log("dialog modify ", r);
       this.form.arena['arenaId'] = r._id;
       this.form.arena['arenaName'] = r.arenaName;
     });
@@ -222,8 +222,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
       }
     }
     this.form.pairs.push(tmpPair);
-    this.setDataSource(this.form.pairs);
-    this.table.renderRows();
+    this.dataSource.data = this.form.pairs;
   }
 
   checkParticipants(riderInfo:any):boolean{
@@ -238,8 +237,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     this.form.pairs.forEach((obj:any, index:any)=>{
       if(obj.riderInfo.riderId === riderId){
         this.form.pairs.splice(index,1);
-        this.setDataSource(this.form.pairs);
-        this.table.renderRows();
+        this.dataSource.data = this.form.pairs;
       }
     })
   }

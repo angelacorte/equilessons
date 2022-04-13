@@ -30,11 +30,11 @@ export class NewArenaComponent implements OnInit {
     clubId: ""
   }
 
-  dataSource:any;
+  arenas:any[] = [];
+  dataSource = new MatTableDataSource(this.arenas);
   displayedColumns = ['checkbox', 'arenaName'];
   isLoggedIn = false;
   infos: any;
-  arenas:any[] = [];
   toUpdate: {clubId:any, arenaName:string}[] = [];
   toRemove: {arenaId: any}[] = [];
 
@@ -86,7 +86,7 @@ export class NewArenaComponent implements OnInit {
     }
     this.toUpdate.push(up);
     this.setDataSource(this.arenas);
-    this.table.renderRows();
+    this.dataSource.data = this.arenas;
   }
 
   isArenaUnchecked(e: any, arenaId:any) {
@@ -96,8 +96,7 @@ export class NewArenaComponent implements OnInit {
           this.arenas.splice(index, 1);
           this.toRemove.push(arenaId);
           this.setDataSource(this.arenas);
-          this.table.renderRows();
-          console.log("this.arenas", this.arenas)
+          this.dataSource.data = this.arenas;
         }
       });
     }

@@ -37,12 +37,12 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   };
 
   users:any = [];
+  dataSource = new MatTableDataSource(this.users);
   errorMessage = '';
   isLoggedIn = false;
   infos: any;
   toRemove: any = [];
   displayedColumns = ['checkbox', 'utente', 'numero_di_telefono', 'utente_temporaneo'];
-  dataSource:any;
 
   constructor(public dialog: MatDialog, private _snackBar: MatSnackBar, private userService: UserService,
               private authService: AuthService, private http: HttpClient, private lessonService: LessonService,
@@ -119,7 +119,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
           this.users.splice(index,1)
           this.toRemove.push(userId);
           this.setDataSource(this.users);
-          this.table.renderRows();
+          this.dataSource.data = this.users;
         }
       })
     }

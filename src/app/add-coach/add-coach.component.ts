@@ -28,12 +28,12 @@ export class AddCoachComponent implements OnInit {
     coachId: ''
   }
 
-  dataSource:any;
+  coaches:{_id: any, name: any, surname: any}[]= [];
+  dataSource = new MatTableDataSource(this.coaches);
   errorMessage = '';
   isLoggedIn = false;
   infos: any;
   displayedColumns = ['checkbox', 'istruttore'];
-  coaches:{_id: any, name: any, surname: any}[]= [];
   coachId: any;
   users = [];
   toUpdate: {coachId: any}[]= [];
@@ -88,7 +88,7 @@ export class AddCoachComponent implements OnInit {
         this.coaches.push(coach);
         this.form.coachId = '';
         this.setDataSource(this.coaches);
-        this.table.renderRows();
+        this.dataSource.data = this.coaches;
       }
     }))
   }
@@ -111,7 +111,7 @@ export class AddCoachComponent implements OnInit {
         if(this.coaches[index] === coachId){
           this.coaches.splice(index, 1);
           this.setDataSource(this.coaches);
-          this.table.renderRows();
+          this.dataSource.data = this.coaches;
         }
       });
     }

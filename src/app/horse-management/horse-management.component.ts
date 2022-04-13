@@ -25,7 +25,7 @@ export class HorseManagementComponent implements OnInit {
   horses:any[] = [];
   displayedColumns = ['checkbox', 'cavallo', 'proprietario', 'scuola'];
 
-  dataSource:any;
+  dataSource = new MatTableDataSource(this.horses);
   toRemove:any[] = [];
   isClub: boolean = false;
   infos:any;
@@ -60,7 +60,7 @@ export class HorseManagementComponent implements OnInit {
         if(value._id === horseId && value.scholastic){
           this.horses.splice(index,1);
           this.toRemove.push(horseId);
-          this.table.renderRows();
+          this.dataSource.data = this.horses;
         }
       })
     }

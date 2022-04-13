@@ -9,6 +9,7 @@ import {LessonService} from "../_services/lesson.service";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {pairs} from "rxjs";
 
 @Component({
   selector: 'app-new-lesson',
@@ -18,7 +19,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class NewLessonComponent implements OnInit {
 
 
-  @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
+  @ViewChild(MatTable) table!: MatTable<any>;
   @ViewChild(MatSort, {static:false})
   set sort(value: MatSort) {
     if (this.dataSource){
@@ -40,13 +41,13 @@ export class NewLessonComponent implements OnInit {
     //color: ''
   }
 
-  dataSource:any;
+  lesson: {riderInfo: any, horseInfo: any}[] = []; //{riderId: any, horseId: any}[]
+  dataSource = new MatTableDataSource(this.lesson);
+  riders = [];
   isSuccessful = false;
   isLoggedIn = false;
   infos: any;
-  riders = [];
   arenas = [];
-  lesson: any = []; //{riderId: any, horseId: any}[]
   horses: any;
   displayedColumns = ['checkbox', 'allievo', 'cavallo'];
   coaches: {_id: any, name: any, surname: any}[] = [];
@@ -174,22 +175,20 @@ export class NewLessonComponent implements OnInit {
             this.dataSource.data = this.lesson;
             this.dataSource.sort;
             this.dataSource.paginator = this.paginator;
-            this.table.renderRows();
+            this.dataSource.data = this.lesson;
           }
         }))
       }
     }))
   }
 
-  isRiderUnchecked(e: any, pair: any) { //TODO CHECK IF IT STILL WORKS
-    if(!e.target.checked){
-      this.lesson.forEach((item: any, index: number)=>{
-        if(this.lesson[index] === pair){
-          this.lesson.splice(index, 1);
-          this.table.renderRows();
-        }
-      });
-    }
+  isRiderUnchecked(pair: any) { //TODO CHECK IF IT STILL WORKS
+    this.lesson.forEach((item: any, index: number)=>{
+      if(this.lesson[index] === pair){
+        this.lesson.splice(index, 1);
+        this.dataSource.data = this.lesson;
+      }
+    });
   }
 
   checkCoach() {
@@ -197,19 +196,19 @@ export class NewLessonComponent implements OnInit {
   }
 
   isRiderInList(id: any): boolean {
-    return this.lesson.some((obj: { riderInfo: { [x: string]: any; }; })=>obj.riderInfo["riderId"] === id);
+    return this.lesson.some((obj)=>obj.riderInfo["riderId"] === id);
 
   }
 
   isHorseInList(id: any) {
-    return this.lesson.some((obj: { horseInfo: { [x: string]: any; }; })=>obj.horseInfo["horseId"] === id)
+    return this.lesson.some((obj)=>obj.horseInfo["horseId"] === id)
   }
 
   isRider(rider: any) {
     this.riders.some((obj: any)=>{
       if(obj._id === rider){
         this.form.riderId = rider;
-        this.lesson.some((o: { horseInfo: { [x: string]: any; }; })=> {
+        this.lesson.some((o)=> {
           if (o.horseInfo['horseId'] !== obj.horse[0] && obj.horse.length > 0) {
             this.form.horseId = obj.horse[0];
           }

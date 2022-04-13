@@ -74,7 +74,7 @@ export class CalendarComponent implements OnInit {
 
   isLoggedIn = false;
   infos: any;
-  lessons = [];
+  lessons: any[] = [];
   isClub: boolean = false;
 
 
@@ -227,7 +227,6 @@ export class CalendarComponent implements OnInit {
       }
       return dataArray;
     })).subscribe(response=>{
-      // @ts-ignore
       this.lessons = response;
       this.appService.getEvents(this.lessons,this.actions)
         .then((events: CalendarSchedulerEvent[]) => this.events = events);
