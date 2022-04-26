@@ -36,6 +36,7 @@ export class ClubRegistrationComponent implements OnInit {
   isLoggedIn = false;
   //infos: any;
   isSignUpFailed = true;
+  hide = true;
 
   constructor(private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService, private userService: UserService) { }
 

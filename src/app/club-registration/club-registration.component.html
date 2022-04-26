@@ -1,93 +1,92 @@
-<div class="container mt-5 align-self-auto">
+<div class="container mt-5">
     <form
       *ngIf="!isSuccessful"
       name="form"
       (ngSubmit)="f.form.valid && onSubmit()"
       #f="ngForm"
-      novalidate
-    >
-      <h1 class="title">Registra il tuo circolo!</h1>
+      novalidate>
 
-      <div class="form-row col-md-5 mt-2">
-        <input
-          type="text"
-          class="form-control"
-          name="clubName"
-          id="clubName"
-          placeholder="Denominazione"
-          [(ngModel)]="form.clubName"
-          required
-        />
-      </div>
+      <h2 class="title">Registra il tuo circolo!</h2>
 
-      <div class="form-row col-md-5 mt-2">
-        <input
-          type="email"
-          class="form-control"
-          name="clubEmail"
-          id="clubEmail"
-          placeholder="Email"
-          [(ngModel)]="form.clubEmail"
-          required
-          email
-        />
-      </div>
-
-      <div class="form-row col-md-5 mt-2">
-        <input id="clubPassword" type="password" class="form-control" name="clubPassword" placeholder="Password"
-               [(ngModel)]="form.clubPassword" required minlength="4" #password="ngModel"/>
-        <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
-          <div *ngIf="password.errors.required">Inserisci la password!</div>
-          <div *ngIf="password.errors.minlength">
-            La password deve essere di almeno 4 caratteri
-          </div>
+      <div class="input-group flex-column">
+        <div class="row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Denominazione</mat-label>
+            <input
+              matInput
+              name="clubName"
+              id="clubName"
+              [(ngModel)]="form.clubName"
+              required>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              name="clubEmail"
+              id="clubEmail"
+              [(ngModel)]="form.clubEmail"
+              required>
+          </mat-form-field>
         </div>
       </div>
 
-      <div class="form-row col-md-5 mt-2">
-        <input
-          type="tel"
-          class="form-control"
-          name="clubTelephone"
-          id="clubTelephone"
-          placeholder="Telefono"
-          [(ngModel)]="form.clubTelephone"
-          required
-        />
+      <div class="input-group flex-column">
+        <div class="row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Numero di telefono</mat-label>
+            <input
+              matInput
+              type="tel"
+              name="clubTelephone"
+              id="clubTelephone"
+              [(ngModel)]="form.clubTelephone"
+              required>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hide ? 'clubPassword' : 'text'"
+              name="clubPassword"
+              id="clubPassword"
+              [(ngModel)]="form.clubPassword"
+              required
+              minlength="8">
+            <mat-error *ngIf="form.clubPassword.length < 8">Passowrd breve (minimo 8 caratteri)</mat-error>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+        </div>
       </div>
 
-      <div class="d-flex form-row col-md-5 mt-2 align-self-center">
-        <input
-          type="text"
-          class="form-control"
-          name="clubCity"
-          id="clubCity"
-          placeholder="Città"
-          [(ngModel)]="form.clubCity"
-          required
-        />
+      <div class="input-group flex-column">
+        <div class="row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Città</mat-label>
+            <input
+              matInput
+              name="clubCity"
+              id="clubCity"
+              [(ngModel)]="form.clubCity"
+              required>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Indirizzo</mat-label>
+            <input
+              matInput
+              name="clubAddress"
+              id="clubAddress"
+              [(ngModel)]="form.clubAddress"
+              required>
+          </mat-form-field>
+        </div>
       </div>
 
-      <div class="d-flex form-row col-md-5 mt-2 align-self-center">
-        <input
-          type="text"
-          class="form-control"
-          name="clubAddress"
-          id="clubAddress"
-          placeholder="Indirizzo"
-          [(ngModel)]="form.clubAddress"
-          required
-        />
+      <div class="input-group flex-column p-2">
+        <button class="btn col-md-4">Registrami</button>
       </div>
 
-
-      <div class="d-flex form-group col-md-5 mt-4 align-self-right">
-        <button class="btn col-md-4">Registrami!</button>
-      </div>
-
-      <div class="alert alert-warning" *ngIf="f.submitted && isRegistrationFailed">
-        Signup failed!<br />{{ errorMessage }}
-      </div>
   </form>
 
 
