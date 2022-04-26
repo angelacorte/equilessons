@@ -1,54 +1,69 @@
 <div class="container mt-5 align-self-center flex-wrap">
-    <form
-          *ngIf="!isLoggedIn"
-          name="form"
-          (ngSubmit)="f.form.valid && onSubmit()"
-          #f="ngForm"
-          novalidate>
-      <h1 class="title d-flex justify-content-center col-md-4">Effettua l'accesso!</h1>
-      <div class="form-group"> <!--text-center content-center col-md-6 offset-md-3-->
-        <div class="d-flex justify-content-center col-md-4 mt-4"> <!--d-flex flex-row col-6-->
-          <input id="username" type="text" class="form-control" name="username" placeholder="Username"
-            [(ngModel)]="form.username" required #username="ngModel"
-          />
-          <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
-            Inserisci l'username!
-          </div>
+  <form
+    *ngIf="!isLoggedIn"
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate>
+    <h1 class="title d-flex justify-content-center col-md-4">Effettua l'accesso!</h1>
+
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="" appearance="fill">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            name="username"
+            id="username"
+            placeholder="Username o email"
+            [(ngModel)]="form.username"
+            required
+            #username="ngModel">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="input-group flex-column p-2">
+      <div class="row">
+          <mat-form-field class="" appearance="fill">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            name="password"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            [(ngModel)]="form.password"
+            required minlength="4"
+            #password="ngModel"/>
+          </mat-form-field>
+      </div>
+    </div>
+    <div class="input-group flex-column p-2">
+      <button class="btn col-md-4">Entra</button>
+    </div>
+    <div class="form-group">
+      <div class="d-flex flex-column justify-content-center col-md-4 align-self-center">
+        <div class="flex-row align-self-center mt-3">
+          <a class="mt-4" href="/signup">Devi ancora effettuare la registrazione?</a>
         </div>
-        <div class="d-flex justify-content-center col-md-4 mt-2">
-          <input id="password" type="password" class="form-control" name="password" placeholder="Password"
-            [(ngModel)]="form.password" required minlength="4" #password="ngModel"/>
-          <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
-            <div *ngIf="password.errors.required">Inserisci la password!</div>
-            <div *ngIf="password.errors.minlength">
-              La password deve essere di almeno 4 caratteri
-            </div>
-          </div>
+        <div class="flex-row align-self-center mt-3">
+          <p>Oppure</p>
         </div>
-        <div class="d-flex justify-content-center col-md-4 mt-2">
-          <button class="btn col-md-6 mt-2">Entra</button>
-        </div>
-        <div class="d-flex flex-column justify-content-center col-md-4 align-self-center">
-          <div class="flex-row align-self-center mt-3">
-            <a class="mt-4" href="/signup">Devi ancora effettuare la registrazione?</a>
-          </div>
-          <div class="flex-row align-self-center mt-3">
-            <p>Oppure</p>
-          </div>
-          <div class="flex-row align-self-center">
-            <a class="mt-4" href="/newClub">Registra il tuo circolo ippico!</a>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
-            Login failed: {{ errorMessage }}
-          </div>
+        <div class="flex-row align-self-center">
+          <a class="mt-4" href="/newClub">Registra il tuo circolo ippico!</a>
         </div>
       </div>
-    </form>
+      <div class="form-group">
+        <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
+          Login failed: {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </form>
 <!--
-    <div class="alert alert-success" *ngIf="isLoggedIn">
-      Welcome back!
-    </div>-->
+  <div class="alert alert-success" *ngIf="isLoggedIn">
+    Welcome back!
+  </div>-->
 
 </div>

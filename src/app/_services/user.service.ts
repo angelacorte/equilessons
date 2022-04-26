@@ -18,7 +18,7 @@ export class UserService {
 
   //This provides methods to access public and protected resources
 
-  getPublicContent(): Observable<any> {
+  getPublicContent(): Observable<any> { //TODO
     return this.http.get(baseURL + 'all', { responseType: 'text' });
   }
 
