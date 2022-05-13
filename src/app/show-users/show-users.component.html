@@ -10,45 +10,50 @@
           Aggiungi un utente temporaneo
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-form-field appearance="fill">
-        <mat-label>Nome</mat-label>
-        <input
-          matInput
-          type="text"
-          class="form-control"
-          name="name"
-          id="name"
-          [(ngModel)]="form.name"
-          required/>
-      </mat-form-field><br>
-      <mat-form-field appearance="fill">
-        <mat-label>Cognome</mat-label>
-        <input
-          matInput
-          type="text"
-          class="form-control"
-          name="surname"
-          id="surname"
-          [(ngModel)]="form.surname"
-          required
-        />
-      </mat-form-field><br>
-      <mat-form-field appearance="fill">
-        <mat-label>Numero di telefono</mat-label>
-        <input
-          matInput
-          type="tel"
-          class="form-control"
-          name="phoneNumber"
-          id="phoneNumber"
-          [(ngModel)]="form.phoneNumber"
-          required
-        />
-      </mat-form-field>
-
-      <div class="mt-2">
-        <button class="btn col-md-3">Conferma</button>
+      <div class="input-group flex-column p-2">
+        <div class="d-flex row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Nome</mat-label>
+            <input
+              matInput
+              type="text"
+              class="form-control"
+              name="name"
+              id="name"
+              [(ngModel)]="form.name"
+              required/>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Cognome</mat-label>
+            <input
+              matInput
+              type="text"
+              class="form-control"
+              name="surname"
+              id="surname"
+              [(ngModel)]="form.surname"
+              required
+            />
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Numero di telefono</mat-label>
+            <input
+              matInput
+              type="tel"
+              class="form-control"
+              name="phoneNumber"
+              id="phoneNumber"
+              [(ngModel)]="form.phoneNumber"
+              required
+            />
+          </mat-form-field>
+        </div>
       </div>
+      <button mat-fab class="btn" >
+        <mat-icon>add</mat-icon>
+      </button>
+
+
     </mat-expansion-panel>
   </mat-accordion>
 
