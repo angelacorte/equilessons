@@ -1,4 +1,4 @@
-<div class="container mt-5 align-self-auto">
+<div class="container mt-5">
   <h1>Gestione campi</h1>
   <mat-accordion>
     <mat-expansion-panel
@@ -8,20 +8,24 @@
           Aggiungi un campo adibito alle lezioni
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-form-field appearance="fill">
-        <mat-label>Denominazione</mat-label>
-        <input
-          matInput
-          #arenaName
-          type="text"
-          class="form-control"
-          name="arenaName"
-          id="arenaName"
-          [(ngModel)]="form.arenaName"
-        />
-      </mat-form-field>
-      <div class="mt-1">
-        <button class="btn" (click)="addArenaToList(arenaName.value)" type="reset">Aggiungi</button>
+      <div class="input-group flex-column p-2">
+        <div class="d-flex row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Denominazione</mat-label>
+            <input
+              matInput
+              #arenaName
+              type="text"
+              class="form-control"
+              name="arenaName"
+              id="arenaName"
+              [(ngModel)]="form.arenaName"
+            />
+          </mat-form-field>
+          <button mat-fab class="btn" (click)="addArenaToList(arenaName.value)" type="reset">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
