@@ -182,7 +182,7 @@ export class NewLessonComponent implements OnInit {
     }))
   }
 
-  isRiderUnchecked(pair: any) { //TODO CHECK IF IT STILL WORKS
+  isRiderUnchecked(pair: any) {
     this.lesson.forEach((item: any, index: number)=>{
       if(this.lesson[index] === pair){
         this.lesson.splice(index, 1);
