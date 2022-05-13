@@ -1,9 +1,10 @@
 <div class="container mt-2">
 
   <h1>Gestione istruttori</h1>
-    <div class="d-flex row col-md-5 mt-4">
-        <mat-label>Aggiungi istruttore</mat-label>
-        <mat-form-field appearance="fill">
+  <div class="input-group flex-column p-2">
+    <div class="d-flex row">
+        <mat-form-field class="col col-md-4" appearance="fill">
+          <mat-label>Aggiungi istruttore</mat-label>
           <mat-select
             class="custom-select"
             name="riderId"
@@ -18,9 +19,11 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-
-      <button class="d-flex-row btn col-md-3 ml-1" (click)="addCoachToList(form.coachId)" >Aggiungi</button>
+      <button mat-fab class=" btn" (click)="addCoachToList(form.coachId)" >
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
+  </div>
 
     <div class="mt-4"> <!--[style.display]="'true'"-->
       <h2>Istruttori abilitati:</h2>
