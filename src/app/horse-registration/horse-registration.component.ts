@@ -119,7 +119,8 @@ export class HorseRegistrationComponent implements OnInit {
         })
       }
       snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.assign('/profile');
+        if(this.isClub) window.location.assign('/showHorses');
+        else window.location.assign('/profile');
       })
     }, err => {
       this._snackBar.open("Non è stato possibile registrare il cavallo", "Ok", {
