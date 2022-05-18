@@ -23,8 +23,12 @@ exports.getUserById = function (req,res){
  * @param req
  * @param res
  */
-exports.getUsersByClub = function (req,res) {
-  User.find({clubId:req.params.clubId}, {name:1,surname:1}).then(result=>{
+exports.getUsersByClub = function (req,res) { //todo maybe useless
+  const sort = {
+    surname:1,
+    name:1
+  }
+  User.find({clubId:req.params.clubId}, {name:1,surname:1}).sort(sort).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -139,7 +143,11 @@ exports.getUserHorses = function (req,res){
     }
   ];
 
-  User.aggregate(pipeline).then(result=>{
+  const sort = {
+    horseName: 1
+  }
+
+  User.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }

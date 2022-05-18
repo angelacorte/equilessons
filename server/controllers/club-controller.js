@@ -235,9 +235,7 @@ exports.getClubArenas = function (req,res) { //TODO maybe it's a duplicate, the 
  * @param res
  */
 exports.registerClub = function (req,res) {
-  Club.findOne({
-    clubEmail:req.body.clubEmail
-  }).then(tmpClub=>{
+  Club.findOne({clubEmail:req.body.clubEmail}).then(tmpClub=>{
     if(tmpClub){
       res.status(409).send({"description": "email already in use"})
     }else{
@@ -276,7 +274,11 @@ exports.addCoach = function (req,res){
  * @param res
  */
 exports.getClubAthletes = function (req,res) {
-  User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1, email:1, phoneNumber:1}).then(result=>{
+  let sort = {
+    surname: 1,
+    name: 1
+  };
+  User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1, email:1, phoneNumber:1}).sort(sort).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -294,6 +296,10 @@ exports.getClubAthletes = function (req,res) {
  */
 exports.getCoachByClubId = function (req,res) {
 
+  let sort = {
+    surname: 1,
+    name: 1
+  };
   let pipeline = [
     {
       '$match': {
@@ -315,7 +321,7 @@ exports.getCoachByClubId = function (req,res) {
     }
   ];
 
-  Club.aggregate( pipeline).then(result=>{
+  Club.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -324,22 +330,3 @@ exports.getCoachByClubId = function (req,res) {
     console.log("Error: ", err.message);
   });
 }
-
-/*
-IDEAS FOR AGGREGATE
-db.arenas.aggregate([{ $match:{"clubId":ObjectId("60f702d3329ccb26f26937a0")}},{$lookup:{from:"clubs",localField:"clubId",foreignField:"_id",as:"arenasClub
-
-//this finds all the arenas that a club has:
-//db.clubs.aggregate([{ $match:{"_id":ObjectId("60f702d3329ccb26f26937a0")}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasClub"}}])
-
-{ $match:"}}])
-  {
-    "_id":ObjectId("60f702d3329ccb26f26937a0")
-  }
-},{$lookup:{
-  from:"arenas",
-    localField:"clubId",
-    foreignField:"_id",
-    as:"arenasClub"
-}}
-*/

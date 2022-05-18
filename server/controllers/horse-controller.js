@@ -24,7 +24,7 @@ exports.addHorse = function (req,res){
  * @param res
  */
 exports.getScholasticHorses = function (req,res) {
-  Horse.find({clubId:new ObjectId(req.params.clubId), scholastic:true}).then(result =>{
+  Horse.find({clubId:new ObjectId(req.params.clubId), scholastic:true}).sort({horseName:1}).then(result =>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -56,6 +56,11 @@ exports.getHorseInfos = function (req,res){
  * @param res
  */
 exports.getHorses = function (req,res){
+  const sort = {
+    "horseOwner.surname":1,
+    "horseOwner.name":1,
+    "horseName":1
+  }
   let pipeline = [
     {
       '$match': {
@@ -89,7 +94,7 @@ exports.getHorses = function (req,res){
     }
   ];
 
-  Horse.aggregate(pipeline).then(result=>{
+  Horse.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }

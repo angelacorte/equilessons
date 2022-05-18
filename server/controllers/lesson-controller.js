@@ -37,7 +37,6 @@ exports.deleteLesson = function (req,res){     //TODO might send a notification 
  * @param res
  */
 exports.updateLesson = function (req,res){ //TODO might send a notification to the participants who were listed into
-  console.log("req.body", req.body)
  let update = {
    beginDate: req.body.beginDate,
    endDate: req.body.endDate,
@@ -108,6 +107,12 @@ exports.getLessonByCoachID = function (req,res){
  */
 exports.getLessonsInfos = function (req,res) {
 
+  const sort = {
+    "beginDate":1,
+    "coach.surname": 1,
+    "coach.name": 1,
+    'arena.arenaName': 1
+  }
   let pipeline = [
     {
       $match: {
@@ -162,7 +167,7 @@ exports.getLessonsInfos = function (req,res) {
     }
   ];
 
-  Lesson.aggregate(pipeline).then(result=>{
+  Lesson.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }

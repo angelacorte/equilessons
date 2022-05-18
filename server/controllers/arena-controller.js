@@ -8,7 +8,7 @@ let ObjectId = require('mongodb').ObjectID;
  * @param req
  * @param res
  */
-exports.getArenaByName = function (req,res){
+exports.getArenaByName = function (req,res){ //todo useless???
   Arena.findOne({"arenaName":req.params.arenaName}).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
@@ -44,7 +44,7 @@ exports.addArena = function (req,res){
  * @param res
  */
 exports.getArenasByClubId = function (req,res){
-  Arena.find({"clubId":req.params.clubId}, {"clubId":0}).then(result=>{
+  Arena.find({"clubId":req.params.clubId}, {"clubId":0}).sort({arenaName: 1}).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
