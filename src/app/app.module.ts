@@ -58,6 +58,8 @@ import { HorseManagementComponent } from './horse-management/horse-management.co
 import {MatRadioModule} from "@angular/material/radio";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -115,7 +117,9 @@ registerLocaleData(localeIt);
     MatSnackBarModule,
     MatRadioModule,
     MatMenuModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTabsModule,
+    MatProgressBarModule
   ],
   providers: [
     MatDatepickerModule,

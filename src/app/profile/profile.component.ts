@@ -4,6 +4,7 @@ import {map} from "rxjs/operators";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {ClubService} from "../_services/club.service";
+import {Observable, Observer} from "rxjs";
 
 const baseURL = 'http://localhost:5050';
 
@@ -11,12 +12,20 @@ const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
+export interface ProfileTab{
+  label: string,
+}
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
+
+
 export class ProfileComponent implements OnInit {
+
+  asyncTabs: Observable<ProfileTab[]>;
 
   roles: string[] = [];
   isLoggedIn = false;
@@ -24,7 +33,18 @@ export class ProfileComponent implements OnInit {
   user:any;
   isClub: boolean = false;
 
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private clubService: ClubService) { }
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private clubService: ClubService) {
+    this.asyncTabs = new Observable((observer: Observer<ProfileTab[]>) => {
+      setTimeout(() => {
+        observer.next([
+          {label: 'Gestione Campi'},
+          {label: 'Gestione Cavalli'},
+          {label: 'Gestione Istruttori'},
+          {label: 'Gestione Utenti'},
+        ]);
+      }, 1000);
+    });
+  }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();

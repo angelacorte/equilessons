@@ -4,7 +4,7 @@
   -->
   <app-login></app-login>
 </div>
-<div class="container">
-  <h1 class="d-flex ml-5 mt-5" *ngIf="isLoggedIn && !isClub">Ciao {{ infos.name }}!</h1>
-  <h1 class="d-flex ml-5 mt-5" *ngIf="isLoggedIn && isClub">{{ infos.clubName }}</h1>
-</div>
+
+<ng-container *ngIf="isLoggedIn">
+  <app-calendar></app-calendar>
+</ng-container>

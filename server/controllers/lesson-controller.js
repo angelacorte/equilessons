@@ -167,7 +167,7 @@ exports.getLessonsInfos = function (req,res) {
     }
   ];
 
-  Lesson.aggregate(pipeline).sort(sort).then(result=>{
+  Lesson.aggregate(pipeline).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
