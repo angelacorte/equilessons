@@ -38,20 +38,30 @@ export class HorseManagementComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
     if (this.isLoggedIn && this.isClub) { //check on user's login
-      this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub()); //get the infos saved in the session
+      this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
 
       this.horses = await this.getAllHorses(this.infos['_id']);
-
       await this.matchOwner();
       this.setDataSource(this.horses);
 
-    }else {
+    }else if(this.isLoggedIn && !this.isClub) {
+      this.infos = this.tokenStorage.getInfos(this.isClub);
+      this.horses = await this.getPrivateHorses(this.infos['_id']);
+      console.log("this horses" + this.horses)
+
+      await this.matchPrivateHorse();
+      this.setDataSource(this.horses);
+    } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
   private async getAllHorses(clubId:any):Promise<any>{
     return await this.horseService.getAllHorses(clubId).toPromise();
+  }
+
+  private async getPrivateHorses(userId: string): Promise<any>{
+    return await this.horseService.getPrivateHorses(userId).toPromise();
   }
 
   isHorseUnchecked(e: any, horseId: any) {
@@ -112,6 +122,18 @@ export class HorseManagementComponent implements OnInit {
         }
         this.horses[index]['clubOwner'] = clubOwner;
       }
+    })
+  }
+
+  private async matchPrivateHorse() { //TODO add way to remove horse
+    this.horses.forEach((h:{horseName: string, riders: string[], scholastic: boolean}, index) => {
+      console.log("h " + h.horseName)
+      let horseOwner = {
+          ownerName: this.infos['name'],
+          ownerSurname: this.infos['surname']
+      }
+      this.horses[index]['horseOwner'] = horseOwner;
+      this.horses[index]['clubOwner'] = ""; //TODO MAGHEGGI BRUTTI
     })
   }
 }

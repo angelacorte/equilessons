@@ -65,6 +65,9 @@ module.exports = function (app){
   app.route('/horses/:clubId')
     .get(horseController.getHorses);
 
+  app.route('/privateHorses/:ownerId')
+    .get(horseController.getPrivateHorses);
+
   //---------------------------------LESSON---------------------------------
   app.route('/lesson')
     .post(lessonController.createLesson);

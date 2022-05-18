@@ -27,4 +27,8 @@ export class HorseService {
   getAllHorses(clubId: any) {
     return this.http.get(baseURL + '/horses/' + clubId, httpOptions);
   }
+
+  getPrivateHorses(ownerId: string){
+    return this.http.get(baseURL + '/privateHorses/' + ownerId, httpOptions)
+  }
 }

@@ -1,18 +1,28 @@
 <div class="container" *ngIf="isLoggedIn">
-  <h1 class="d-flex ml-5 mt-4">Il tuo profilo</h1>
-  <div class="d-flex flex-column ml-2 mt-5" *ngIf="!isClub">
-    <h2 class="d-flex ml-2 mt-5">Ruoli</h2>
-    <ul class="list-group" style="list-style-type:square;">
-      <li class="list-group-item col-md-4" *ngFor="let role of roles">{{role}}</li>
-    </ul>
-  </div>
-  <div class="d-flex flex-column mt-1" *ngIf="isClub">
+  <h1 class="d-flex mt-3">Il tuo profilo</h1>
+  <div class="d-flex flex-column mt-2" *ngIf="!isClub">
     <ng-container *ngIf="(asyncTabs | async) === null">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </ng-container>
 
     <mat-tab-group>
       <mat-tab *ngFor="let tab of asyncTabs | async">
+        <ng-template mat-tab-label>{{tab.label}}</ng-template>
+        <ng-container [ngSwitch]="tab.label">
+          <app-personal-infos *ngSwitchCase="'Informazioni Personali'"></app-personal-infos>
+          <app-horse-management *ngSwitchCase="'Gestione Cavalli'"></app-horse-management>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div class="d-flex flex-column mt-1" *ngIf="isClub">
+    <ng-container *ngIf="(asyncTabsClub | async) === null">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </ng-container>
+
+    <mat-tab-group>
+      <mat-tab *ngFor="let tab of asyncTabsClub | async">
         <ng-template mat-tab-label>{{tab.label}}</ng-template>
         <ng-container [ngSwitch]="tab.label">
           <app-new-arena *ngSwitchCase="'Gestione Campi'"></app-new-arena>

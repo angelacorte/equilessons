@@ -25,6 +25,7 @@ export interface ProfileTab{
 
 export class ProfileComponent implements OnInit {
 
+  asyncTabsClub: Observable<ProfileTab[]>;
   asyncTabs: Observable<ProfileTab[]>;
 
   roles: string[] = [];
@@ -34,13 +35,22 @@ export class ProfileComponent implements OnInit {
   isClub: boolean = false;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private clubService: ClubService) {
-    this.asyncTabs = new Observable((observer: Observer<ProfileTab[]>) => {
+    this.asyncTabsClub = new Observable((observer: Observer<ProfileTab[]>) => {
       setTimeout(() => {
         observer.next([
           {label: 'Gestione Campi'},
           {label: 'Gestione Cavalli'},
           {label: 'Gestione Istruttori'},
           {label: 'Gestione Utenti'},
+        ]);
+      }, 1000);
+    });
+
+    this.asyncTabs = new Observable((observer: Observer<ProfileTab[]>) => {
+      setTimeout(() => {
+        observer.next([
+          {label: 'Informazioni Personali'},
+          {label: 'Gestione Cavalli'}
         ]);
       }, 1000);
     });

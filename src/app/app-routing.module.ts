@@ -15,6 +15,8 @@ import {AddCoachComponent} from "./add-coach/add-coach.component";
 import {NotAllowedComponent} from "./not-allowed/not-allowed.component";
 import {ShowUsersComponent} from "./show-users/show-users.component";
 import {HorseManagementComponent} from "./horse-management/horse-management.component";
+import {LessonHistoryComponent} from "./lesson-history/lesson-history.component";
+import {PersonalInfosComponent} from "./personal-infos/personal-infos.component";
 
 const routes: Routes = [
   {path: '', redirectTo:'home', pathMatch:'full'},
@@ -32,6 +34,8 @@ const routes: Routes = [
   {path: 'notAllowed', component: NotAllowedComponent},
   {path: 'showUsers', component:ShowUsersComponent},
   {path: 'showHorses', component:HorseManagementComponent},
+  {path: 'lessonHistory', component:LessonHistoryComponent},
+  {path: 'personalInfos', component:PersonalInfosComponent},
   {path: `**`, component: PageNotFoundComponent}
 ];
 

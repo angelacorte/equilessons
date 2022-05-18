@@ -103,3 +103,19 @@ exports.getHorses = function (req,res){
     console.log("Error: ", err.message);
   });
 }
+
+exports.getPrivateHorses = function (req,res){ //todo must check also on riders, not only on the owner (or make another query?)
+  const sort = {
+    horseName: 1
+  }
+
+  Horse.find({ownerId:req.params.ownerId}).sort(sort).then(result => {
+    if(!result){
+      return res.status(500).send({message: "an error occurred"});
+    }
+    console.log("private " + result)
+    return res.send(result);
+  }).catch(err=> {
+    console.log("Error: ", err.message);
+  });
+}

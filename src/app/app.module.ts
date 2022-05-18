@@ -60,6 +60,8 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { PersonalInfosComponent } from './personal-infos/personal-infos.component';
+import { LessonHistoryComponent } from './lesson-history/lesson-history.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -83,7 +85,9 @@ registerLocaleData(localeIt);
     DialogLessonViewComponent,
     DialogHorseViewComponent,
     DialogModifyLessonViewComponent,
-    HorseManagementComponent
+    HorseManagementComponent,
+    PersonalInfosComponent,
+    LessonHistoryComponent
   ],
   imports: [
     BrowserModule,
