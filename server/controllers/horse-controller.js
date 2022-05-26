@@ -11,8 +11,10 @@ let ObjectId = require('mongodb').ObjectID;
 exports.addHorse = function (req,res){
   let newHorse = new Horse(req.body);
   newHorse.save(function(err, horse) {
+    console.log("error " + err + err.type);
     if (err){
-      res.send(err);
+      console.log("error ");
+      res.status(400).json(err);
     }
     res.status(200).json(horse);
   });
@@ -113,7 +115,6 @@ exports.getPrivateHorses = function (req,res){ //todo must check also on riders,
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    console.log("private " + result)
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);

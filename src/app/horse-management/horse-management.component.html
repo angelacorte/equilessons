@@ -5,8 +5,8 @@
   <a class="btn col-md-3" href="/horseRegistration">Aggiungi un cavallo</a>
 
   <div class="mt-2"> <!--[style.display]="'true'"-->
-    <h5 class="text-secondary">Per rimuovere un cavallo del circolo ippico dalla lista, basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
-
+    <h5 *ngIf="isClub" class="text-secondary">Per rimuovere un cavallo del circolo ippico dalla lista, basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
+    <h5 *ngIf="!isClub" class="text-secondary">Per modificare le informazioni di un cavallo basta cliccare sul nome</h5>
     <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
       <ng-container matColumnDef="checkbox">
         <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
@@ -18,19 +18,24 @@
             checked
             [disabled]="!h.scholastic"
             (click)="isHorseUnchecked($event, h.horseId)"
-          > <!--id="userId"-->
+          > <!--todo in realta metterlo disabilitato se il cavallo non è della scuola, se è profilo utente allora abilitarlo-->
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="cavallo">
         <mat-header-cell *matHeaderCellDef> Cavallo </mat-header-cell>
         <mat-cell *matCellDef="let h">
-          <button mat-button (click)="showHorseInfos(h.horseId)"> {{h['horseName']}}</button>
+          <button
+            mat-button
+            (click)="showHorseInfos(h._id)"
+            #tooltip="matTooltip"
+            matTooltip="Visualizza informazioni"
+            matTooltipHideDelay="100"> {{h['horseName']}}</button>
 
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="proprietario">
+      <ng-container matColumnDef="proprietario" >
         <mat-header-cell *matHeaderCellDef> Proprietario </mat-header-cell>
         <mat-cell *matCellDef="let h"> {{h.horseOwner['ownerName']}} {{h.horseOwner['ownerSurname']}} {{h.clubOwner['ownerName']}}</mat-cell>
       </ng-container>

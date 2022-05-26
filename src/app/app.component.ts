@@ -33,6 +33,6 @@ export class AppComponent implements OnInit{
 
   logout(): void {
     this.tokenStorageService.logout();
-    window.location.reload();
+    window.location.replace("/");
   }
 }

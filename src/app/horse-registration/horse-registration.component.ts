@@ -5,6 +5,7 @@ import {UserService} from "../_services/user.service";
 import {map} from "rxjs/operators";
 import {HorseService} from "../_services/horse.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ClubService} from "../_services/club.service";
 
 
 @Component({
@@ -37,7 +38,7 @@ export class HorseRegistrationComponent implements OnInit {
   isClub: boolean = false;
   isOwnRider: boolean = false;
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private clubService: ClubService,  private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -46,38 +47,30 @@ export class HorseRegistrationComponent implements OnInit {
       this.isClub = this.tokenStorage.isClub();
       this.infos = this.tokenStorage.getInfos(this.isClub);
       this.form.ownerId = this.infos._id;
+
       this.fetchData();
     }else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
-  private fetchData(){
+  private async fetchData() {
     let clubId;
-
-    if(this.isClub) {
+    if (this.isClub) {
       clubId = this.infos._id
-    }else{
+    } else {
       clubId = this.infos.clubId
     }
-    this.userService.getUsersByClub(clubId).pipe(map(responseData => {
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
+    this.users = await this.getUsers(clubId);
+    this.users.forEach((item, index) => {
+      if (item['_id'] === this.infos._id || item['email'] == undefined) {
+        this.users.splice(index, 1);
       }
-      return dataArray;
-    })).subscribe(response=>{
-      // @ts-ignore
-      this.users = response;
-      this.users.forEach((item,index)=>{
-        if(item['_id'] === this.infos._id){
-          this.users.splice(index, 1);
-        }
-      });
     });
+  }
+
+  private async getUsers(clubId: any): Promise<any>{
+    return await this.clubService.getClubAthletes(clubId).toPromise();
   }
 
   onSubmit(): void{
@@ -103,7 +96,7 @@ export class HorseRegistrationComponent implements OnInit {
       form.scholastic = true;
     }
 
-    this.horseService.horseRegistration(form).subscribe(response=>{
+    this.horseService.horseRegistration(form).subscribe((response)=>{
       this.submitted = true;
       this.isSuccessful = true;
       let snackBarRef = this._snackBar.open("Registrazione con successo", "Ok", {
@@ -121,7 +114,7 @@ export class HorseRegistrationComponent implements OnInit {
       snackBarRef.afterDismissed().subscribe(()=>{
         if(this.isClub) window.location.assign('/showHorses');
         else window.location.assign('/profile');
-      })
+      });
     }, err => {
       this._snackBar.open("Non è stato possibile registrare il cavallo", "Ok", {
         duration: 3000

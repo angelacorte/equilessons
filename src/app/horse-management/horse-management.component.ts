@@ -46,6 +46,7 @@ export class HorseManagementComponent implements OnInit {
 
     }else if(this.isLoggedIn && !this.isClub) {
       this.infos = this.tokenStorage.getInfos(this.isClub);
+      this.displayedColumns = ['cavallo', 'scuola'];
       this.horses = await this.getPrivateHorses(this.infos['_id']);
       console.log("this horses" + this.horses)
 
@@ -77,6 +78,8 @@ export class HorseManagementComponent implements OnInit {
   }
 
   showHorseInfos(horseId: any) {
+    console.log("horse id is " + horseId);
+
   //TODO implement showhorse infos (dialog view)
   }
 
@@ -128,12 +131,11 @@ export class HorseManagementComponent implements OnInit {
   private async matchPrivateHorse() { //TODO add way to remove horse
     this.horses.forEach((h:{horseName: string, riders: string[], scholastic: boolean}, index) => {
       console.log("h " + h.horseName)
-      let horseOwner = {
-          ownerName: this.infos['name'],
-          ownerSurname: this.infos['surname']
-      }
-      this.horses[index]['horseOwner'] = horseOwner;
-      this.horses[index]['clubOwner'] = ""; //TODO MAGHEGGI BRUTTI
+      this.horses[index]['horseOwner'] = {
+        ownerName: this.infos['name'],
+        ownerSurname: this.infos['surname']
+      };
+      // this.horses[index]['clubOwner'] = ""; //TODO MAGHEGGI BRUTTI
     })
   }
 }

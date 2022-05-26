@@ -23,6 +23,7 @@
         </mat-form-field>
         <mat-form-field class="col" appearance="fill">
           <mat-label>Microchip</mat-label>
+          <mat-hint>Non deve contenere lettere</mat-hint>
           <input
             matInput
             name="horseMicrochip"
@@ -54,6 +55,7 @@
         </mat-form-field>
         <mat-form-field class="col" appearance="fill">
           <mat-label>Numero FISE</mat-label>
+          <mat-hint>Opzionale</mat-hint>
           <input
             matInput
             name="horseFise"
@@ -80,6 +82,7 @@
       <div class="d-flex row">
         <mat-form-field class="col" appearance="fill">
           <mat-label>Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</mat-label>
+          <mat-hint>Gli utenti temporanei non possono essere selezionati</mat-hint>
           <mat-select
             name="riderId"
             id="riderId"
