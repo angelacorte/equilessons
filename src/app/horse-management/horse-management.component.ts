@@ -52,7 +52,7 @@ export class HorseManagementComponent implements OnInit {
       this.infos = this.tokenStorage.getInfos(this.isClub);
       this.displayedColumns = ['cavallo', 'scuola'];
       this.horses = await this.getPrivateHorses(this.infos['_id']);
-      await this.matchOwner();
+      await this.matchPrivateHorse();
       this.setDataSource(this.horses);
     } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
@@ -70,7 +70,9 @@ export class HorseManagementComponent implements OnInit {
   isHorseUnchecked(e: any, horseId: any) {
     if(!e.target.checked){
       this.horses.some((value:any,index:number) => {
+        console.log("value" + value._id);
         if(value._id === horseId && value.scholastic){
+          console.log("yes")
           this.horses.splice(index,1);
           this.toRemove.push(horseId);
           this.dataSource.data = this.horses;
@@ -88,11 +90,16 @@ export class HorseManagementComponent implements OnInit {
     });
   }
 
-
   update() {
-    //TODO implement, means that a horse should have been removed
-    //var "toRemove" - add snackbar
-
+    console.log("to remove" + this.toRemove);
+    this.horseService.removeHorses(this.toRemove).then((res) => {}, (msg) => { //todo brutta roba ma non so fare altrimenti
+      console.log(msg);
+      if(msg.status == 200){
+        this.openSnackbar("Modifiche apportate con successo");
+      }else{
+        this.openSnackbar("Modifiche non apportate");
+      }
+    })
   }
 
   private setDataSource(data:any){
@@ -131,6 +138,18 @@ export class HorseManagementComponent implements OnInit {
         }
         this.horses[index]['horseOwner'] = horseOwner;
       }
+    })
+  }
+
+  private async matchPrivateHorse() { //TODO add way to remove horse
+    this.horses.forEach((h:{horseName: string, riders: string[], scholastic: boolean}, index) => {
+      console.log("h " + h.horseName)
+      let horseOwner = {
+        ownerName: this.infos['name'],
+        ownerSurname: this.infos['surname'],
+        ownerId: this.infos['_id']
+      }
+      this.horses[index]['horseOwner'] = horseOwner;
     })
   }
 }

@@ -12,13 +12,14 @@
         <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
         <mat-cell *matCellDef="let h">               <!--<td  *ngFor="let les of lesson">-->
           <input
+            *ngIf="isClub"
             type="checkbox"
             class="form-check-input"
             value="true"
             checked
             [disabled]="!h.scholastic"
-            (click)="isHorseUnchecked($event, h.horseId)"
-          > <!--todo in realta metterlo disabilitato se il cavallo non è della scuola, se è profilo utente allora abilitarlo-->
+            (click)="isHorseUnchecked($event, h._id)"
+          >
         </mat-cell>
       </ng-container>
 
@@ -43,7 +44,8 @@
       <ng-container matColumnDef="scuola">
         <mat-header-cell *matHeaderCellDef> Destinato alla scuola </mat-header-cell>
         <mat-cell *matCellDef="let h" >
-          <mat-icon *ngIf="h.scholastic == true">done</mat-icon>
+          <mat-icon *ngIf="h.scholastic">done</mat-icon>
+          <mat-icon *ngIf="!h.scholastic">close</mat-icon>
         </mat-cell>
       </ng-container>
 

@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {HorseInfos} from "../_utils/Horse";
 import {UserService} from "../_services/user.service";
+import {DialogModifyLessonViewComponent} from "../dialog-modify-lesson-view/dialog-modify-lesson-view.component";
 
 @Component({
   selector: 'app-dialog-horse-view',
@@ -32,7 +33,11 @@ export class DialogHorseViewComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  userInfo(_id: any) {
+  onModify() {
     console.log("TO IMPLEMENT");
+   /* this.dialog.open(DialogModifyHorseViewComponent, {
+      width: '650px',
+      data: this.horse
+    });*/
   }
 }

@@ -120,7 +120,7 @@ exports.getPrivateHorses = function (req,res){ //todo must check also on riders,
 }
 
 exports.removeHorse = function (req,res){
-  let ids = req.body.horseIds;
+  let ids = req.body;
   ids.forEach((id,index) => {
     ids[index] = new ObjectId(id);
   })

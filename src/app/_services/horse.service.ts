@@ -34,7 +34,11 @@ export class HorseService {
     return this.http.get(baseURL + '/privateHorses/' + ownerId, httpOptions).toPromise();
   }
 
-  async getHorse(horseId: string): Promise<Object>{
+  getHorse(horseId: string): Promise<Object>{
     return this.http.get(baseURL + '/horse/' + horseId, httpOptions).toPromise();
+  }
+
+  removeHorses(horseIds: string[]){
+    return this.http.delete(baseURL + '/removeHorses', {body: horseIds}).toPromise();
   }
 }
