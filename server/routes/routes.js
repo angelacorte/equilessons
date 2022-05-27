@@ -62,6 +62,9 @@ module.exports = function (app){
   app.route('/horse/:horseId')
     .get(horseController.getHorseInfos);
 
+  app.route('/removeHorses')
+    .delete(horseController.removeHorse);
+
   app.route('/horses/:clubId')
     .get(horseController.getHorses);
 

@@ -118,3 +118,20 @@ exports.getPrivateHorses = function (req,res){ //todo must check also on riders,
     console.log("Error: ", err.message);
   });
 }
+
+exports.removeHorse = function (req,res){
+  let ids = req.body.horseIds;
+  ids.forEach((id,index) => {
+    ids[index] = new ObjectId(id);
+  })
+  let query = { _id: { $in: ids}};
+  Horse.deleteMany(query).then((result) => {
+    if(result.deletedCount === ids.length){
+      return res.sendStatus(200);
+    }else{
+      return res.sendStatus(400).json({message: "an error occurred"});
+    }
+  }).catch(err=> {
+    res.sendStatus(500).json(err); //todo " Cannot set headers after they are sent to the client"
+  });
+}
