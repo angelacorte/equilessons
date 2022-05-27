@@ -11,9 +11,7 @@ let ObjectId = require('mongodb').ObjectID;
 exports.addHorse = function (req,res){
   let newHorse = new Horse(req.body);
   newHorse.save(function(err, horse) {
-    console.log("error " + err + err.type);
     if (err){
-      console.log("error ");
       res.status(400).json(err);
     }
     res.status(200).json(horse);
@@ -44,9 +42,9 @@ exports.getScholasticHorses = function (req,res) {
 exports.getHorseInfos = function (req,res){
   Horse.find({_id:new ObjectId(req.params.horseId)}).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.status(400).json({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).json(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -100,7 +98,7 @@ exports.getHorses = function (req,res){
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });

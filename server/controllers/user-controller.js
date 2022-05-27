@@ -12,7 +12,7 @@ exports.getUserById = function (req,res){
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).json(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -32,7 +32,7 @@ exports.getUsersByClub = function (req,res) { //todo maybe useless
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -48,7 +48,7 @@ exports.getUserRoles = function (req,res) {
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -64,7 +64,7 @@ exports.addRole = function (req,res){
     if(result.ok !== 1){
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -101,7 +101,7 @@ exports.removeUser = function (req,res){
     if(result.deletedCount < 1){
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -151,7 +151,7 @@ exports.getUserHorses = function (req,res){
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    return res.status(200).send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
