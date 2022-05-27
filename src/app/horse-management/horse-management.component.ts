@@ -5,6 +5,10 @@ import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialog} from "@angular/material/dialog";
+import {DialogHorseViewComponent} from "../dialog-horse-view/dialog-horse-view.component";
+import {HorseInfos} from "../_utils/Horse";
+import {UserService} from "../_services/user.service";
 
 @Component({
   selector: 'app-horse-management',
@@ -22,7 +26,7 @@ export class HorseManagementComponent implements OnInit {
   }
   @ViewChild(MatPaginator, {static:false}) paginator!: MatPaginator;
 
-  horses:any[] = [];
+  horses:HorseInfos[] = [];
   displayedColumns = ['checkbox', 'cavallo', 'proprietario', 'scuola'];
 
   dataSource = new MatTableDataSource(this.horses);
@@ -31,7 +35,7 @@ export class HorseManagementComponent implements OnInit {
   infos:any;
   isLoggedIn:boolean = false;
 
-  constructor(private _snackBar: MatSnackBar, private horseService: HorseService, private tokenStorage: TokenStorageService) { }
+  constructor(private userService:UserService, public dialog: MatDialog, private _snackBar: MatSnackBar, private horseService: HorseService, private tokenStorage: TokenStorageService) { }
 
   async ngOnInit(): Promise<void> {
     this.isClub = this.tokenStorage.isClub();
@@ -48,9 +52,7 @@ export class HorseManagementComponent implements OnInit {
       this.infos = this.tokenStorage.getInfos(this.isClub);
       this.displayedColumns = ['cavallo', 'scuola'];
       this.horses = await this.getPrivateHorses(this.infos['_id']);
-      console.log("this horses" + this.horses)
-
-      await this.matchPrivateHorse();
+      await this.matchOwner();
       this.setDataSource(this.horses);
     } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
@@ -58,11 +60,11 @@ export class HorseManagementComponent implements OnInit {
   }
 
   private async getAllHorses(clubId:any):Promise<any>{
-    return await this.horseService.getAllHorses(clubId).toPromise();
+    return await this.horseService.getAllHorses(clubId);
   }
 
   private async getPrivateHorses(userId: string): Promise<any>{
-    return await this.horseService.getPrivateHorses(userId).toPromise();
+    return await this.horseService.getPrivateHorses(userId);
   }
 
   isHorseUnchecked(e: any, horseId: any) {
@@ -77,10 +79,13 @@ export class HorseManagementComponent implements OnInit {
     }
   }
 
-  showHorseInfos(horseId: any) {
-    console.log("horse id is " + horseId);
-
-  //TODO implement showhorse infos (dialog view)
+  async showHorseInfos(horseId: string) {
+    await this.horseService.getHorse(horseId).then(async (response: any) => {
+      this.dialog.open(DialogHorseViewComponent, {
+        width: '600px',
+        data: response[0]
+      });
+    });
   }
 
 
@@ -119,23 +124,13 @@ export class HorseManagementComponent implements OnInit {
       }
       if(value['clubOwner'].length > 0){
         val = value['clubOwner'][0];
-        let clubOwner = {
+        let horseOwner = {
           ownerId: val['_id'],
-          ownerName: val['clubName']
+          ownerName: val['clubName'],
+          ownerSurname: ''
         }
-        this.horses[index]['clubOwner'] = clubOwner;
+        this.horses[index]['horseOwner'] = horseOwner;
       }
-    })
-  }
-
-  private async matchPrivateHorse() { //TODO add way to remove horse
-    this.horses.forEach((h:{horseName: string, riders: string[], scholastic: boolean}, index) => {
-      console.log("h " + h.horseName)
-      this.horses[index]['horseOwner'] = {
-        ownerName: this.infos['name'],
-        ownerSurname: this.infos['surname']
-      };
-      // this.horses[index]['clubOwner'] = ""; //TODO MAGHEGGI BRUTTI
     })
   }
 }

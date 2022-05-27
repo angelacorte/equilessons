@@ -131,7 +131,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
   }
 
   private async getScholasticHorses(id:any):Promise<any>{
-    return await this.horseService.getScholasticHorses(id).toPromise();
+    return await this.horseService.getScholasticHorses(id);
   }
 
   private async getClubCoaches(id:any):Promise<any>{ //remove user's id from coaches list if id is not referred to club

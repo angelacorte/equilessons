@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {HorseInfos} from "../_utils/Horse";
+
 
 const baseURL = 'http://localhost:5050';
 
@@ -20,19 +22,19 @@ export class HorseService {
     return this.http.post(baseURL + '/horse', data, httpOptions);
   }
 
-  getScholasticHorses(clubId: any): Observable<any>{
-    return this.http.get(baseURL + '/getSchoolHorses/' + clubId, httpOptions);
+  getScholasticHorses(clubId: any): Promise<Object>{
+    return this.http.get(baseURL + '/getSchoolHorses/' + clubId, httpOptions).toPromise();
   }
 
   getAllHorses(clubId: any) {
-    return this.http.get(baseURL + '/horses/' + clubId, httpOptions);
+    return this.http.get(baseURL + '/horses/' + clubId, httpOptions).toPromise();
   }
 
   getPrivateHorses(ownerId: string){
-    return this.http.get(baseURL + '/privateHorses/' + ownerId, httpOptions)
+    return this.http.get(baseURL + '/privateHorses/' + ownerId, httpOptions).toPromise();
   }
 
-  getHorse(horseId: string){
-    return this.http.get(baseURL + '/horse/' + horseId, httpOptions);
+  async getHorse(horseId: string): Promise<Object>{
+    return this.http.get(baseURL + '/horse/' + horseId, httpOptions).toPromise();
   }
 }
