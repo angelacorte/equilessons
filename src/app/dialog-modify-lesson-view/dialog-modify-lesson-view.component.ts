@@ -108,13 +108,6 @@ export class DialogModifyLessonViewComponent implements OnInit {
     //calculate the lesson duration
     this.form.lessonDuration = (lessonEndDate.valueOf() - lessonBeginDate.valueOf()) / 60000;
 
-    //set the arenaId
-    await this.matchArena(this.updateLesson.arenaName).then((r:any)=>{
-      console.log("dialog modify ", r);
-      this.form.arena['arenaId'] = r._id;
-      this.form.arena['arenaName'] = r.arenaName;
-    });
-
     //set the coachId
     this.form.coach = this.updateLesson.coach;
 

@@ -24,13 +24,14 @@ import {
 } from 'angular-calendar';
 import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from "@angular/core";
 import {Subject} from "rxjs";
-import {LessonService} from "../_services/lesson.service";
+import {LessonService, LessonState} from "../_services/lesson.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {map} from "rxjs/operators";
 import {AppCalendarService} from "../_services/app-calendar.service";
 import {DialogUserViewComponent} from "../dialog-user-view/dialog-user-view.component";
 import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 import {MatDialog} from "@angular/material/dialog";
+import {response} from "express";
 // import {addMonths} from "@syncfusion/ej2-angular-schedule";
 
 @Component({
@@ -74,7 +75,7 @@ export class CalendarComponent implements OnInit {
 
   isLoggedIn = false;
   infos: any;
-  lessons: any[] = [];
+  lessons: LessonState[] = [];
   isClub: boolean = false;
 
 
@@ -193,12 +194,9 @@ export class CalendarComponent implements OnInit {
   }
 
   eventClicked(action: string, event: CalendarSchedulerEvent): void {
-    this.lessons.some((obj:any)=>{
-      if (obj._id === event.id){
-        this.getLessonInfo(obj);
-      }
+    this.lessons.some((obj:LessonState)=>{
+      if (obj.lessonId === event.id) this.showLessonInfo(obj);
     })
-    console.log('eventClicked Event', event);
   }
 
   eventTimesChanged({ event, newStart, newEnd, type }: SchedulerEventTimesChangedEvent): void {
@@ -213,34 +211,23 @@ export class CalendarComponent implements OnInit {
   }
 
   private fetchData(){
-    let id: any;
+    let id: string;
     if(this.isClub) id = this.infos._id
-      else id = this.infos.clubId
+    else id = this.infos.clubId
 
-    this.lessonService.getLessonsInfos(id).pipe(map(responseData =>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
-          dataArray.push({...responseData[key]})
-        }
-      }
-      return dataArray;
-    })).subscribe(response=>{
-      this.lessons = response;
+    this.lessonService.getLessonsInfos(id).then(async (response: any) => { //todo should be LessonState
+      this.lessons = response
       this.appService.getEvents(this.lessons,this.actions)
         .then((events: CalendarSchedulerEvent[]) => this.events = events);
-    });
+    })
   }
 
-  private getLessonInfo(lesson: any) {
-    console.log("lesson", lesson);
+  private showLessonInfo(lesson: LessonState) {
     let data = {
       lesson: lesson,
       icClub: this.isClub,
       userId: this.infos['_id']
     };
-
     let dialogRef = this.dialog.open(DialogLessonViewComponent, {
       width: '650px',
       data: data

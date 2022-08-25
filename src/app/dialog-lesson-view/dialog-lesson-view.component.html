@@ -9,7 +9,7 @@
   <h5 class="text-secondary">Orario di fine</h5>
   <p>{{lesson.endDate | date :'h:mm a' : '' :'it' }}</p>
   <h5 class="text-secondary">Campo prenotato:</h5>
-  <p>{{lesson.arenaName}}</p>
+  <p>{{lesson.arena['arenaName']}}</p>
   <h5 class="text-secondary">Note sulla lezione:</h5>
   <p>{{lesson.notes}}</p>
   <h5 class="text-secondary">Partecipanti:</h5>

@@ -20,7 +20,8 @@ export class DialogLessonViewComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.lesson = this.lessonService.matchPairs(this.data.lesson);
+    this.lesson = this.data.lesson;
+
     this.isClub = this.data.isClub;
     this.userId = this.data.userId;
   }
