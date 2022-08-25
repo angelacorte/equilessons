@@ -122,21 +122,19 @@ export class HorseManagementComponent implements OnInit {
     this.horses.forEach((value:any, index) =>{
       let val = value['horseOwner'][0];
       if(value['horseOwner'].length > 0){
-        let horseOwner = {
-          ownerId : val['_id'],
-          ownerName : val['name'],
-          ownerSurname : val['surname']
-        }
-        this.horses[index]['horseOwner'] = horseOwner;
+        this.horses[index]['horseOwner'] = {
+          ownerId: val['_id'],
+          ownerName: val['name'],
+          ownerSurname: val['surname']
+        };
       }
       if(value['clubOwner'].length > 0){
         val = value['clubOwner'][0];
-        let horseOwner = {
+        this.horses[index]['horseOwner'] = {
           ownerId: val['_id'],
           ownerName: val['clubName'],
           ownerSurname: ''
-        }
-        this.horses[index]['horseOwner'] = horseOwner;
+        };
       }
     })
   }
@@ -144,12 +142,11 @@ export class HorseManagementComponent implements OnInit {
   private async matchPrivateHorse() { //TODO add way to remove horse
     this.horses.forEach((h:{horseName: string, riders: string[], scholastic: boolean}, index) => {
       console.log("h " + h.horseName)
-      let horseOwner = {
+      this.horses[index]['horseOwner'] = {
         ownerName: this.infos['name'],
         ownerSurname: this.infos['surname'],
         ownerId: this.infos['_id']
-      }
-      this.horses[index]['horseOwner'] = horseOwner;
+      };
     })
   }
 }

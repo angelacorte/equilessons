@@ -4,6 +4,7 @@ const app = express();
 const jwt = require('jsonwebtoken')
 let bodyParser = require("body-parser");
 const routes = require('./routes/routes');
+const db = require("./models/index")
 
 let corsOptions = {
   origin: "http://localhost:4200"
@@ -32,7 +33,7 @@ app.listen(PORT, () => {
 });
 
 routes(app);
-const db = require("./models");
+
 db.mongoose.connect(db.url,{
   useNewUrlParser: true,
   useUnifiedTopology: true,
