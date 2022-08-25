@@ -1,6 +1,5 @@
 const db = require("../models");
 let Lesson = db.lesson;
-
 let ObjectId = require('mongodb').ObjectID;
 
 /**
@@ -167,12 +166,67 @@ exports.getLessonsInfos = function (req,res) {
     }
   ];
 
-  Lesson.aggregate(pipeline).then(result=>{
-    if(!result){
+  Lesson.aggregate(pipeline).then(async result => {
+    if (!result) {
       return res.status(500).send({message: "an error occurred"});
     }
-    return res.send(result);
+    let lesson = await matchPairs(result)
+    return res.send(lesson);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
 }
+
+async function matchPairs(lessons) {
+  let newLessons = []
+  lessons.forEach(l => {
+    let pairs = l['pairs'];
+    let riders_in_lesson = l['riders_in_lesson'];
+    let horses_in_lesson = l['horses_in_lesson'];
+
+    let lessonRefactored = {
+      lessonId: l._id,
+      beginDate: l.beginDate,
+      endDate: l.endDate,
+      arena: l.arena[0], //could be arena[0]
+      coach: {
+        coachId: l.coach[0]['_id'],  //could be coach[0]
+        coachName: l.coach[0]['name'], //could be coach[0]
+        coachSurname: l.coach[0]['surname']  //could be coach[0]
+      },
+      pairs: [],
+      notes: l.notes
+    };
+
+    pairs.forEach((value)=>{
+      console.log("value pairid " + value._id)
+      riders_in_lesson.forEach(rider =>{
+        console.log("rider " + rider._id + " is equal to " + value.riderId + " ?? "+ (rider._id.toString() === value.riderId.toString()))
+        if(rider._id.toString() === value.riderId.toString()){
+          let riderInfo = {
+            riderId: rider._id,
+            riderName:rider.name,
+            riderSurname:rider.surname
+          }
+          horses_in_lesson.forEach(horse =>{
+            if(horse._id.toString() === value.horseId.toString()){
+              let horseInfo = {
+                horseId: horse._id,
+                horseName: horse.horseName
+              }
+              let couple = {
+                riderInfo: riderInfo,
+                horseInfo: horseInfo
+              }
+              lessonRefactored.pairs.push(couple);
+            }
+          })
+        }
+      })
+    })
+    newLessons.push(lessonRefactored)
+  })
+
+  return newLessons;
+}
+
