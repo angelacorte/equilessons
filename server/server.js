@@ -1,7 +1,10 @@
+// import * as dotenv from 'dotenv'
+require('dotenv').config()
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 let bodyParser = require("body-parser");
 const routes = require('./routes/routes');
 const db = require("./models/index")
