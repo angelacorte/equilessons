@@ -137,13 +137,6 @@
       </div>
     </div>
 
-    <div class="d-flex row p-2">
-      <mat-form-field appearance="fill">
-        <mat-label>Note aggiuntive sulla lezione</mat-label>
-        <textarea matInput name="notes" [(ngModel)]="form.notes" placeholder="Avvisi"></textarea>
-      </mat-form-field>
-    </div>
-
     <div class="mt-5 p-2" *ngIf="lesson.length != 0">
       <h3>Lezione composta da:</h3>
       <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -181,6 +174,13 @@
         showFirstLastButtons
         aria-label="Seleziona pagina">
       </mat-paginator>
+
+      <div class="d-flex row p-2">
+        <mat-form-field appearance="fill">
+          <mat-label>Note aggiuntive sulla lezione</mat-label>
+          <textarea matInput name="notes" [(ngModel)]="form.notes" placeholder="Avvisi"></textarea>
+        </mat-form-field>
+      </div>
 
       <div class="d-flex flex-row d-flex justify-content-around">
         <button mat-button class="btn p-2 col-md-4">Crea</button>

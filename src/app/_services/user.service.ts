@@ -53,6 +53,7 @@ export class UserService {
   getUserHorses(userId:any): Observable<any>{
     return this.http.get(baseURL + '/userhorse/' + userId, httpOptions);
   }
+  
   /*
   get(id: any): Observable<User> {
     return this.http.get(`${baseUrl}/${id}`);

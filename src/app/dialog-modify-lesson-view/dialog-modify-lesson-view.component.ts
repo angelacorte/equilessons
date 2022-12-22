@@ -175,6 +175,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     }
 
     this.lessonService.updateLesson(lesson).subscribe(response=>{
+      //todo if(response)
       this.onClose();
       this.openSnackbar("Lezione aggiornata con successo");
     }, err => {
