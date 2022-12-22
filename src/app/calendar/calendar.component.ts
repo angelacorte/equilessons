@@ -24,7 +24,8 @@ import {
 } from 'angular-calendar';
 import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from "@angular/core";
 import {Subject} from "rxjs";
-import {LessonService, LessonState} from "../_services/lesson.service";
+import {LessonService} from "../_services/lesson.service";
+import {LessonState} from "../_utils/Lesson";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {map} from "rxjs/operators";
 import {AppCalendarService} from "../_services/app-calendar.service";

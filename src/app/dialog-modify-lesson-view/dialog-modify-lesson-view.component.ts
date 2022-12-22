@@ -1,5 +1,6 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {LessonService, LessonState} from "../_services/lesson.service";
+import {LessonService} from "../_services/lesson.service";
+import {LessonState} from "../_utils/Lesson";
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ArenaService} from "../_services/arena.service";

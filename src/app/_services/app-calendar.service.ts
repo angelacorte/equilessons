@@ -6,7 +6,8 @@ import {
 } from 'angular-calendar-scheduler';
 
 import {HttpClient} from "@angular/common/http";
-import {LessonService, LessonState} from "./lesson.service";
+import {LessonService} from "./lesson.service";
+import {LessonState} from "../_utils/Lesson";
 
 @Injectable({
   providedIn: 'root'

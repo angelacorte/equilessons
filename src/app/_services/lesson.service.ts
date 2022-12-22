@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {CalendarSchedulerEventAction} from "angular-calendar-scheduler";
+import {LessonState} from "../_utils/Lesson";
 
 const baseURL = 'http://localhost:5050';
 
@@ -23,11 +24,11 @@ export class LessonService {
     return this.http.post(baseURL + '/lesson', data, httpOptions);
   }
 
-  getClubsLessons(clubId: any): Observable<any> {
+  getClubsLessons(clubId: string): Observable<any> {
     return this.http.get(baseURL + '/lesson/' + clubId, httpOptions);
   }
 
-  getLessonsInfos(clubId: any): Promise<Object>{
+  getLessonsInfos(clubId: string): Promise<Object>{
     return this.http.get(baseURL + '/lesson/getInfo/' + clubId, httpOptions).toPromise();
   }
 
@@ -48,31 +49,4 @@ export class LessonService {
   deleteLessonState(){
     window.sessionStorage.removeItem(KEY);
   }
-}
-
-export interface LessonState {
-  lessonId: string,
-  beginDate: Date,
-  endDate: Date,
-  arena: {
-    arenaName: string,
-    arenaId: string
-  },
-  coach: {
-    coachId: string,
-    coachName: string,
-    coachSurname: string
-  },
-  pairs: [{
-    riderInfo: {
-      riderId: string,
-      riderName: string,
-      riderSurname: string
-    },
-    horseInfo:{
-      horseId: string,
-      horseName: string
-    }
-  }],
-  notes: string
 }

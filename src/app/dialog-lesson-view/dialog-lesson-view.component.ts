@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {LessonService, LessonState} from "../_services/lesson.service"
+import {LessonService} from "../_services/lesson.service"
+import {LessonState} from "../_utils/Lesson";
 import {DialogModifyLessonViewComponent} from "../dialog-modify-lesson-view/dialog-modify-lesson-view.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 @Component({
