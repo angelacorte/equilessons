@@ -199,9 +199,7 @@ async function matchPairs(lessons) {
     };
 
     pairs.forEach((value)=>{
-      console.log("value pairid " + value._id)
       riders_in_lesson.forEach(rider =>{
-        console.log("rider " + rider._id + " is equal to " + value.riderId + " ?? "+ (rider._id.toString() === value.riderId.toString()))
         if(rider._id.toString() === value.riderId.toString()){
           let riderInfo = {
             riderId: rider._id,
