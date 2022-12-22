@@ -63,6 +63,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { PersonalInfosComponent } from './personal-infos/personal-infos.component';
 import { LessonHistoryComponent } from './lesson-history/lesson-history.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { NotificationsComponent } from './notifications/notifications.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -88,7 +89,8 @@ registerLocaleData(localeIt);
     DialogModifyLessonViewComponent,
     HorseManagementComponent,
     PersonalInfosComponent,
-    LessonHistoryComponent
+    LessonHistoryComponent,
+    NotificationsComponent
   ],
     imports: [
         BrowserModule,

@@ -11,6 +11,7 @@
     <button mat-menu-item routerLink="/">Home</button>
     <button mat-menu-item routerLink="/newLesson">Aggiungi lezione</button>
     <button mat-menu-item routerLink="/horseRegistration">Registra cavallo</button>
+    <button mat-menu-item routerLink="/notifications">Notifiche</button>
     <button mat-menu-item routerLink="/profile">{{ username }}</button>
     <button mat-menu-item (click)="logout()">LOGOUT</button>
   </mat-menu>
@@ -23,6 +24,7 @@
   <div class="d-flex flex-row justify-content-end navbar-nav hide-on-phone " aria-label="hide-on-phone" *ngIf="isLoggedIn">
     <a class="nav-link px-2" routerLink="/newLesson">Aggiungi lezione</a>
     <a class="nav-link px-2" routerLink="horseRegistration">Registra cavallo</a>
+    <a class="nav-link px-2" routerLink="/notifications">Notifiche</a>
     <a class="nav-link px-2" routerLink="profile">{{ username }}</a>
     <a class="nav-link px-2" (click)="logout()">LOGOUT</a>
   </div>

@@ -17,6 +17,7 @@ import {ShowUsersComponent} from "./show-users/show-users.component";
 import {HorseManagementComponent} from "./horse-management/horse-management.component";
 import {LessonHistoryComponent} from "./lesson-history/lesson-history.component";
 import {PersonalInfosComponent} from "./personal-infos/personal-infos.component";
+import {NotificationsComponent} from "./notifications/notifications.component";
 
 const routes: Routes = [
   {path: '', redirectTo:'home', pathMatch:'full'},
@@ -36,6 +37,7 @@ const routes: Routes = [
   {path: 'showHorses', component:HorseManagementComponent},
   {path: 'lessonHistory', component:LessonHistoryComponent},
   {path: 'personalInfos', component:PersonalInfosComponent},
+  {path: 'notifications', component:NotificationsComponent},
   {path: `**`, component: PageNotFoundComponent}
 ];
 
