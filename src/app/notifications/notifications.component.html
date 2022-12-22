@@ -1,0 +1,55 @@
+<div class="container mt-5">
+  <h2 class="title">Le tue notifiche</h2>
+  <div class="mt-2">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8 notifications-table">
+      <ng-container matColumnDef="checkbox">
+        <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+        <mat-cell *matCellDef="let n">               <!--<td  *ngFor="let les of lesson">-->
+          <input
+            *ngIf="isClub"
+            type="checkbox"
+            class="form-check-input"
+            value="true"
+            checked
+            [disabled]="false"
+            (click)="isNotificationUnchecked()"
+          >
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="sender" >
+        <mat-header-cell *matHeaderCellDef> Mittente </mat-header-cell>
+        <mat-cell *matCellDef="let n"> {{n['sender']}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="message">
+        <mat-header-cell *matHeaderCellDef> Oggetto </mat-header-cell>
+        <mat-cell *matCellDef="let n">
+          <button
+            mat-button
+            (click)="goToLesson(n['lessonID'])"
+            #tooltip="matTooltip"
+            matTooltip="cliccal per andare alla lezione"
+            matTooltipHideDelay="100"> {{n['message']}}</button>
+
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
+        <mat-cell *matCellDef="let n" > {{n['date']}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      [length]="notifications.length"
+      showFirstLastButtons
+      aria-label="Seleziona pagina">
+    </mat-paginator>
+    <button class="btn col-md-4" (click)="update()">Aggiorna</button>
+  </div>
+</div>
