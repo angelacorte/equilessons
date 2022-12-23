@@ -7,6 +7,7 @@ import {ClubService} from "../_services/club.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 
 @Component({
   selector: 'app-add-coach',
@@ -28,15 +29,14 @@ export class AddCoachComponent implements OnInit {
     coachId: ''
   }
 
-  coaches:{_id: any, name: any, surname: any}[]= [];
+  coaches:Coach[]= [];
   dataSource = new MatTableDataSource(this.coaches);
-  errorMessage = '';
   isLoggedIn = false;
-  infos: any;
+  infos?: ClubInfos | UserInfos;
   displayedColumns = ['checkbox', 'istruttore'];
-  coachId: any;
-  users = [];
-  toUpdate: {coachId: any}[]= [];
+  coachId: string = "";
+  users: UserInfos[] = [];
+  toUpdate: string[]= [];
 
   constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
@@ -45,14 +45,15 @@ export class AddCoachComponent implements OnInit {
 
     if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
+      if(this.infos){
+        await this.getCoaches(this.infos._id).then((response)=>{
+          this.coaches = response[0]['clubCoaches'];
+        });
 
-      await this.getCoaches(this.infos._id).then((response)=>{
-        this.coaches = response[0]['clubCoaches'];
-      });
+        this.users = await this.getAthletes(this.infos._id);
 
-      this.users = await this.getAthletes(this.infos._id);
-
-      this.setDataSource(this.coaches);
+        this.setDataSource(this.coaches);
+      }else{ this.openSnackbar("Qualcosa è andato storto, riprova."); }
     } else {
       window.location.assign('/notAllowed');
     }
@@ -62,15 +63,15 @@ export class AddCoachComponent implements OnInit {
     this.coaches.forEach((value) => {
       this.toUpdate.push(value._id);
     })
-
-    await this.addCoach(this.toUpdate, this.infos._id).then((response:any)=>{
-      if(response.ok === 1){
-        this.openSnackbar("Operazione effettuata con successo");
-      }else{
-        console.log(response);
-        this.openSnackbar("Errore nell'aggiornamento degli istruttori");
-      }
-    });
+    if (this.infos) {
+      await this.addCoach(this.toUpdate, this.infos._id).then((response: any) => {
+        if (response.ok === 1) {
+          this.openSnackbar("Operazione effettuata con successo");
+        } else {
+          this.openSnackbar("Errore nell'aggiornamento degli istruttori");
+        }
+      });
+    } else { this.openSnackbar("Qualcosa è andato storto, riprova."); }
   }
 
   isUserInList(id: any):boolean {
@@ -93,22 +94,22 @@ export class AddCoachComponent implements OnInit {
     }))
   }
 
-  private async getCoaches(clubId:any): Promise<any>{
+  private async getCoaches(clubId:string): Promise<any>{
     return this.clubService.getClubCoaches(clubId).toPromise();
   }
 
-  private async getAthletes(clubId:any):Promise<any>{
+  private async getAthletes(clubId:string):Promise<any>{
     return this.clubService.getClubAthletes(clubId).toPromise();
   }
 
-  private async addCoach(update:any, clubId:any):Promise<any>{
+  private async addCoach(update:string[], clubId:string):Promise<any>{
     return this.clubService.addCoach(update, clubId).toPromise()
   }
 
-  isCoachUnchecked(e: any, coachId:any) {
+  isCoachUnchecked(e: any, coachId:string) {
     if(!e.target.checked){
       this.coaches.forEach((item,index)=>{
-        if(this.coaches[index] === coachId){
+        if(item._id === coachId){
           this.coaches.splice(index, 1);
           this.setDataSource(this.coaches);
           this.dataSource.data = this.coaches;
