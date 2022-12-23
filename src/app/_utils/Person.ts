@@ -4,6 +4,7 @@ export interface UserInfos{
   surname: string,
   phoneNumber: number,
   email: string,
+  clubId: string,
   birthday?: dateFns, //todo change
   taxcode?: string,
   city?: string,
@@ -25,7 +26,13 @@ export interface ClubInfos {
 }
 
 export interface Coach {
-  _id: string,
-  name: string,
-  surname: string
+  coachId: string,
+  coachName: string,
+  coachSurname: string
+}
+
+export interface RiderInfo {
+  riderId: string,
+  riderName: string,
+  riderSurname: string
 }
