@@ -15,6 +15,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {DialogUserViewComponent} from '../dialog-user-view/dialog-user-view.component';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ClubInfos, UserInfos} from "../_utils/Person";
 
 @Component({
   selector: 'app-show-users',
@@ -23,7 +24,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
-  @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
+  @ViewChild(MatTable, {static:false}) table!: MatTable<UserInfos>;
   @ViewChild(MatSort, {static:false})
   set sort(value: MatSort) {
     if (this.dataSource){
@@ -36,13 +37,12 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     userId:''
   };
 
-  users:any = [];
+  users: UserInfos[] = [];
   dataSource = new MatTableDataSource(this.users);
-  errorMessage = '';
   isLoggedIn = false;
-  infos: any;
-  toRemove: any = [];
-  displayedColumns = ['checkbox', 'utente', 'numero_di_telefono', 'utente_temporaneo'];
+  infos?: ClubInfos | UserInfos;
+  toRemove: string[] = [];
+  displayedColumns = ['checkbox', 'user', 'telephone_number', 'temporary_user'];
 
   constructor(public dialog: MatDialog, private _snackBar: MatSnackBar, private userService: UserService,
               private authService: AuthService, private http: HttpClient, private lessonService: LessonService,
@@ -53,7 +53,11 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
     if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
-      await this.fetchUsers(this.infos._id);
+      if(this.infos){
+        await this.fetchUsers(this.infos._id);
+      }else{
+        this.openSnackbar("Qualcosa è andato storto, riprova");
+      }
     } else {
       window.location.assign('/notAllowed');
     }
@@ -63,22 +67,15 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     return this.clubService.getClubAthletes(clubId).toPromise();
   }
 
-  private async fetchUsers(clubId:any){
+  private async fetchUsers(clubId:string){
     this.getAthletes(clubId).then((response:any)=>{
-      response.forEach((value:any) => {
-        let u = {
-          userId: value._id,
-          name: value.name,
-          surname: value.surname,
-          email: value.email,
-          phoneNumber: value.phoneNumber,
-          tmp: false
-        }
+      response.forEach((value:UserInfos) => {
         if(value.email === undefined){
-          u.tmp = true;
-          this.users.push(u)
+          value.temporary = true;
+          this.users.push(value);
         }else{
-          this.users.push(u);
+          value.temporary = false;
+          this.users.push(value);
         }
       })
       this.setDataSource(this.users);
@@ -112,10 +109,10 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     })
   }
 
-  isUserUnchecked(e: any, userId: any) {
+  isUserUnchecked(e: any, userId: string) {
     if(!e.target.checked) {
-      this.users.some((value:any, index:number)=> {
-        if(value.userId === userId && value.email === undefined){
+      this.users.some((value:UserInfos, index:number)=> {
+        if(value._id === userId && value.email === undefined){
           this.users.splice(index,1)
           this.toRemove.push(userId);
           this.setDataSource(this.users);
@@ -132,27 +129,31 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
       }, err => {
         this.openSnackbar("Qualcosa è andato storto");
-        console.log(err);
+        console.log('ERROR SHOW USERS', err);
       })
     }
   }
 
   onSubmit() {
-    let tmpUser = this.form;
-    tmpUser.clubId = this.infos._id;
+    if(this.infos){
+      let tmpUser = this.form;
+      tmpUser.clubId = this.infos._id;
 
-    this.authService.signup(tmpUser).subscribe(
-      data => {
-        this.openSnackbar("Registrazione avvenuta con successo");
-      },
-      err => {
-        this.openSnackbar("Non è stato possibile registare l'utente");
-        console.log(err);
-      }
-    );
+      this.authService.signup(tmpUser).subscribe(
+        data => {
+          this.openSnackbar("Registrazione avvenuta con successo");
+        },
+        err => {
+          this.openSnackbar("Non è stato possibile registare l'utente");
+          console.log('ERROR', err);
+        }
+      );
+    }else{
+      this.openSnackbar("Qualcosa è andato storto, riprova");
+    }
   }
 
-  private openSnackbar(message:any){
+  private openSnackbar(message:string){
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
@@ -160,7 +161,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
       window.location.reload();
     })
   }
-  private setDataSource(data:any){
+  private setDataSource(data:UserInfos[]){
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.data = data;
     this.dataSource.sort;

@@ -73,7 +73,7 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="utente">
+      <ng-container matColumnDef="user">
         <mat-header-cell *matHeaderCellDef> Utente </mat-header-cell>
         <mat-cell *matCellDef="let u">
           <button mat-button (click)="showInfos(u.userId)"> {{u['name']}} {{u['surname']}}</button>
@@ -81,15 +81,15 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="numero_di_telefono">
+      <ng-container matColumnDef="telephone_number">
         <mat-header-cell *matHeaderCellDef> Numero di telefono </mat-header-cell>
         <mat-cell *matCellDef="let u"> {{u['phoneNumber']}}  </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="utente_temporaneo">
+      <ng-container matColumnDef="temporary_user">
         <mat-header-cell *matHeaderCellDef> Utente temporaneo </mat-header-cell>
         <mat-cell *matCellDef="let u" >
-          <mat-icon *ngIf="u.tmp == true">done</mat-icon>
+          <mat-icon *ngIf="u.temporary == true">done</mat-icon>
         </mat-cell>
       </ng-container>
 
