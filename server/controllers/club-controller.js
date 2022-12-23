@@ -3,22 +3,10 @@ let Club = db.club;
 let User = db.user;
 
 let jwt = require("jsonwebtoken");
+const {generateAccessToken} = require("../utils/controller-utils");
 require('dotenv').config();
 
 let ObjectId = require('mongodb').ObjectID;
-
-/**
- * Create new access token for club login
- * @param clubId
- * @return {*}
- */
-function generateAccessToken(clubId){
-  return jwt.sign({clubId}, process.env.ACCESS_TOKEN_SECRET,{
-    expiresIn: '365d' // expires in 1 year
-  }, function (err, token) {
-    console.log(err);
-  })
-}
 
 /**
  * Authenticate a club on login
@@ -32,7 +20,11 @@ exports.clubLogin = function (req,res) { //TODO manage errors
     }
     if (club) {
       const accessToken = generateAccessToken(club._id);
-      const refreshToken = jwt.sign(JSON.stringify(club._id), process.env.REFRESH_TOKEN_SECRET, { algorithm: 'RS256' }, function (err, token){console.log(err)});
+      const refreshToken = jwt.sign(JSON.stringify(club._id), `${process.env.REFRESH_TOKEN_SECRET}`, {}, //todo options
+        function (err, token){
+          if(err) throw err;
+          else return token;
+      });
 
       const filter = {"_id": club._id};
       const update = {"token": refreshToken};
@@ -52,18 +44,13 @@ exports.clubLogin = function (req,res) { //TODO manage errors
     let reasons = Club.failedLogin;
     switch (reason) {
       case reasons.NOT_FOUND:
-        res.status(401).json({"description": "incorrect username or password"});
+        res.status(404).json({"description": "incorrect username or password"});
         break;
       case reasons.PASSWORD_INCORRECT:
         // note: these cases are usually treated the same - don't tell
         // the user *why* the login failed, only that it did
         res.status(401).json({"description": "incorrect username or password"});
         break;
-      /*case reasons.MAX_ATTEMPTS:
-        // send email or otherwise notify user that account is
-        // temporarily locked
-        res.status(401).json({"description": "you have been locked"});
-        break;*/
     }
   });
 }
@@ -83,10 +70,10 @@ exports.authenticate = function authenticateToken(req,res,next) {
     return res.status(401);
   }
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err,club)=>{
+  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, { expiresIn: '30d' },(err,club)=>{
     if(err){
       console.log("TOKEN: ", + token);
-      console.log(err);
+      console.log('ERROR', err);
       return res.sendStatus(403);
     }
 
@@ -94,7 +81,7 @@ exports.authenticate = function authenticateToken(req,res,next) {
       if(err){
         return res.sendStatus(500);
       }
-      console.log(club)
+      console.log("CLUB", club)
       if(!club){
         return res.sendStatus(404);
       }
@@ -124,7 +111,7 @@ exports.token = function (req,res){
     if(doc == null){
       return res.sendStatus(403);
     }
-    jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET, (err,club)=>{
+    jwt.verify(refreshToken,`${process.env.REFRESH_TOKEN_SECRET}`, {expiresIn: '30d'},(err,club)=>{
       if(err){
         return res.sendStatus(403);
       }
@@ -240,11 +227,13 @@ exports.registerClub = function (req,res) {
       res.status(409).send({"description": "email already in use"})
     }else{
       let newClub = new Club(req.body);
-      newClub.save(function(err, club) {
-        if (err){
+      newClub.save(function (err, club) {
+        if (err) {
           res.send(err);
         }
         res.status(200).json(club);
+      }).then(r  => {
+        console.log('THEN WHAT')
       });
     }
   }).catch(err=> {
