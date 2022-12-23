@@ -40,7 +40,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   users: UserInfos[] = [];
   dataSource = new MatTableDataSource(this.users);
   isLoggedIn = false;
-  infos?: ClubInfos | UserInfos;
+  infos?: ClubInfos;
   toRemove: string[] = [];
   displayedColumns = ['checkbox', 'user', 'telephone_number', 'temporary_user'];
 

@@ -7,6 +7,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatAccordion} from "@angular/material/expansion";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {ClubInfos} from "../_utils/Person";
+import {Arena} from "../_utils/Arena";
 
 @Component({
   selector: 'app-new-arena',
@@ -25,18 +27,18 @@ export class NewArenaComponent implements OnInit {
   @ViewChild(MatPaginator, {static:false}) paginator!: MatPaginator;
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
-  form:any = {
+  form:Arena = {
     arenaName:'',
-    clubId: ""
+    clubId:''
   }
 
-  arenas:any[] = [];
+  arenas:Arena[] = [];
   dataSource = new MatTableDataSource(this.arenas);
   displayedColumns = ['checkbox', 'arenaName'];
   isLoggedIn = false;
-  infos: any;
-  toUpdate: {clubId:any, arenaName:string}[] = [];
-  toRemove: {arenaId: any}[] = [];
+  infos?: ClubInfos;
+  toUpdate: Arena[] = [];
+  toRemove: string[] = [];
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private _snackBar: MatSnackBar,
               private arenaService: ArenaService) {
@@ -47,10 +49,12 @@ export class NewArenaComponent implements OnInit {
 
     if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
-
-      this.arenas = await this.getArenas(this.infos._id);
-
-      this.setDataSource(this.arenas);
+      if(this.infos){
+        this.arenas = await this.getArenas(this.infos._id);
+        this.setDataSource(this.arenas);
+      }else{
+        this.openSnackbar("Qualcosa è andato storto, riprova");
+      }
     } else {
       window.location.assign('/notAllowed');
     }
@@ -62,37 +66,37 @@ export class NewArenaComponent implements OnInit {
         this.arenaService.removeArena(this.toRemove).subscribe(() => {
           this.openSnackbar("Modifiche apportate con successo");
         }, err => {
-          console.log(err);
+          console.log('ERROR NEW ARENA 1', err);
           this.openSnackbar("Errore nella rimozione dei campi");
         })
       } else {
         this.openSnackbar("Modifiche apportate con successo");
       }
     }, err => {
-      console.log(err);
+      console.log('ERROR NEW ARENA 2', err);
       this.openSnackbar("Errore nella modifica dei campi");
     })
   }
 
   addArenaToList(value: string) {
-    let arena = {
-      _id: '',
-      arenaName: value
-    };
-    this.arenas.push(arena);
-    let up = {
-      clubId: this.infos._id,
-      arenaName: arena.arenaName
+    if(this.infos){
+      let newArena: Arena = {
+        clubId: this.infos._id,
+        arenaName: value
+      };
+      this.arenas.push(newArena);
+      this.toUpdate.push(newArena);
+      this.setDataSource(this.arenas);
+      this.dataSource.data = this.arenas;
+    }else{
+      this.openSnackbar("Qualcosa è andato storto, riprova");
     }
-    this.toUpdate.push(up);
-    this.setDataSource(this.arenas);
-    this.dataSource.data = this.arenas;
   }
 
-  isArenaUnchecked(e: any, arenaId:any) {
+  isArenaUnchecked(e: any, arenaId:string) {
     if(!e.target.checked){
       this.arenas.forEach((item, index)=>{
-        if(this.arenas[index] === arenaId){
+        if(item.arenaId === arenaId){
           this.arenas.splice(index, 1);
           this.toRemove.push(arenaId);
           this.setDataSource(this.arenas);
@@ -102,22 +106,22 @@ export class NewArenaComponent implements OnInit {
     }
   }
 
-  private async addArena(data:any):Promise<any>{
+  private async addArena(data:Arena[]):Promise<any>{
     return await this.arenaService.addArena(data).toPromise();
   }
 
-  private async getArenas(clubId:any):Promise<any>{
+  private async getArenas(clubId:string):Promise<any>{
     return this.arenaService.getClubArenas(clubId).toPromise();
   }
 
-  private setDataSource(data:any){
+  private setDataSource(data:Arena[]){
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.data = data;
     this.dataSource.sort;
     this.dataSource.paginator = this.paginator;
   }
 
-  private openSnackbar(message:any){
+  private openSnackbar(message:string){
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
