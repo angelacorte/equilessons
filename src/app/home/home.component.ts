@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../_services/user.service';
 import {TokenStorageService} from "../_services/token-storage.service";
+import {print} from "@syncfusion/ej2-angular-schedule";
+import {ClubInfos, UserInfos} from "../_utils/Person";
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -13,7 +15,7 @@ const USER_KEY = 'auth-user';
 export class HomeComponent implements OnInit {
   content?: string;
   isLoggedIn = false;
-  infos: any;
+  infos?: ClubInfos | UserInfos;
   user: any;
   isClub = false;
 
@@ -21,7 +23,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
-
     if(this.isLoggedIn) {
       this.isClub = this.tokenStorage.isClub();
       this.infos = this.tokenStorage.getInfos(this.isClub);

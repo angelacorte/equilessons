@@ -1,12 +1,15 @@
+import {RiderInfo} from "./Person";
+
 export interface HorseInfos {
+  horseId?: string,
   horseName: string,
   horseMicrochip: number,
-  horseFise: string,
+  horseFise?: string,
   horseOwner: HorseOwner,
   clubId: string,
-  horseBirthday: Date,
-  riders: Array<string>, //todo modify in array of users
-  scholastic: boolean
+  horseBirthday?: Date,
+  riders: Array<RiderInfo>,
+  scholastic?: boolean
 }
 
 export interface HorseOwner {

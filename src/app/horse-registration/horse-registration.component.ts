@@ -108,7 +108,7 @@ export class HorseRegistrationComponent implements OnInit {
           this.infos['roles'] = tmpRole;
           this.tokenStorage.saveUser(this.infos);
         }, error =>{
-          console.log(error);
+          console.log("ERROR HORSE REG", error);
         })
       }
       snackBarRef.afterDismissed().subscribe(()=>{
@@ -121,7 +121,7 @@ export class HorseRegistrationComponent implements OnInit {
       });
       this.errorMessage = err.error.message;
       this.isRegistrationFailed = true;
-      console.log(err);
+      console.log("ERROR", err);
     })
   }
 

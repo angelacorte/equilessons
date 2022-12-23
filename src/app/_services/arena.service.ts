@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Arena} from "../_utils/Arena";
 
 const baseURL = 'http://localhost:5050/arena';
 
@@ -15,15 +16,15 @@ export class ArenaService {
 
   constructor(private http: HttpClient) { }
 
-  addArena(newArenas: any[]): Observable<any>{
+  addArena(newArenas: Arena[]): Observable<any>{
     return this.http.post(baseURL, {newArenas}, httpOptions);
   }
 
-  getClubArenas(clubId: any): Observable<any>{
+  getClubArenas(clubId: string): Observable<any>{
     return this.http.get(baseURL + '/' + clubId, httpOptions);
   }
 
-  removeArena(arenasId: any[]): Observable<any>{
+  removeArena(arenasId: string[]): Observable<any>{
     let options = {
       options: httpOptions,
       body: arenasId

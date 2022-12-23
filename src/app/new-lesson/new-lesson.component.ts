@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {HorseService} from "../_services/horse.service";
@@ -10,6 +10,8 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {pairs} from "rxjs";
+import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
+import {HorseInfos} from "../_utils/Horse";
 
 @Component({
   selector: 'app-new-lesson',
@@ -53,10 +55,9 @@ export class NewLessonComponent implements OnInit {
   coaches: {_id: any, name: any, surname: any}[] = [];
   coachId: any;
   isClub: boolean = false;
-  value: any;
   checked: boolean = true;
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService) { }
 
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -71,7 +72,6 @@ export class NewLessonComponent implements OnInit {
       }
 
       if (this.isClub || this.tokenStorage.isCoach(this.infos)) { //check on user's login
-        // this.checked = true;
         this.arenas = await this.getClubArenas(this.form.clubId);
         this.riders = await this.getClubAthletes(this.form.clubId);
         this.horses = await this.getScholasticHorses(this.form.clubId);
@@ -124,11 +124,11 @@ export class NewLessonComponent implements OnInit {
       this._snackBar.open("Non è stato possibile creare la lezione", "Ok", {
         duration: 3000
       });
-      console.log(err);
+      console.log('ERROR NEW LESSON', err);
     });
   }
 
-  private async getClubArenas(id:any):Promise<any>{
+  private async getClubArenas(id:string):Promise<any>{
     return await this.arenaService.getClubArenas(id).toPromise();
   }
 

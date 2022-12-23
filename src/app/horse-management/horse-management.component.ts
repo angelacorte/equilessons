@@ -30,7 +30,7 @@ export class HorseManagementComponent implements OnInit {
   displayedColumns = ['checkbox', 'cavallo', 'proprietario', 'scuola'];
 
   dataSource = new MatTableDataSource(this.horses);
-  toRemove:any[] = [];
+  toRemove:string[] = [];
   isClub: boolean = false;
   infos:any;
   isLoggedIn:boolean = false;
@@ -93,7 +93,7 @@ export class HorseManagementComponent implements OnInit {
   update() {
     console.log("to remove" + this.toRemove);
     this.horseService.removeHorses(this.toRemove).then((res) => {}, (msg) => { //todo brutta roba ma non so fare altrimenti
-      console.log(msg);
+      console.log("MESSAGE ", msg);
       if(msg.status == 200){
         this.openSnackbar("Modifiche apportate con successo");
       }else{
@@ -140,7 +140,7 @@ export class HorseManagementComponent implements OnInit {
   }
 
   private async matchPrivateHorse() { //TODO add way to remove horse
-    this.horses.forEach((h:{horseName: string, riders: string[], scholastic: boolean}, index) => {
+    this.horses.forEach((h:HorseInfos, index) => {
       console.log("h " + h.horseName)
       this.horses[index]['horseOwner'] = {
         ownerName: this.infos['name'],

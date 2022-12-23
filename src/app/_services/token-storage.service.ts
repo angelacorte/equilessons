@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {LessonService} from "./lesson.service";
-import {print} from "@syncfusion/ej2-angular-schedule";
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
