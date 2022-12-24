@@ -8,7 +8,7 @@ import {MatAccordion} from "@angular/material/expansion";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {ClubInfos} from "../_utils/Person";
-import {Arena} from "../_utils/Arena";
+import {ArenaInfo} from "../_utils/Arena";
 
 @Component({
   selector: 'app-new-arena',
@@ -27,17 +27,17 @@ export class NewArenaComponent implements OnInit {
   @ViewChild(MatPaginator, {static:false}) paginator!: MatPaginator;
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
-  form:Arena = {
+  form:ArenaInfo = {
     arenaName:'',
     clubId:''
   }
 
-  arenas:Arena[] = [];
+  arenas:ArenaInfo[] = [];
   dataSource = new MatTableDataSource(this.arenas);
   displayedColumns = ['checkbox', 'arenaName'];
   isLoggedIn = false;
   infos?: ClubInfos;
-  toUpdate: Arena[] = [];
+  toUpdate: ArenaInfo[] = [];
   toRemove: string[] = [];
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private _snackBar: MatSnackBar,
@@ -80,7 +80,7 @@ export class NewArenaComponent implements OnInit {
 
   addArenaToList(value: string) {
     if(this.infos){
-      let newArena: Arena = {
+      let newArena: ArenaInfo = {
         clubId: this.infos._id,
         arenaName: value
       };
@@ -106,7 +106,7 @@ export class NewArenaComponent implements OnInit {
     }
   }
 
-  private async addArena(data:Arena[]):Promise<any>{
+  private async addArena(data:ArenaInfo[]):Promise<any>{
     return await this.arenaService.addArena(data).toPromise();
   }
 
@@ -114,7 +114,7 @@ export class NewArenaComponent implements OnInit {
     return this.arenaService.getClubArenas(clubId).toPromise();
   }
 
-  private setDataSource(data:Arena[]){
+  private setDataSource(data:ArenaInfo[]){
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.data = data;
     this.dataSource.sort;

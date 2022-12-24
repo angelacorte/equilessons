@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Arena} from "../_utils/Arena";
+import {ArenaInfo} from "../_utils/Arena";
 
 const baseURL = 'http://localhost:5050/arena';
 
@@ -16,7 +16,7 @@ export class ArenaService {
 
   constructor(private http: HttpClient) { }
 
-  addArena(newArenas: Arena[]): Observable<any>{
+  addArena(newArenas: ArenaInfo[]): Observable<any>{
     return this.http.post(baseURL, {newArenas}, httpOptions);
   }
 
