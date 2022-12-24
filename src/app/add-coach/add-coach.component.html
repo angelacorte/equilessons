@@ -38,14 +38,14 @@
               class="form-check-input"
               value="true"
               checked
-              (change)="isCoachUnchecked($event, c)"
+              (change)="isCoachUnchecked($event, c['_id'])"
               id="isCoach">
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="istruttore">
           <mat-header-cell *matHeaderCellDef> Istruttore </mat-header-cell>
-          <mat-cell *matCellDef="let c"> {{c['name']}} {{c['surname']}}   </mat-cell>
+          <mat-cell *matCellDef="let c"> {{c['coachName']}} {{c['coachSurname']}}   </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

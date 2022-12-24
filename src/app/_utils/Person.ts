@@ -26,7 +26,7 @@ export interface ClubInfos {
 }
 
 export interface Coach {
-  coachId: string,
+  _id: string,
   coachName: string,
   coachSurname: string
 }

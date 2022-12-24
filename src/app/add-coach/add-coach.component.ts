@@ -32,7 +32,7 @@ export class AddCoachComponent implements OnInit {
   coaches:Coach[]= [];
   dataSource = new MatTableDataSource(this.coaches);
   isLoggedIn = false;
-  infos?: ClubInfos | UserInfos;
+  infos?: ClubInfos;
   displayedColumns = ['checkbox', 'istruttore'];
   coachId: string = "";
   users: UserInfos[] = [];
@@ -48,6 +48,7 @@ export class AddCoachComponent implements OnInit {
       if(this.infos){
         await this.getCoaches(this.infos._id).then((response)=>{
           this.coaches = response[0]['clubCoaches'];
+          console.log("coaches ", response)
         });
 
         this.users = await this.getAthletes(this.infos._id);
@@ -78,14 +79,17 @@ export class AddCoachComponent implements OnInit {
     return this.coaches.some((obj)=>obj["_id"] === id);
   }
 
-  addCoachToList(coachId: any) {
+  addCoachToList(coachId: string) {
+    console.log("add coach to list")
     this.users.forEach((value => {
+    console.log("value ", value)
       if(value['_id'] === coachId && !this.coaches.some(obj=>obj['_id'] === coachId)){
-        let coach = {
+        let coach: Coach = {
           _id: value['_id'],
-          name: value['name'],
-          surname: value['surname']
+          coachName: value['name'],
+          coachSurname: value['surname']
         };
+        console.log("coach ", coach)
         this.coaches.push(coach);
         this.form.coachId = '';
         this.setDataSource(this.coaches);
@@ -94,8 +98,15 @@ export class AddCoachComponent implements OnInit {
     }))
   }
 
-  private async getCoaches(clubId:string): Promise<any>{
-    return this.clubService.getClubCoaches(clubId).toPromise();
+  private async getCoaches(clubId:string): Promise<any>{ //todo maybe find a nicer way to do it? don't know
+    let c = await this.clubService.getClubCoaches(clubId).toPromise();
+    c[0].clubCoaches.forEach((x:any) => {
+      x.coachName = x.name;
+      x.coachSurname = x.surname;
+      delete x.name;
+      delete x.surname
+    })
+    return c;
   }
 
   private async getAthletes(clubId:string):Promise<any>{

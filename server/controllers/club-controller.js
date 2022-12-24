@@ -267,7 +267,7 @@ exports.getClubAthletes = function (req,res) {
     surname: 1,
     name: 1
   };
-  User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1, email:1, phoneNumber:1}).sort(sort).then(result=>{
+  User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1, email:1, phoneNumber:1, clubId: 1}).sort(sort).then(result=>{
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
@@ -314,6 +314,7 @@ exports.getCoachByClubId = function (req,res) {
     if(!result){
       return res.status(500).send({message: "an error occurred"});
     }
+
     return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
