@@ -103,7 +103,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     let lessonEndDate = new Date(this.updateLesson.endDate);
     //convert the date in a format supported by html
     this.form.lessonDate = lessonBeginDate.getFullYear() + '-' + (lessonBeginDate.getMonth() + 1) + '-' + lessonBeginDate.getDate();
-    this.form.lessonHour = lessonBeginDate.getHours() + ':' + (lessonBeginDate.getMinutes() < 10 ? '0' + lessonBeginDate.getMinutes().toString() : lessonBeginDate.getMinutes());
+    this.form.lessonHour = this.getXXTime(lessonBeginDate.getHours()) + ':' + this.getXXTime(lessonBeginDate.getMinutes())
     //calculate the lesson duration
     this.form.lessonDuration = (lessonEndDate.valueOf() - lessonBeginDate.valueOf()) / 60000;
     //set the coachId
@@ -111,6 +111,10 @@ export class DialogModifyLessonViewComponent implements OnInit {
     this.form.pairs = this.updateLesson.pairs;
     this.form.arena = this.updateLesson.arena
     this.form.notes = this.updateLesson.notes
+  }
+
+  private getXXTime(x: number): string{
+    return x < 10 ? '0' + x : x.toString()
   }
 
   private async getClubArenas(id:any):Promise<any>{
