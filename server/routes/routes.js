@@ -78,6 +78,9 @@ module.exports = function (app){
   app.route('/lesson/:clubId')
     .get(lessonController.getLessonByClubID);
 
+  app.route('/removelesson/:clubId')
+    .delete(lessonController.deleteLesson);
+
   app.route('/lesson/getInfo/:clubId')
     .get(lessonController.getLessonsInfos);
 

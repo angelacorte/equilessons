@@ -3,7 +3,7 @@ import {HorseInfos} from "./Horse";
 import {ArenaInfo} from "./Arena";
 
 export interface LessonState {
-  lessonId?: string,
+  lessonId: string,
   beginDate: Date,
   endDate: Date,
   arena: ArenaInfo,

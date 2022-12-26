@@ -42,8 +42,12 @@ export class LessonService {
     else return lessonData;
   }
 
+  deleteLesson(lessonId: string): Promise<Object>{
+    return this.http.delete(baseURL + '/removelesson/' + lessonId, {responseType: 'json'}).toPromise();
+  }
+
   updateLesson(lesson:any):Observable<any>{
-    return this.http.post(baseURL + '/lesson/update', lesson, httpOptions);
+    return this.http.post(baseURL + '/lesson/update', lesson, {responseType: 'json'});
   }
 
   deleteLessonState(){

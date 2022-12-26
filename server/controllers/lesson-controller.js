@@ -11,7 +11,7 @@ exports.createLesson = function (req,res){
   let newLesson = new Lesson(req.body);
   newLesson.save(function(err, lesson) {
     if (err){
-      res.send(err);
+      res.send({status: 500, message: 'an error occurred'});
     }
     res.status(200).json(lesson);
   });
@@ -23,8 +23,12 @@ exports.createLesson = function (req,res){
  * @param res
  */
 exports.deleteLesson = function (req,res){     //TODO might send a notification to the participants who were listed into
-  Lesson.deleteOne({_id:req.params._id}).then(result=>{
-    res.status(200).send({message:"Lesson deleted"});
+  Lesson.deleteOne({_id: req.params.clubId}).then(result=>{
+    if(result.deletedCount > 0){
+      return res.send({status: 200, message:"OK"});
+    }else{
+      return res.send({status: 400, message: "bad request"});
+    }
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -36,25 +40,27 @@ exports.deleteLesson = function (req,res){     //TODO might send a notification 
  * @param res
  */
 exports.updateLesson = function (req,res){ //TODO might send a notification to the participants who were listed into
- let update = {
-   beginDate: req.body.beginDate,
-   endDate: req.body.endDate,
-   arenaId: req.body.arenaId,
-   coachId: req.body.coachId,
-   clubId: req.body.clubId,
-   pairs: req.body.pairs,
-   notes: req.body.notes
- };
+  console.log("update lesson req body ", req.body)
+  let update = {
+    beginDate: req.body.beginDate,
+    endDate: req.body.endDate,
+    arenaId: req.body.arenaId,
+    coachId: req.body.coachId,
+    clubId: req.body.clubId,
+    pairs: req.body.pairs,
+    notes: req.body.notes
+  };
 
- Lesson.updateOne({_id: new ObjectId(req.body._id)}, update).then(result=>{
-   if(result.ok !== 1){
-     return res.status(500).send({message: "an error occurred"});
-   }
-   return res.send(result);
- }).catch(err=> {
-   console.log("Error: ", err.message);
- });
+  Lesson.updateOne({_id: new ObjectId(req.body._id)}, update).then(result=>{
+    console.log("result update one ", result)
+    if(result.nModified > 0){
+      return res.send({status: 200, message:"OK"});
+    }else{
+      return res.send({status: 500, message: "an error occurred"});
+    }
+  })
 };
+
 
 /**
  * Get all the lessons where a specific user is signed to
@@ -82,7 +88,7 @@ exports.getLessonByArenaID = function (req,res){
 exports.getLessonByClubID = function (req,res){
   Lesson.find({"clubId": req.params.clubId}).sort({beginDate:1}).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 500, message: "an error occurred"});
     }
     return res.send(result);
   }).catch(err=> {
@@ -106,12 +112,6 @@ exports.getLessonByCoachID = function (req,res){
  */
 exports.getLessonsInfos = function (req,res) {
 
-  const sort = {
-    "beginDate":1,
-    "coach.surname": 1,
-    "coach.name": 1,
-    'arena.arenaName': 1
-  }
   let pipeline = [
     {
       $match: {
@@ -168,7 +168,7 @@ exports.getLessonsInfos = function (req,res) {
 
   Lesson.aggregate(pipeline).then(async result => {
     if (!result) {
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 500, message: "an error occurred"});
     }
     let lesson = await matchPairs(result)
     return res.send(lesson);

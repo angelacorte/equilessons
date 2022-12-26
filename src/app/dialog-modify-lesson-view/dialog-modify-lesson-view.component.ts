@@ -54,7 +54,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
         horseId: '',
         horseName: ''
       }
-    }]
+    }],
+    notes: ''
   }
 
   updateLesson !: LessonState;
@@ -89,7 +90,6 @@ export class DialogModifyLessonViewComponent implements OnInit {
       this.coaches = await this.getClubCoaches(this.infos['_id']);
 
       this.updateLesson = this.data;
-
       await this.modifyLesson();
       this.dataSource.data = this.form.pairs;
     } else {
@@ -101,19 +101,16 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
     let lessonBeginDate = new Date(this.updateLesson.beginDate);
     let lessonEndDate = new Date(this.updateLesson.endDate);
-
     //convert the date in a format supported by html
     this.form.lessonDate = lessonBeginDate.getFullYear() + '-' + (lessonBeginDate.getMonth() + 1) + '-' + lessonBeginDate.getDate();
     this.form.lessonHour = lessonBeginDate.getHours() + ':' + (lessonBeginDate.getMinutes() < 10 ? '0' + lessonBeginDate.getMinutes().toString() : lessonBeginDate.getMinutes());
-
     //calculate the lesson duration
     this.form.lessonDuration = (lessonEndDate.valueOf() - lessonBeginDate.valueOf()) / 60000;
-
     //set the coachId
     this.form.coach = this.updateLesson.coach;
-
     this.form.pairs = this.updateLesson.pairs;
-
+    this.form.arena = this.updateLesson.arena
+    this.form.notes = this.updateLesson.notes
   }
 
   private async getClubArenas(id:any):Promise<any>{
@@ -144,13 +141,9 @@ export class DialogModifyLessonViewComponent implements OnInit {
     return arena;
   }
 
-  onSave(_id: any) {
-    console.log("this form on save", this.form);
-
-    this.form.lessonDate = new Date(this.form.lessonDate);
-    let beginDate = new Date(this.form.lessonDate.getFullYear()+' '+(this.form.lessonDate.getMonth()+1) +' '+this.form.lessonDate.getDate() + ' ' + this.form.lessonHour.toString()); //TODO non worka
+  onSave() {
+    let beginDate = new Date(this.form.lessonDate);
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
-
     let pairs: { riderId: any; horseId: any; }[] = [];
 
     this.form.pairs.forEach((val: any) =>{
@@ -169,19 +162,21 @@ export class DialogModifyLessonViewComponent implements OnInit {
       _id: this.updateLesson.lessonId,
       beginDate: beginDate,
       endDate: endDate,
-      arenaId: this.form.arena['arenaId'],
+      arenaId: this.form.arena['_id'],
       coachId: this.form.coach['coachId'],
       clubId: clubId,
       pairs: pairs,
+      notes: this.form.notes
     }
 
     this.lessonService.updateLesson(lesson).subscribe(response=>{
-      //todo if(response)
-      this.onClose();
-      this.openSnackbar("Lezione aggiornata con successo");
+      if(response.status == 200){
+        this.openSnackbar("Lezione aggiornata con successo");
+      }else{
+        this.openSnackbar("Errore nell'aggiornamento della lezione, riprova.");
+      }
     }, err => {
-      this.openSnackbar("Errore nell'aggiornamento della lezione");
-      console.log(err);
+      this.openSnackbar("Errore nell'aggiornamento della lezione, riprova.");
     })
   }
 
@@ -237,15 +232,21 @@ export class DialogModifyLessonViewComponent implements OnInit {
     })
   }
 
-  onDelete() {
+  async onDelete() {
     let today = new Date();
     let lessonDay = new Date(this.updateLesson.beginDate);
-    if(today > lessonDay){
+    if (today > lessonDay) {
       this._snackBar.open("Non è possibile cancellare una lezione passata", "Ok", {
         duration: 5000
       });
-    } else if( today <= lessonDay){
-      //TODO implement delete lesson
+    } else if (today <= lessonDay) {
+      this.lessonService.deleteLesson(this.updateLesson.lessonId).then((obj) => {}, (res) => { //todo brutta roba?
+        if(res.status == 200){
+          this.openSnackbar("Rimozione avvenuta con successo.")
+        }else{
+          this.openSnackbar("Qualcosa è andato storto, riprova.")
+        }
+      })
     }
   }
 
