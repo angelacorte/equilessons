@@ -40,7 +40,6 @@ exports.deleteLesson = function (req,res){     //TODO might send a notification 
  * @param res
  */
 exports.updateLesson = function (req,res){ //TODO might send a notification to the participants who were listed into
-  console.log("update lesson req body ", req.body)
   let update = {
     beginDate: req.body.beginDate,
     endDate: req.body.endDate,
@@ -52,7 +51,6 @@ exports.updateLesson = function (req,res){ //TODO might send a notification to t
   };
 
   Lesson.updateOne({_id: new ObjectId(req.body._id)}, update).then(result=>{
-    console.log("result update one ", result)
     if(result.nModified > 0){
       return res.send({status: 200, message:"OK"});
     }else{
