@@ -91,7 +91,6 @@ export class HorseManagementComponent implements OnInit {
   }
 
   update() {
-    console.log("to remove" + this.toRemove);
     this.horseService.removeHorses(this.toRemove).then((res) => {}, (msg) => { //todo brutta roba ma non so fare altrimenti
       console.log("MESSAGE ", msg);
       if(msg.status == 200){

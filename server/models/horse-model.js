@@ -10,9 +10,9 @@ let HorseSchema = new Schema({
   horseMicrochip: {type:Number, required:true, unique:true},
   horseFise: {type:String, unique:true},
   //nrFEI: {type:String, unique:true},
-  ownerId: {type:Schema.Types.ObjectId, ref:"User"}, //refers to an user
-  clubId: {type:Schema.Types.ObjectId, ref:"Club"}, //object/reference of 'club model'
-  horseBirthday: {type:Date, required:true},
+  ownerId: {type:Schema.Types.ObjectId, ref:"User", required: true}, //refers to an user
+  clubId: {type:Schema.Types.ObjectId, ref:"Club", required: true}, //object/reference of 'club model'
+  horseBirthday: {type:Date},
   //provenience: {type: String, required:true}, //TODO must be an existing country
   riders: [{type:Schema.Types.ObjectId, ref:"User"}],
   scholastic: {type:Boolean, default:false} //if true means that the horse can do school lessons
