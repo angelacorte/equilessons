@@ -7,6 +7,7 @@ const loginController = require("../controllers/login-controller");
 const roleController = require("../controllers/role-controller");
 const signupController = require("../controllers/signup-controller");
 const userController = require("../controllers/user-controller");
+const notificationController = require("../controllers/notification-controller")
 //const { verifySignup } = require("../middleware")
 
 module.exports = function (app){
@@ -115,4 +116,12 @@ module.exports = function (app){
 
   app.route('/userhorse/:userId')
     .get(userController.getUserHorses);
+
+  //---------------------------NOTIFICATION---------------------------------
+
+  app.route('/notification')
+    .get(notificationController.addNotification)
+
+  app.route('/notification/:recipientId')
+    .get(notificationController.getUserNotifications)
 }
