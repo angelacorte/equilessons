@@ -30,61 +30,67 @@ export class SignupComponent implements OnInit {
     clubId: "",
   };
 
-  clubs = [];
-  isSuccessful = false;
-  isSignUpFailed = false;
-  errorMessage = '';
+  clubs: {_id: string, clubName: string}[] = [];
   hide = true;
   passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
-  constructor(private authService: AuthService,private _snackBar: MatSnackBar, private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService) { }
+  constructor(private authService: AuthService, private _snackBar: MatSnackBar, private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService) {
+  }
 
   ngOnInit(): void {
 
-    if(!!this.tokenStorage.getToken()){ //if user is logged in
+    if (!!this.tokenStorage.getToken()) { //if user is logged in
       window.location.assign('home');
+    }else{
+      this.fetchData();
     }
-    this.fetchData();
   }
 
-  private fetchData(){
-    this.clubService.getAllClubs().pipe(map(responseData=>{
+  private fetchData() {
+    this.clubService.getAllClubs().pipe(map(responseData => {
       const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          // @ts-ignore
+      for (const key in responseData) {
+        if (responseData.hasOwnProperty(key)) {
           dataArray.push({...responseData[key]})
         }
       }
       return dataArray;
-
-    })).subscribe(response=>{
-      // @ts-ignore
+    })).subscribe(response => {
       this.clubs = response;
     });
   }
 
-  onSubmit(): void{
+  onSubmit(): void {
     let user = this.form;
 
     this.authService.signup(user).subscribe(
-        data => {
-          this.isSuccessful = true;
-          this.isSignUpFailed = false;
-          let snackBarRef = this._snackBar.open("Registrazione con successo", "Ok", {
-            duration: 5000
-          });
-          snackBarRef.afterDismissed().subscribe(()=>{
-            window.location.assign('/login');
-          })
-        },
-      err => {
-        this._snackBar.open("La registrazione non è andata a buon fine", "Ok", {
-          duration: 5000
-        });
-        this.errorMessage = err.error.message;
-        this.isSignUpFailed = true;
+      data => {
+        if (data.status == 200) {
+          this.openSnackbar("Registrazione avvenuta con successo, vai al login.", "login");
+        } else if (data.status == 409) {
+          this.openSnackbar("Utente già registrato.", "retry");
+        }else if(data.status == 400){
+          this.openSnackbar("La registrazione non è andata a buon fine, riprova.", "reload");
+        }
+      },
+      () => {
+        this.openSnackbar("La registrazione non è andata a buon fine, riprova.", "reload");
       }
     );
+  }
+
+  private openSnackbar(message: string, option: string) { //todo maybe change into enum
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    if(option == 'login'){
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.assign('/login');
+      })
+    }else if(option == 'reload'){
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.reload();
+      })
+    }
   }
 }
