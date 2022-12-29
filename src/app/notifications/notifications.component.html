@@ -4,13 +4,11 @@
     <mat-table [dataSource]="dataSource" class="mat-elevation-z8 notifications-table">
       <ng-container matColumnDef="checkbox">
         <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
-        <mat-cell *matCellDef="let n">               <!--<td  *ngFor="let les of lesson">-->
+        <mat-cell *matCellDef="let n">
           <input
-            *ngIf="isClub"
             type="checkbox"
             class="form-check-input"
-            value="true"
-            checked
+            value="false"
             [disabled]="false"
             (click)="isNotificationUnchecked()"
           >
@@ -19,25 +17,30 @@
 
       <ng-container matColumnDef="sender" >
         <mat-header-cell *matHeaderCellDef> Mittente </mat-header-cell>
-        <mat-cell *matCellDef="let n"> {{n['sender']}}</mat-cell>
+        <mat-cell *matCellDef="let n"> {{n['senderId']}}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="message">
+      <ng-container matColumnDef="object">
         <mat-header-cell *matHeaderCellDef> Oggetto </mat-header-cell>
         <mat-cell *matCellDef="let n">
           <button
             mat-button
-            (click)="goToLesson(n['lessonID'])"
+            (click)="goToLesson(n['lessonId'])"
             #tooltip="matTooltip"
             matTooltip="cliccal per andare alla lezione"
-            matTooltipHideDelay="100"> {{n['message']}}</button>
+            matTooltipHideDelay="100"> {{n['notificationType']}}</button>
 
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="date">
         <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
-        <mat-cell *matCellDef="let n" > {{n['date']}} </mat-cell>
+        <mat-cell *matCellDef="let n" > {{n['notificationDate']}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="message">
+        <mat-header-cell *matHeaderCellDef> Messaggio </mat-header-cell>
+        <mat-cell *matCellDef="let n"> {{n['message']}} </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
