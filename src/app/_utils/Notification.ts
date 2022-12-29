@@ -1,13 +1,17 @@
 export enum NotificationType {
-  MODIFY = " ha apportato modifiche alla lezione del ",
-  ADD = " ti ha aggiunto alla lezione del ",
-  DELETED = " ha annullato la lezione del "
+  ADD = "add-lesson",
+  UPDATE = "update-lesson",
+  DELETE = "delete-lesson",
+  INFO = "info"
 }
 
 export interface NotificationMessage{
-  sender: string,
-  lessonID: string,
-  lessonDate: string, //todo Date
-  message: NotificationType,
-  date: string
+  notificationId: string,
+  senderId: string,
+  recipientId: string,
+  lessonId?: string,
+  lessonDate?: string,
+  notificationType: NotificationType,
+  notificationDate: Date,
+  message?: string
 }
