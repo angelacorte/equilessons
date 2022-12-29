@@ -53,8 +53,8 @@ export class NotificationsComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  isNotificationUnchecked() {
-
+  checkNotification(n: NotificationMessage) {
+    console.log(n.senderId)
   }
 
   goToLesson(lessonId: string) {
@@ -62,6 +62,6 @@ export class NotificationsComponent implements OnInit {
   }
 
   update() {
-
+    this.setDataSource(this.notifications)
   }
 }
