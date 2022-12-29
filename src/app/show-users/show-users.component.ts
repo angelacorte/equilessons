@@ -54,9 +54,8 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
       if(this.infos){
-        await this.fetchUsers(this.infos._id);
-      }else{
-        this.openSnackbar("Qualcosa è andato storto, riprova");
+        this.setDataSource(await this.fetchUsers(this.infos._id))
+        // await this.fetchUsers(this.infos._id);
       }
     } else {
       window.location.assign('/notAllowed');
@@ -67,19 +66,20 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     return this.clubService.getClubAthletes(clubId).toPromise();
   }
 
-  private async fetchUsers(clubId:string){
-    this.getAthletes(clubId).then((response:any)=>{
-      response.forEach((value:UserInfos) => {
-        if(value.email === undefined){
+//TODO SORT USERS
+  private async fetchUsers(clubId:string): Promise<UserInfos[]>{
+    return this.getAthletes(clubId).then((response: any) => {
+      response.forEach((value: UserInfos) => {
+        if (value.email === undefined) {
           value.temporary = true;
           this.users.push(value);
-        }else{
+        } else {
           value.temporary = false;
           this.users.push(value);
         }
-      })
-      this.setDataSource(this.users);
-    })
+      });
+      return this.users;
+    });
   }
 
   private async getUserById(userId:any):Promise<any>{
@@ -125,11 +125,14 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   update() {
     if(this.toRemove.length > 0){
       this.userService.removeUser(this.toRemove).subscribe(resp =>{
-        this.openSnackbar("Operazione avvenuta con successo");
+        if(resp.status == 200){
+          this.openSnackbar("Operazione avvenuta con successo", "reload");
+        }else{
+          this.openSnackbar("Qualcosa è andato storto", "retry");
 
-      }, err => {
-        this.openSnackbar("Qualcosa è andato storto");
-        console.log('ERROR SHOW USERS', err);
+        }
+      }, () => {
+        this.openSnackbar("Qualcosa è andato storto", "retry");
       })
     }
   }
@@ -139,26 +142,35 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
       let tmpUser = this.form;
       tmpUser.clubId = this.infos._id;
 
-      this.authService.signup(tmpUser).subscribe(
+      this.authService.signTemporary(tmpUser).subscribe(
         data => {
-          this.openSnackbar("Registrazione avvenuta con successo");
+          if(data.status == 200){
+            tmpUser.temporary = true;
+            this.users.push(tmpUser);
+            // this.resetForm();
+            this.openSnackbar("Registrazione avvenuta con successo", "reload");
+          }else if(data.status == 409){
+            this.openSnackbar("Utente già presente", "retry");
+          }else{
+            this.openSnackbar("Qualcosa è andato storto, riprova.", "retry")
+          }
         },
         err => {
-          this.openSnackbar("Non è stato possibile registare l'utente");
-          console.log('ERROR', err);
+          this.openSnackbar("Non è stato possibile registare l'utente", "retry");
         }
       );
-    }else{
-      this.openSnackbar("Qualcosa è andato storto, riprova");
     }
   }
 
-  private openSnackbar(message:string){
+  private openSnackbar(message:string, option: string){ //todo maybe change into enum
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
     snackBarRef.afterDismissed().subscribe(()=>{
-      window.location.reload();
+      if(option == 'reload'){
+        this.setDataSource(this.users);
+        // window.location.reload();
+      }
     })
   }
   private setDataSource(data:UserInfos[]){
@@ -166,5 +178,13 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     this.dataSource.data = data;
     this.dataSource.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  private resetForm(){
+    this.form = {
+      name: '',
+      surname: '',
+      telephoneNumber: ''
+    }
   }
 }

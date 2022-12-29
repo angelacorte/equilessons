@@ -98,10 +98,10 @@ exports.removeUser = function (req,res){
     }
   }
   User.deleteMany(opts).then(result=>{
-    if(result.deletedCount < 1){
-      return res.status(500).send({message: "an error occurred"});
+    if(result.deletedCount > 0){
+      return res.send({status: 200, result});
     }
-    return res.status(200).send(result);
+    return res.send({status: 500, message: "an error occurred"});
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
