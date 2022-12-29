@@ -120,7 +120,7 @@ module.exports = function (app){
   //---------------------------NOTIFICATION---------------------------------
 
   app.route('/notification')
-    .get(notificationController.addNotification)
+    .post(notificationController.addNotification)
 
   app.route('/notification/:recipientId')
     .get(notificationController.getUserNotifications)
