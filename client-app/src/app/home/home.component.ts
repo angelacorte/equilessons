@@ -13,7 +13,6 @@ const USER_KEY = 'auth-user';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  content?: string;
   isLoggedIn = false;
   infos?: ClubInfos | UserInfos;
   user: any;
@@ -27,15 +26,5 @@ export class HomeComponent implements OnInit {
       this.isClub = this.tokenStorage.isClub();
       this.infos = this.tokenStorage.getInfos(this.isClub);
     }
-
-    this.userService.getPublicContent().subscribe(
-      data => {
-        this.content = data;
-      },
-      err => {
-        console.log("err", err);
-        this.content = JSON.parse(err.message).message;
-      }
-    );
   }
 }
