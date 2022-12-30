@@ -10,8 +10,28 @@ export interface NotificationMessage{
   senderId: string,
   recipientId: string,
   lessonId?: string,
-  lessonDate?: string,
+  lessonDate?: Date,
   notificationType: NotificationType,
   notificationDate: Date,
   message?: string
 }
+
+export function Notification(
+  notificationId: string, 
+  senderId: string, 
+  recipientId: string, 
+  notificationType: NotificationType, 
+  notificationDate: Date, 
+  lessonId?: string, 
+  lessonDate?: Date, 
+  message?: string): NotificationMessage {
+    return { 
+      notificationId: notificationId, 
+      senderId: senderId, 
+      recipientId: recipientId, 
+      lessonId: lessonId, 
+      lessonDate: lessonDate, 
+      notificationType: notificationType, 
+      notificationDate: notificationDate, 
+      message: message }
+  }
