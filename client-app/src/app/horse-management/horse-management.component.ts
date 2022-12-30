@@ -70,9 +70,7 @@ export class HorseManagementComponent implements OnInit {
   isHorseUnchecked(e: any, horseId: any) {
     if(!e.target.checked){
       this.horses.some((value:any,index:number) => {
-        console.log("value" + value._id);
         if(value._id === horseId && value.scholastic){
-          console.log("yes")
           this.horses.splice(index,1);
           this.toRemove.push(horseId);
           this.dataSource.data = this.horses;
@@ -140,7 +138,6 @@ export class HorseManagementComponent implements OnInit {
 
   private async matchPrivateHorse() { //TODO add way to remove horse
     this.horses.forEach((h:HorseInfos, index) => {
-      console.log("h " + h.horseName)
       this.horses[index]['horseOwner'] = {
         ownerName: this.infos['name'],
         ownerSurname: this.infos['surname'],
