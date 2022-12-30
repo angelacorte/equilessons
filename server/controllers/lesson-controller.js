@@ -39,7 +39,7 @@ exports.deleteLesson = function (req,res){     //TODO might send a notification 
  * @param req
  * @param res
  */
-exports.updateLesson = function (req,res){ //TODO might send a notification to the participants who were listed into
+exports.updateLesson = function (req,res){
   let update = {
     beginDate: req.body.beginDate,
     endDate: req.body.endDate,
@@ -52,9 +52,9 @@ exports.updateLesson = function (req,res){ //TODO might send a notification to t
 
   Lesson.updateOne({_id: new ObjectId(req.body._id)}, update).then(result=>{
     if(result.nModified > 0){
-      return res.send({status: 200, message:"OK"});
+      return res.status(200).json(result);
     }else{
-      return res.send({status: 500, message: "an error occurred"});
+      return res.sendStatus(500);
     }
   })
 };
