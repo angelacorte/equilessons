@@ -9,6 +9,7 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {ClubInfos} from "../_utils/Person";
 import {ArenaInfo} from "../_utils/Arena";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-new-arena',
@@ -50,10 +51,10 @@ export class NewArenaComponent implements OnInit {
     if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
       if(this.infos){
-        this.arenas = await this.getArenas(this.infos._id);
+        this.arenas = await this.getArenas(this.infos._id)
         this.setDataSource(this.arenas);
       }else{
-        this.openSnackbar("Qualcosa è andato storto, riprova");
+        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RELOAD);
       }
     } else {
       window.location.assign('/notAllowed');
@@ -61,20 +62,44 @@ export class NewArenaComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    await this.addArena(this.toUpdate).then(()=> {
-      if (this.toRemove.length > 0) {
-        this.arenaService.removeArena(this.toRemove).subscribe(() => {
-          this.openSnackbar("Modifiche apportate con successo");
-        }, err => {
-          console.log('ERROR NEW ARENA 1', err);
-          this.openSnackbar("Errore nella rimozione dei campi");
-        })
-      } else {
-        this.openSnackbar("Modifiche apportate con successo");
+    await this.addArena(this.toUpdate).then((res)=> {
+      console.log("add arena res ", res)
+      if(res.status == 200){
+        this.replaceArena(res.newArenas)
+        if(this.toRemove.length > 0){
+
+        }else{
+          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH);
+        }
+      }else{
+        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
       }
+
+      // if (this.toRemove.length > 0) {
+      //   this.arenaService.removeArena(this.toRemove).subscribe(() => {
+      //     this.openSnackbar("Modifiche apportate con successo");
+      //   }, err => {
+      //     console.log('ERROR NEW ARENA 1', err);
+      //     this.openSnackbar("Errore nella rimozione dei campi");
+      //   })
+      // } else {
+      //   this.openSnackbar("Modifiche apportate con successo");
+      // }
     }, err => {
       console.log('ERROR NEW ARENA 2', err);
-      this.openSnackbar("Errore nella modifica dei campi");
+      this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+    })
+  }
+
+  private replaceArena(arenas: {arenaName: string, clubId: string, arenaId: string}[]){
+    console.log("replace ", arenas)
+    arenas.forEach((arena) => {
+      this.arenas.forEach((element, index) => {
+        if(element.arenaName == arena.arenaName){
+          this.arenas.splice(index,1);
+          this.arenas.push(arena);
+        }
+      })
     })
   }
 
@@ -89,7 +114,7 @@ export class NewArenaComponent implements OnInit {
       this.setDataSource(this.arenas);
       this.dataSource.data = this.arenas;
     }else{
-      this.openSnackbar("Qualcosa è andato storto, riprova");
+      this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
     }
   }
 
@@ -110,8 +135,15 @@ export class NewArenaComponent implements OnInit {
     return await this.arenaService.addArena(data).toPromise();
   }
 
-  private async getArenas(clubId:string):Promise<any>{
-    return this.arenaService.getClubArenas(clubId).toPromise();
+  private async getArenas(clubId:string):Promise<ArenaInfo[]>{
+    return await this.arenaService.getClubArenas(clubId).toPromise().then(res => {
+      if (res.status == 200) {
+        return res.arenas;
+      } else if (res.status == 400 || res.status == 500) {
+        this.openSnackbar(SnackBarMessages.RETRY,SnackBarActions.RELOAD);
+        return [];
+      }
+    });
   }
 
   private setDataSource(data:ArenaInfo[]){
@@ -121,12 +153,18 @@ export class NewArenaComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  private openSnackbar(message:string){
+  private openSnackbar(message:SnackBarMessages, option: SnackBarActions){
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
-    snackBarRef.afterDismissed().subscribe(()=>{
-      window.location.reload();
-    })
+    if(option == SnackBarActions.RELOAD){
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.reload();
+      })
+    }else if(option == SnackBarActions.REFRESH){
+
+    }else if(option == SnackBarActions.RETRY){
+
+    }
   }
 }
