@@ -16,19 +16,19 @@ export class ArenaService {
 
   constructor(private http: HttpClient) { }
 
-  addArena(newArenas: ArenaInfo[]): Observable<any>{
-    return this.http.post(baseURL, {newArenas}, httpOptions);
+  addArena(newArenas: ArenaInfo): Promise<any>{
+    return this.http.post(baseURL, {newArenas}, httpOptions).toPromise();
   }
 
-  getClubArenas(clubId: string): Observable<any>{
-    return this.http.get(baseURL + '/' + clubId, httpOptions);
+  getClubArenas(clubId: string): Promise<any>{
+    return this.http.get(baseURL + '/' + clubId, httpOptions).toPromise();
   }
 
-  removeArena(arenasId: string[]): Observable<any>{
+  removeArena(arenasId: string[]): Promise<any>{
     let options = {
       options: httpOptions,
       body: arenasId
     }
-    return this.http.delete(baseURL, options);
+    return this.http.delete(baseURL, options).toPromise();
   }
 }
