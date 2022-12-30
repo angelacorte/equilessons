@@ -96,6 +96,9 @@ module.exports = function (app){
   app.route('/signup')
     .post(signupController.signup);
 
+  app.route('/addTemporary')
+    .post(signupController.signupTemporary);
+
   app.route('/user/roles/:id')
     .get(userController.getUserRoles)
 

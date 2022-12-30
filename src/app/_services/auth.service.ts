@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {UserInfos} from "../_utils/Person";
 
 const baseURL = 'http://localhost:5050';
 
@@ -24,7 +25,11 @@ export class AuthService {
     }, httpOptions);
   }
 
-  signup(data:any): Observable<any>{
+  signup(data:UserInfos): Observable<any>{
     return this.http.post(baseURL + '/signup', data, httpOptions);
+  }
+
+  signTemporary(data: {name: string, surname: string, telephoneNumber: number}): Observable<any>{
+    return this.http.post(baseURL + '/addTemporary', data, httpOptions);
   }
 }

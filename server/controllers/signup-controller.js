@@ -10,73 +10,90 @@ let SALT_WORK_FACTOR = 10;
  * @param res
  */
 exports.signup = function(req, res) {
-  console.log("req.body.phoneNumber",req.body.phoneNumber);
   User.findOne({
     $or:[{
       phoneNumber:req.body.phoneNumber
-    }] /*,{
-      username: req.body.username
-    },{
-      email:req.body.email
-    }*/
-  }).then(u => {
-    if (u && u.email !== undefined)  {
-      res.status(409).send({"description": "email or username already in use"})
+    }]
+  }).then(async u => { //todo manca controllo su email e username che non devono essere duplicati
+    if (u && u.email !== undefined) {
+      res.status(409).send({"description": "telephone number already in use"})
     }else{ //if user does not exists or exists without email (means that it's a temporary user, so it is possible to overwrite his infos)
-      let newUser = new User(req.body);
-
-      if(newUser.email !== undefined){
-        let hash = hashPassword(newUser.password);
-        let update = {
-          isOwner: newUser.isOwner,
-          roles: [],
-          horse: [],
-          name: newUser.name,
-          surname: newUser.surname,
-          email: newUser.email,
-          birthday: newUser.birthday,
-          username: newUser.username,
-          password: hash,
-          phoneNumber: newUser.phoneNumber,
-          taxcode: newUser.taxcode,
-          city: newUser.city,
-          address: newUser.address,
-          nrFise: newUser.nrFise,
-          clubId: newUser.clubId
-      };
-
-        User.updateOne({phoneNumber: newUser.phoneNumber}, update).then(result=>{
-          if(result.ok !== 1){
-            return res.status(500).send({message: "an error occurred"});
+      if(u == null){
+        let user = new User(await setUserFields(req.body))
+        user.save(function (err, user) {
+          if (err) {
+            res.send({status: 400, message: "error while saving user"})
+            return err;
+          }else{
+            return res.send({status: 200, message: "user added", user});
           }
-          return res.send(result);
-        }).catch(err=> {
-          console.log("Error: ", err.message);
-        });
-      }else{
-        newUser.save(function(err, user) {
-          if (err){
-            res.send(err);
+        })
+      }else if(u.email === undefined){ //was a temporary user
+        let updateUser = await setUserFields(req.body)
+        User.updateOne({phoneNumber: updateUser.phoneNumber}, updateUser).then(result => {
+          if(result.nModified === 1){
+            delete updateUser.password;
+            res.send({status: 200, message:"user added", updateUser})
+          }else{
+            res.send({status: 400, message: "error while saving user"})
           }
-          res.status(200).json(user);
         });
       }
     }
   })
 };
 
-function hashPassword (password){
-  try{
-    bcrypt.genSalt(SALT_WORK_FACTOR, function (err,salt) {
-      if(err) return err;
-      else{
-        bcrypt.hash(password,salt, function (error, hash) {
-          if(error) return error;
-          else return hash;
-        })
+exports.signupTemporary = function (req, res){
+  User.findOne({
+    $or:[{
+      phoneNumber:req.body.phoneNumber
+    }]
+  }).then(response => {
+    if(response !== null){
+      res.send({status: 409, message: "telephone number already exists"})
+    }else{
+      let temp = {
+        name: req.body.name,
+        surname: req.body.surname,
+        phoneNumber: req.body.phoneNumber,
+        clubId: req.body.clubId
       }
-    })
-  } catch (e){
-    return e;
-  }
+      let newUser = new User(temp);
+      newUser.save(function (err, user) {
+        if (err) {
+          res.send({status: 400, message: "error while saving user"})
+          return err;
+        }else{
+          return res.send({status: 200, message: "temporary user added", user});
+        }
+      })
+    }
+  })
 }
+
+async function hashPassword (password) {
+  let salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+  return await bcrypt.hash(password, salt);
+}
+
+async function setUserFields(body) {
+  let hash = await hashPassword(body.password);
+  return {
+    isOwner: body.isOwner,
+    roles: [],
+    horse: [],
+    name: body.name,
+    surname: body.surname,
+    email: body.email,
+    birthday: body.birthday,
+    username: body.username,
+    password: hash,
+    phoneNumber: body.phoneNumber,
+    taxCode: body.taxCode,
+    city: body.city,
+    address: body.address,
+    nrFise: body.nrFise,
+    clubId: body.clubId
+  };
+}
+

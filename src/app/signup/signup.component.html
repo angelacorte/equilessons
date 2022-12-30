@@ -1,6 +1,5 @@
 <div class="container mt-5">
   <form
-    *ngIf="!isSuccessful"
     name="form"
     (ngSubmit)="f.form.valid && onSubmit()"
     #f="ngForm"
@@ -165,10 +164,4 @@
       <button class="btn col-md-4">Registrami</button>
     </div>
   </form>
-
-
-  <div class="alert alert-success" *ngIf="isSuccessful">
-    Registrazione completata!
-    <a href="/login">Ora effettua il login!</a>
-  </div>
 </div>

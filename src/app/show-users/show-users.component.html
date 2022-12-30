@@ -67,8 +67,8 @@
             class="form-check-input"
             value="true"
             checked
-            [disabled]="!u.tmp"
-            (click)="isUserUnchecked($event, u.userId)"
+            [disabled]="!u.temporary"
+            (click)="isUserUnchecked($event, u._id)"
           > <!--id="userId"-->
         </mat-cell>
       </ng-container>
