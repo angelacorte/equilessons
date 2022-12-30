@@ -120,7 +120,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
   }
 
   private async getClubArenas(id:any):Promise<any>{
-    return await this.arenaService.getClubArenas(id).toPromise();
+    return await this.arenaService.getClubArenas(id);
   }
 
   private async getClubAthletes(id:any):Promise<any>{
