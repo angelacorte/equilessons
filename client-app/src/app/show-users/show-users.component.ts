@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {HttpClient} from "@angular/common/http";
 import {LessonService} from "../_services/lesson.service";
@@ -16,6 +12,7 @@ import {MatSort} from "@angular/material/sort";
 import {DialogUserViewComponent} from '../dialog-user-view/dialog-user-view.component';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ClubInfos, UserInfos} from "../_utils/Person";
+import {SignupMessages, SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-show-users',
@@ -126,13 +123,13 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     if(this.toRemove.length > 0){
       this.userService.removeUser(this.toRemove).subscribe(resp =>{
         if(resp.status == 200){
-          this.openSnackbar("Operazione avvenuta con successo", "reload");
+          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.RELOAD);
         }else{
-          this.openSnackbar("Qualcosa è andato storto", "retry");
+          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
 
         }
       }, () => {
-        this.openSnackbar("Qualcosa è andato storto", "retry");
+        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
       })
     }
   }
@@ -148,28 +145,31 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
             tmpUser.temporary = true;
             this.users.push(tmpUser);
             // this.resetForm();
-            this.openSnackbar("Registrazione avvenuta con successo", "reload");
+            this.openSnackbar(SnackBarMessages.OK, SnackBarActions.RELOAD);
           }else if(data.status == 409){
-            this.openSnackbar("Utente già presente", "retry");
+            this.openSnackbar(SignupMessages.PRESENT, SnackBarActions.RETRY);
           }else{
-            this.openSnackbar("Qualcosa è andato storto, riprova.", "retry")
+            this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY)
           }
         },
         err => {
-          this.openSnackbar("Non è stato possibile registare l'utente", "retry");
+          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
         }
       );
     }
   }
 
-  private openSnackbar(message:string, option: string){ //todo maybe change into enum
+  private openSnackbar(message:string, option: SnackBarActions){ //todo maybe change into enum
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
     snackBarRef.afterDismissed().subscribe(()=>{
-      if(option == 'reload'){
-        this.setDataSource(this.users);
-        // window.location.reload();
+      switch (option) {
+        case SnackBarActions.RELOAD:
+          this.setDataSource(this.users);
+          break
+        case SnackBarActions.RETRY:
+          break;
       }
     })
   }

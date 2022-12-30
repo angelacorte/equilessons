@@ -20,5 +20,6 @@ export enum LoginMessages{
 export enum SignupMessages{
   LOGIN = "Registrazione avvenuta con successo, vai al login.",
   ALREADY_EXISTS = "Username o email già registrato.",
-  FAILED = "La registrazione non è andata a buon fine, riprova."
+  FAILED = "La registrazione non è andata a buon fine, riprova.",
+  PRESENT = "Utente già registrato."
 }
