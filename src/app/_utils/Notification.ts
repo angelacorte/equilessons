@@ -6,7 +6,7 @@ export enum NotificationType {
 }
 
 export interface NotificationMessage{
-  notificationId: string,
+  notificationId?: string,
   senderId: string,
   recipientId: string,
   lessonId?: string,
@@ -17,14 +17,14 @@ export interface NotificationMessage{
 }
 
 export function Notification(
-  notificationId: string, 
   senderId: string, 
   recipientId: string, 
   notificationType: NotificationType, 
   notificationDate: Date, 
   lessonId?: string, 
   lessonDate?: Date, 
-  message?: string): NotificationMessage {
+  message?: string,
+  notificationId?: string, ): NotificationMessage {
     return { 
       notificationId: notificationId, 
       senderId: senderId, 
