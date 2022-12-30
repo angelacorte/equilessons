@@ -12,6 +12,10 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {pairs} from "rxjs";
 import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 import {HorseInfos} from "../_utils/Horse";
+import { NotificationService } from '../_services/notification.service';
+import { Notification, NotificationType } from '../_utils/Notification';
+import { response } from 'express';
+import { LessonState } from '../_utils/Lesson';
 
 @Component({
   selector: 'app-new-lesson',
@@ -57,7 +61,7 @@ export class NewLessonComponent implements OnInit {
   isClub: boolean = false;
   checked: boolean = true;
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService) { }
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private notificationService: NotificationService) { }
 
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -84,7 +88,7 @@ export class NewLessonComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     let beginDate = new Date(this.form.lessonDate);
     beginDate.setHours(this.form.lessonHour.substring(0,2), this.form.lessonHour.substring(3,5));
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
@@ -107,25 +111,30 @@ export class NewLessonComponent implements OnInit {
       pairs: pairs,
       notes: this.form.notes
     }
-    this.lessonService.createLesson(lesson).toPromise().then(response=>{
-      if(response.errors != undefined){
-        this._snackBar.open("Riempi i campi obbligatori.", "Ok", {
-          duration: 3000
-        });
-      }else{
-        let snackBarRef = this._snackBar.open("Lezione creata con successo", "Ok", {
-          duration: 3000
-        });
-        snackBarRef.afterDismissed().subscribe(()=>{
-          window.location.assign('/calendar');
-        })
-      }
-    }, err => {
+
+    try {
+      let d: LessonState = await this.lessonService.createLesson(lesson).toPromise()
+      let snackBarRef = this._snackBar.open("Lezione creata con successo", "Ok", {
+        duration: 3000
+      });
+      snackBarRef.afterDismissed().subscribe(()=>{
+        window.location.assign('/calendar');
+      })
+      const notification = Notification(
+        this.tokenStorage.getInfos(this.isClub)._id,
+        pairs.pop()?.riderId,
+        NotificationType.ADD,
+        new Date(),
+        d.lessonId,
+        d.beginDate
+      )
+      await this.notificationService.createNotification(notification)
+    } catch(err){
       this._snackBar.open("Non è stato possibile creare la lezione", "Ok", {
         duration: 3000
       });
       console.log('ERROR NEW LESSON', err);
-    });
+    }
   }
 
   private async getClubArenas(id:string):Promise<any>{
