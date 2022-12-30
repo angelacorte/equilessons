@@ -126,7 +126,8 @@ export class NewLessonComponent implements OnInit {
         NotificationType.ADD,
         new Date(),
         d.lessonId,
-        d.beginDate
+        d.beginDate,
+        d.notes
       )
       await this.notificationService.createNotification(notification)
     } catch(err){
