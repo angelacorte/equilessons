@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService} from "../_services/auth.service";
 import { TokenStorageService} from "../_services/token-storage.service";
+import {LoginMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.tokenStorage.getToken()){
-
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
     }
@@ -35,16 +35,29 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(username, password).subscribe(
       data => {
-        this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveUser(data);
-
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.roles = this.tokenStorage.getUser().roles;
-        this.reloadPage();
+        switch (data.status) {
+          case 404:
+            this.isLoginFailed = true;
+            this.errorMessage = LoginMessages.FAILED
+            break;
+          case 401:
+            this.isLoginFailed = true;
+            this.errorMessage = LoginMessages.FAILED
+            break;
+          case 200:
+            this.tokenStorage.saveToken(data.accessToken);
+            this.tokenStorage.saveUser(data);
+            this.isLoggedIn = true
+            this.roles = this.tokenStorage.getUser().roles;
+            this.reloadPage();
+            break;
+          case 500:
+            this.isLoginFailed = true;
+            this.errorMessage = LoginMessages.ERROR
+            break
+        }
       },
       err => {
-        console.log('ERROR LOGIN COMPONENT', err);
         this.errorMessage = err.statusText;
         this.isLoginFailed = true;
       }

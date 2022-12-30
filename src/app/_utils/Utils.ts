@@ -10,3 +10,8 @@ export enum SnackBarMessages{
   NOTHING = "Non è stata compiuta alcuna azione"
 
 }
+
+export enum LoginMessages{
+  FAILED = "Username o password errati.",
+  ERROR = "Internal server error."
+}
