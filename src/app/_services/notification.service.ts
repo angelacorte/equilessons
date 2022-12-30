@@ -14,6 +14,10 @@ export class NotificationService {
 
   constructor(private http: HttpClient) { }
 
+  createNotification(data: NotificationMessage): Promise<any>{
+    return this.http.post(BASE_URL + '/notification', data, httpOptions).toPromise()
+  }
+
   getNotifications(userId: string): Promise<any> {
     return this.http.get(BASE_URL + '/notification/' + userId).toPromise()
   }
