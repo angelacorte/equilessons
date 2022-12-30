@@ -61,59 +61,35 @@ export class NewArenaComponent implements OnInit {
     }
   }
 
-  async onSubmit(): Promise<void> {
-    await this.addArena(this.toUpdate).then((res)=> {
-      console.log("add arena res ", res)
-      if(res.status == 200){
-        this.replaceArena(res.newArenas)
-        if(this.toRemove.length > 0){
-
+  async onSubmit() {
+    if(this.toRemove.length > 0){
+      this.arenaService.removeArena(this.toRemove).then((result) => {
+        if(result.status == 200){
+          this.setDataSource(this.arenas);
+          this.toRemove = []
         }else{
-          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH);
-        }
-      }else{
-        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
-      }
-
-      // if (this.toRemove.length > 0) {
-      //   this.arenaService.removeArena(this.toRemove).subscribe(() => {
-      //     this.openSnackbar("Modifiche apportate con successo");
-      //   }, err => {
-      //     console.log('ERROR NEW ARENA 1', err);
-      //     this.openSnackbar("Errore nella rimozione dei campi");
-      //   })
-      // } else {
-      //   this.openSnackbar("Modifiche apportate con successo");
-      // }
-    }, err => {
-      console.log('ERROR NEW ARENA 2', err);
-      this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
-    })
-  }
-
-  private replaceArena(arenas: {arenaName: string, clubId: string, arenaId: string}[]){
-    console.log("replace ", arenas)
-    arenas.forEach((arena) => {
-      this.arenas.forEach((element, index) => {
-        if(element.arenaName == arena.arenaName){
-          this.arenas.splice(index,1);
-          this.arenas.push(arena);
+          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY)
         }
       })
-    })
+    }else{
+      this.openSnackbar(SnackBarMessages.NOTHING, SnackBarActions.REFRESH);
+    }
   }
 
-  addArenaToList(value: string) {
-    if(this.infos){
+  async addArenaToList(value: string) {
+    if (this.infos) {
       let newArena: ArenaInfo = {
         clubId: this.infos._id,
         arenaName: value
       };
-      this.arenas.push(newArena);
-      this.toUpdate.push(newArena);
-      this.setDataSource(this.arenas);
-      this.dataSource.data = this.arenas;
-    }else{
+      await this.addArena(newArena).then((res) => {
+        if (res.status == 200) {
+          this.arenas.push(res.newArenas[0])
+          this.setDataSource(this.arenas)
+          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH);
+        }
+      })
+    } else {
       this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
     }
   }
@@ -121,27 +97,24 @@ export class NewArenaComponent implements OnInit {
   isArenaUnchecked(e: any, arenaId:string) {
     if(!e.target.checked){
       this.arenas.forEach((item, index)=>{
-        if(item.arenaId === arenaId){
+        if(item._id == arenaId){
           this.arenas.splice(index, 1);
           this.toRemove.push(arenaId);
-          this.setDataSource(this.arenas);
-          this.dataSource.data = this.arenas;
         }
       });
     }
   }
 
-  private async addArena(data:ArenaInfo[]):Promise<any>{
-    return await this.arenaService.addArena(data).toPromise();
+  private async addArena(data:ArenaInfo):Promise<any>{
+    return await this.arenaService.addArena(data);
   }
 
   private async getArenas(clubId:string):Promise<ArenaInfo[]>{
-    return await this.arenaService.getClubArenas(clubId).toPromise().then(res => {
+    return await this.arenaService.getClubArenas(clubId).then(res => {
       if (res.status == 200) {
         return res.arenas;
       } else if (res.status == 400 || res.status == 500) {
         this.openSnackbar(SnackBarMessages.RETRY,SnackBarActions.RELOAD);
-        return [];
       }
     });
   }
@@ -157,14 +130,15 @@ export class NewArenaComponent implements OnInit {
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
-    if(option == SnackBarActions.RELOAD){
-      snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.reload();
-      })
-    }else if(option == SnackBarActions.REFRESH){
-
-    }else if(option == SnackBarActions.RETRY){
-
-    }
+    snackBarRef.afterDismissed().subscribe(()=>{
+      switch (option) {
+        case SnackBarActions.REFRESH:
+          this.setDataSource(this.arenas)
+          break
+        case SnackBarActions.RELOAD || SnackBarActions.RETRY:
+          window.location.reload();
+          break;
+      }
+    })
   }
 }
