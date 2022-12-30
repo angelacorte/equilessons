@@ -8,17 +8,16 @@ let ObjectId = require('mongodb').ObjectID;
  * @param req
  * @param res
  */
-exports.getArenaByName = function (req,res){ //todo useless???
+exports.getArenaByName = function (req,res){ //todo MUST be used to check if an arena is already signed for a lesson
   Arena.findOne({"arenaName":req.params.arenaName}).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400, message: "an error occurred"});
     }
-    return res.send(result);
+    return res.send({status: 200,result});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
-
 //db.clubs.aggregate([{ $match:{"_id":ObjectId("60f702d3329ccb26f26937a0")}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasClub"}}])
 
 /**
@@ -28,13 +27,13 @@ exports.getArenaByName = function (req,res){ //todo useless???
  */
 exports.addArena = function (req,res){
   let docs = req.body.newArenas;
-  Arena.insertMany(docs).then(result=>{
-    if(!result){
-      return res.status(500).send({message: "an error occurred"});
+  Arena.insertMany(docs).then(newArenas=>{
+    if(!newArenas){
+      return res.send({status: 400, message: "an error occurred"});
     }
-    return res.send(result);
+    return res.send({status: 200, newArenas: newArenas});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 
@@ -44,13 +43,13 @@ exports.addArena = function (req,res){
  * @param res
  */
 exports.getArenasByClubId = function (req,res){
-  Arena.find({"clubId":req.params.clubId}, {"clubId":0}).sort({arenaName: 1}).then(result=>{
-    if(!result){
-      return res.status(500).send({message: "an error occurred"});
+  Arena.find({"clubId":req.params.clubId}, {"clubId":0}).sort({arenaName: 1}).then(arenas=>{
+    if(!arenas){
+      return res.send({status: 400, message: "an error occurred"});
     }
-    return res.send(result);
+    return res.send({status: 200, arenas});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 
@@ -67,10 +66,10 @@ exports.removeArena = function (req,res){
   }
   Arena.deleteMany(opts).then(result=>{
     if(result.deletedCount < 1){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400, message: "an error occurred"});
     }
-    return res.send(result);
+    return res.send({status: 200, result});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
