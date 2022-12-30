@@ -55,7 +55,7 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 }
 
-let reasons = UserSchema.statics.failedLogin = { NOT_FOUND: 0, PASSWORD_INCORRECT: 1, MAX_ATTEMPTS: 2 };
+let reasons = UserSchema.statics.failedLogin = { NOT_FOUND: 0, PASSWORD_INCORRECT: 1};
 
 UserSchema.statics.getAuthenticated = function (input, password, cb) {
 
@@ -78,6 +78,8 @@ UserSchema.statics.getAuthenticated = function (input, password, cb) {
       }
       if(isMatch){
         return cb(null,user);
+      }else{
+        return cb(err, null, reasons.PASSWORD_INCORRECT)
       }
     })
   })

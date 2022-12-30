@@ -8,11 +8,9 @@ require('dotenv').config();
  * @param req
  * @param res
  */
-exports.login = function (req,res) { //TODO manage errors
-
+exports.login = function (req,res) {
   User.getAuthenticated(req.body.username, req.body.password, function (err, user, reason) {
     if (err) {
-      console.log("error 0: " + err)
       throw err;
     }
     if (user) {
@@ -21,7 +19,7 @@ exports.login = function (req,res) { //TODO manage errors
         function(err, token){
           if(err) throw err;
           else return token;
-      }); //TODO error
+      });
 
       const filter = {"_id": user._id};
       const update = {"token": refreshToken};
@@ -30,9 +28,9 @@ exports.login = function (req,res) { //TODO manage errors
         new: true
       }).then(result => {
         if (!result) {
-          res.status(500).json({"accessToken": accessToken, "refreshToken": refreshToken});
+          res.send({status: 500, accessToken: accessToken, refreshToken: refreshToken});
         }
-        res.status(200).json({"accessToken": accessToken, "refreshToken": refreshToken, "user": user});
+        res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, user: user});
       })/*.catch(err => {
         console.log("Error: ", err.message);
       });*/
@@ -41,12 +39,12 @@ exports.login = function (req,res) { //TODO manage errors
     let reasons = User.failedLogin;
     switch (reason) {
       case reasons.NOT_FOUND:
-        res.status(404).json({"description": "wrong username or password"});
+        res.send({status: 404, description: "wrong username or password"});
         break;
       case reasons.PASSWORD_INCORRECT:
         // note: these cases are usually treated the same - don't tell
         // the user *why* the login failed, only that it did
-        res.status(401).json({"description": "wrong username or password"});
+        res.send({status: 401, description: "wrong username or password"});
         break;
     }
   });
@@ -103,10 +101,10 @@ exports.logout = function (req,res) {
     new:true
   }).then(result =>{
     if(!result){
-      return res.sendStatus(404).json({"description":"no token found"});
+      return res.send({status: 404, description:"no token found"});
     }
     res.sendStatus(204);
   }).catch(err => {
-    console.log("Error 2: ", err.message);
+    return res.send({status: 500, description:err});
   });
 }
