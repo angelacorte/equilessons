@@ -12,6 +12,8 @@ import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import { NotificationType, Notification } from '../_utils/Notification';
+import { NotificationService } from '../_services/notification.service';
 
 @Component({
   selector: 'app-dialog-modify-lesson-view',
@@ -75,7 +77,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
   displayedColumns = ['bin', 'allievo', 'cavallo'];
 
   constructor(public dialogRef: MatDialogRef<DialogModifyLessonViewComponent>, private _snackBar: MatSnackBar, public dialog: MatDialog,private http: HttpClient, private lessonService: LessonService, private tokenStorage: TokenStorageService,private arenaService: ArenaService, private clubService: ClubService, private horseService: HorseService, private changeDetectorRefs: ChangeDetectorRef,
-  @Inject(MAT_DIALOG_DATA) public data: any){ }
+  @Inject(MAT_DIALOG_DATA) public data: any, private notificationService: NotificationService){ }
 
   async ngOnInit(): Promise<void> {
     this.isClub = this.tokenStorage.isClub();
@@ -145,7 +147,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     return arena;
   }
 
-  onSave() {
+  async onSave() {
     let beginDate = new Date(this.form.lessonDate);
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
     let pairs: { riderId: any; horseId: any; }[] = [];
@@ -173,15 +175,22 @@ export class DialogModifyLessonViewComponent implements OnInit {
       notes: this.form.notes
     }
 
-    this.lessonService.updateLesson(lesson).subscribe(response=>{
-      if(response.status == 200){
-        this.openSnackbar("Lezione aggiornata con successo");
-      }else{
-        this.openSnackbar("Errore nell'aggiornamento della lezione, riprova.");
-      }
-    }, err => {
+    try {
+      let newLesson: LessonState = await this.lessonService.updateLesson(lesson).toPromise()
+      this.openSnackbar("Lezione aggiornata con successo")
+      const notification = Notification(
+        this.tokenStorage.getInfos(this.isClub)._id,
+        pairs.pop()?.riderId,
+        NotificationType.UPDATE,
+        new Date(),
+        newLesson.lessonId,
+        newLesson.beginDate,
+        newLesson.notes
+      )
+      await this.notificationService.createNotification(notification)
+    } catch(err) {
       this.openSnackbar("Errore nell'aggiornamento della lezione, riprova.");
-    })
+    }
   }
 
   onClose() {
@@ -244,13 +253,24 @@ export class DialogModifyLessonViewComponent implements OnInit {
         duration: 5000
       });
     } else if (today <= lessonDay) {
-      this.lessonService.deleteLesson(this.updateLesson.lessonId).then((obj) => {}, (res) => { //todo brutta roba?
-        if(res.status == 200){
-          this.openSnackbar("Rimozione avvenuta con successo.")
-        }else{
-          this.openSnackbar("Qualcosa è andato storto, riprova.")
-        }
-      })
+      try {
+        await this.lessonService.deleteLesson(this.updateLesson.lessonId)
+        this.openSnackbar("Rimozione avvenuta con successo.")
+        let recipient = this.updateLesson.pairs.pop()?.riderInfo.riderId
+        if(!recipient) throw new Error
+        const notification = Notification(
+          this.tokenStorage.getInfos(this.isClub)._id,
+          recipient,
+          NotificationType.DELETE,
+          new Date(),
+          this.updateLesson.lessonId,
+          this.updateLesson.beginDate,
+          this.updateLesson.notes
+        )
+        await this.notificationService.createNotification(notification)
+      } catch(err) {
+        this.openSnackbar("Qualcosa è andato storto, riprova.")
+      }
     }
   }
 
