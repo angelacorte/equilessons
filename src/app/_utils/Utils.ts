@@ -1,7 +1,8 @@
 export enum SnackBarActions {
   REFRESH,
   RETRY,
-  RELOAD
+  RELOAD,
+  LOGIN
 }
 
 export enum SnackBarMessages{
@@ -14,4 +15,10 @@ export enum SnackBarMessages{
 export enum LoginMessages{
   FAILED = "Username o password errati.",
   ERROR = "Internal server error."
+}
+
+export enum SignupMessages{
+  LOGIN = "Registrazione avvenuta con successo, vai al login.",
+  ALREADY_EXISTS = "Username o email già registrato.",
+  FAILED = "La registrazione non è andata a buon fine, riprova."
 }

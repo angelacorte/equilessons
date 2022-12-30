@@ -12,11 +12,13 @@ let SALT_WORK_FACTOR = 10;
 exports.signup = function(req, res) {
   User.findOne({
     $or:[{
-      phoneNumber:req.body.phoneNumber
+      phoneNumber:req.body.phoneNumber},{
+      username: req.body.username},{
+      email: req.body.email
     }]
   }).then(async u => { //todo manca controllo su email e username che non devono essere duplicati
-    if (u && u.email !== undefined) {
-      res.status(409).send({"description": "telephone number already in use"})
+    if(u && u.username !== undefined && u.email !== undefined){
+      res.send({status: 409, description: "username or email already in use"})
     }else{ //if user does not exists or exists without email (means that it's a temporary user, so it is possible to overwrite his infos)
       if(u == null){
         let user = new User(await setUserFields(req.body))
@@ -42,6 +44,14 @@ exports.signup = function(req, res) {
     }
   })
 };
+
+/*
+else if(u && u.phoneNumber !== undefined){
+      res.send({status: 409, description: "telephone number already in use"})
+    }else if (u && u.email !== undefined) {
+      res.send({status: 409, description: "email already in use"})
+    }
+ */
 
 exports.signupTemporary = function (req, res){
   User.findOne({

@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../_services/auth.service";
 import {map} from "rxjs/operators";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, Validators} from "@angular/forms";
+import {SignupMessages, SnackBarActions} from "../_utils/Utils";
 
 @Component({
   selector: 'app-signup',
@@ -65,32 +66,36 @@ export class SignupComponent implements OnInit {
 
     this.authService.signup(user).subscribe(
       data => {
-        if (data.status == 200) {
-          this.openSnackbar("Registrazione avvenuta con successo, vai al login.", "login");
-        } else if (data.status == 409) {
-          this.openSnackbar("Utente già registrato.", "retry");
-        }else if(data.status == 400){
-          this.openSnackbar("La registrazione non è andata a buon fine, riprova.", "reload");
+        switch (data.status) {
+          case 200:
+            this.openSnackbar(SignupMessages.LOGIN, SnackBarActions.LOGIN);
+            break;
+          case 409:
+            this.openSnackbar(SignupMessages.ALREADY_EXISTS, SnackBarActions.RETRY);
+            break;
+          case 400:
+            this.openSnackbar(SignupMessages.FAILED, SnackBarActions.RELOAD);
+            break;
         }
       },
       () => {
-        this.openSnackbar("La registrazione non è andata a buon fine, riprova.", "reload");
+        this.openSnackbar(SignupMessages.FAILED, SnackBarActions.RELOAD);
       }
     );
   }
 
-  private openSnackbar(message: string, option: string) { //todo maybe change into enum
+  private openSnackbar(message: string, option: SnackBarActions) {
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
-    if(option == 'login'){
-      snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.assign('/login');
-      })
-    }else if(option == 'reload'){
-      snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.reload();
-      })
-    }
+    snackBarRef.afterDismissed().subscribe(()=> {
+      switch (option) {
+        case SnackBarActions.LOGIN:
+          window.location.assign('/login');
+          break;
+        case SnackBarActions.RELOAD || SnackBarActions.RETRY:
+          window.location.reload();
+      }
+    })
   }
 }
