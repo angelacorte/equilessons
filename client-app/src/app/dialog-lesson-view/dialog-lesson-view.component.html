@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Informazioni sulla lezione</h1>
 <div mat-dialog-content>
   <h5 class="text-secondary">Istruttore:</h5>
-  <p>{{lesson.coach['coachName']}} {{lesson.coach['coachSurname']}}</p>
+  <p>{{lesson.coach['name']}} {{lesson.coach['surname']}}</p>
   <h5 class="text-secondary">Giorno</h5>
   <p>{{lesson.beginDate | date :'EEEE, MMMM d, y' : '' :'it' }}</p>
   <h5 class="text-secondary">Orario di inizio</h5>
