@@ -305,17 +305,17 @@ exports.getCoachByClubId = function (req,res) {
       '$project': {
         'clubCoaches.name': 1,
         'clubCoaches.surname': 1,
-        'clubCoaches._id': 1
+        'clubCoaches._id': 1,
+        '_id': 0
       }
     }
   ];
 
   Club.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 500, message: "an error occurred"});
     }
-
-    return res.send(result);
+    return res.send({status: 200, coaches: result[0].clubCoaches});
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
