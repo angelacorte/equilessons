@@ -1,7 +1,7 @@
 import {RiderInfo} from "./Person";
 
 export interface HorseInfos {
-  horseId?: string,
+  _id?: string,
   horseName: string,
   horseMicrochip: number,
   horseFise?: string,
