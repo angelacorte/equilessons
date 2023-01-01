@@ -70,7 +70,7 @@ export class HorseRegistrationComponent implements OnInit {
   }
 
   private async getUsers(clubId: any): Promise<any>{
-    return await this.clubService.getClubAthletes(clubId).toPromise();
+    return await this.clubService.getClubAthletes(clubId);
   }
 
   onSubmit(): void{
