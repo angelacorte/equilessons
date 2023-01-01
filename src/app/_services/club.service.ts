@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 
 const baseURL = 'http://localhost:5050/club';
@@ -32,11 +31,11 @@ export class ClubService {
     return this.http.post(baseURL + '/addCoach', {coaches, clubId}, httpOptions);
   }
 
-  getClubAthletes(clubId: string): Observable<any>{
-    return this.http.get(baseURL + '/athletes/' + clubId, httpOptions);
+  getClubAthletes(clubId: string): Promise<any>{
+    return this.http.get(baseURL + '/athletes/' + clubId, httpOptions).toPromise();
   }
 
-  getClubCoaches(clubId: string): Observable<any>{
-    return this.http.get(baseURL + '/coaches/' + clubId, httpOptions);
+  getClubCoaches(clubId: string): Promise<any>{
+    return this.http.get(baseURL + '/coaches/' + clubId, {responseType: 'json'}).toPromise();
   }
 }
