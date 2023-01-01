@@ -9,13 +9,12 @@ import {LessonService} from "../_services/lesson.service";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {pairs} from "rxjs";
 import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 import {HorseInfos} from "../_utils/Horse";
 import { NotificationService } from '../_services/notification.service';
 import { Notification, NotificationType } from '../_utils/Notification';
-import { response } from 'express';
 import { LessonState } from '../_utils/Lesson';
+import {ArenaInfo} from "../_utils/Arena";
 
 @Component({
   selector: 'app-new-lesson',
@@ -52,12 +51,12 @@ export class NewLessonComponent implements OnInit {
   riders = [];
   isSuccessful = false;
   isLoggedIn = false;
-  infos: any;
-  arenas = [];
-  horses: any;
+  infos?: ClubInfos | UserInfos;
+  arenas: ArenaInfo[] = [];
+  horses: HorseInfos[] = [];
   displayedColumns = ['checkbox', 'allievo', 'cavallo'];
-  coaches: {_id: any, name: any, surname: any}[] = [];
-  coachId: any;
+  coaches: Coach[] = [];
+  coachId: string = '';
   isClub: boolean = false;
   checked: boolean = true;
 
@@ -69,17 +68,19 @@ export class NewLessonComponent implements OnInit {
 
     if(this.isLoggedIn) {
       this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
-      if(this.isClub) {
+      if(this.isClub && this.infos) {
         this.form.clubId = this.infos['_id'];
       }else{
+        // @ts-ignore
         this.form.clubId = this.infos['clubId'];
       }
 
       if (this.isClub || this.tokenStorage.isCoach(this.infos)) { //check on user's login
+        this.coaches = await this.getClubCoaches(this.form.clubId);
         this.arenas = await this.getClubArenas(this.form.clubId);
         this.riders = await this.getClubAthletes(this.form.clubId);
         this.horses = await this.getScholasticHorses(this.form.clubId);
-        this.coaches = await this.getClubCoaches(this.form.clubId);
+      //   this.coaches =
       } else {
         window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
       }
@@ -139,25 +140,35 @@ export class NewLessonComponent implements OnInit {
   }
 
   private async getClubArenas(id:string):Promise<any>{
-    return await this.arenaService.getClubArenas(id);
+    return await this.arenaService.getClubArenas(id).then(res => {
+      if(res.status == 200){
+        return res.arenas
+      }
+    });
   }
 
   private async getClubAthletes(id:any):Promise<any>{
-    return await this.clubService.getClubAthletes(id).toPromise();
+    return this.clubService.getClubAthletes(id);
   }
 
   private async getScholasticHorses(id:any):Promise<any>{
     return await this.horseService.getScholasticHorses(id);
   }
 
-  private async getClubCoaches(id:any):Promise<any>{ //remove user's id from coaches list if id is not referred to club
-    let coaches = await this.clubService.getClubCoaches(id).toPromise();
-    coaches.forEach((item:any,index:any)=>{
-      if(item['_id'] === this.infos['_id']){
-        this.coaches.splice(index, 1);
+  private async getClubCoaches(id:string): Promise<Coach[]>{ //remove user's id from coaches list if id is not referred to club
+    return this.clubService.getClubCoaches(id).then(res =>{
+      if(res.status == 200){
+        res.coaches.forEach((c: Coach) => {
+          this.coaches.push(c)
+        })
+        if(!this.isClub){
+          // @ts-ignore todo
+          res.coaches = res.coaches.filter((coach: Coach) => coach._id !== this.infos._id);
+        }
+        return res.coaches
       }
-    });
-    return coaches[0].clubCoaches;
+    })
+
   }
 
   addRiderToList(riderId: any, horseId: any) {
