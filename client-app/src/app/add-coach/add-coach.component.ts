@@ -46,13 +46,8 @@ export class AddCoachComponent implements OnInit {
     if (this.isLoggedIn && this.tokenStorage.isClub()) {
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub());
       if(this.infos){
-        await this.getCoaches(this.infos._id).then((response)=>{
-          this.coaches = response[0]['clubCoaches'];
-          console.log("coaches ", response)
-        });
-
+        this.coaches = await this.getCoaches(this.infos._id);
         this.users = await this.getAthletes(this.infos._id);
-
         this.setDataSource(this.coaches);
       }else{ this.openSnackbar("Qualcosa è andato storto, riprova."); }
     } else {
@@ -86,8 +81,8 @@ export class AddCoachComponent implements OnInit {
       if(value['_id'] === coachId && !this.coaches.some(obj=>obj['_id'] === coachId)){
         let coach: Coach = {
           _id: value['_id'],
-          coachName: value['name'],
-          coachSurname: value['surname']
+          name: value['name'],
+          surname: value['surname']
         };
         console.log("coach ", coach)
         this.coaches.push(coach);
@@ -99,18 +94,17 @@ export class AddCoachComponent implements OnInit {
   }
 
   private async getCoaches(clubId:string): Promise<any>{ //todo maybe find a nicer way to do it? don't know
-    let c = await this.clubService.getClubCoaches(clubId).toPromise();
-    c[0].clubCoaches.forEach((x:any) => {
-      x.coachName = x.name;
-      x.coachSurname = x.surname;
-      delete x.name;
-      delete x.surname
-    })
-    return c;
+    return await this.clubService.getClubCoaches(clubId).then((res) => {
+      if(res.status == 200){
+        return res.coaches
+      }else{
+        //todo
+      }
+    });
   }
 
   private async getAthletes(clubId:string):Promise<any>{
-    return this.clubService.getClubAthletes(clubId).toPromise();
+    return this.clubService.getClubAthletes(clubId)
   }
 
   private async addCoach(update:string[], clubId:string):Promise<any>{
