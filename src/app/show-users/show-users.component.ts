@@ -60,7 +60,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   }
 
   private async getAthletes(clubId:any):Promise<any>{
-    return this.clubService.getClubAthletes(clubId).toPromise();
+    return this.clubService.getClubAthletes(clubId);
   }
 
 //TODO SORT USERS

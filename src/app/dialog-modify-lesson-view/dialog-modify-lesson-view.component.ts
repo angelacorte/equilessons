@@ -14,6 +14,9 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import { NotificationType, Notification } from '../_utils/Notification';
 import { NotificationService } from '../_services/notification.service';
+import {Coach} from "../_utils/Person";
+import {HorseInfos} from "../_utils/Horse";
+import {ArenaInfo} from "../_utils/Arena";
 
 @Component({
   selector: 'app-dialog-modify-lesson-view',
@@ -43,8 +46,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
     },
     coach: {
       coachId:'',
-      coachName: '',
-      coachSurname: ''
+      name: '',
+      surname: ''
     },
     pairs: [{
       riderInfo:{
@@ -63,10 +66,10 @@ export class DialogModifyLessonViewComponent implements OnInit {
   updateLesson !: LessonState;
   isClub:boolean = false;
   infos:any;
-  arenas = [];
+  arenas: ArenaInfo[] = [];
   riders = [];
-  horses = [];
-  coaches = [];
+  horses: HorseInfos[] = [];
+  coaches: Coach[] = [];
   dataSource = new MatTableDataSource(this.form.pairs);
 
   errorMessage = '';
@@ -87,10 +90,13 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
       this.form.clubId = this.infos['_id'];
       this.arenas = await this.getClubArenas(this.infos['_id']);
+      console.log("arenas ", this.arenas)
       this.riders = await this.getClubAthletes(this.infos['_id']);
+      console.log("riders ", this.riders)
       this.horses = await this.getScholasticHorses(this.infos['_id']);
+      console.log("horsez ", this.horses)
       this.coaches = await this.getClubCoaches(this.infos['_id']);
-
+      console.log("coaches ", this.coaches)
       this.updateLesson = this.data;
       await this.modifyLesson();
       this.dataSource.data = this.form.pairs;
@@ -103,8 +109,11 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
     let lessonBeginDate = new Date(this.updateLesson.beginDate);
     let lessonEndDate = new Date(this.updateLesson.endDate);
+    //todo check why doesn't show the date
+
     //convert the date in a format supported by html
     this.form.lessonDate = lessonBeginDate.getFullYear() + '-' + (lessonBeginDate.getMonth() + 1) + '-' + lessonBeginDate.getDate();
+    console.log("lesson date", this.form.lessonDate)
     this.form.lessonHour = this.getXXTime(lessonBeginDate.getHours()) + ':' + this.getXXTime(lessonBeginDate.getMinutes())
     //calculate the lesson duration
     this.form.lessonDuration = (lessonEndDate.valueOf() - lessonBeginDate.valueOf()) / 60000;
@@ -120,25 +129,34 @@ export class DialogModifyLessonViewComponent implements OnInit {
   }
 
   private async getClubArenas(id:any):Promise<any>{
-    return await this.arenaService.getClubArenas(id);
+    return await this.arenaService.getClubArenas(id).then(res =>{
+      if(res.status == 200){
+        return res.arenas
+      }else{
+        //todo
+      }
+    });
   }
 
   private async getClubAthletes(id:any):Promise<any>{
-    return await this.clubService.getClubAthletes(id).toPromise();
+    return await this.clubService.getClubAthletes(id);
   }
 
   private async getScholasticHorses(id:any):Promise<any>{
     return await this.horseService.getScholasticHorses(id);
   }
 
-  private async getClubCoaches(id:any):Promise<any>{ //remove user's id from coaches list if id is not referred to club
-    let coaches = await this.clubService.getClubCoaches(id).toPromise();
-    coaches.forEach((item:any,index:any)=>{
+  private async getClubCoaches(id:string): Promise<Coach[]>{ //remove user's id from coaches list if id is not referred to club
+    return await this.clubService.getClubCoaches(id).then((res) => {
+      if(res.status == 200){
+        return res.coaches
+      }
+    });
+    /*coaches.forEach((item:any,index:any)=>{
       if(item['_id'] === this.infos['_id']){
         this.coaches.splice(index, 1);
       }
-    });
-    return coaches[0].clubCoaches;
+    });*/
   }
 
   private async matchArena(arenaName:any):Promise<any>{
@@ -200,8 +218,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
   updateCoach() {
     this.coaches.some((obj:any)=>{
       if(obj._id === this.form.coach['coachId']){
-        this.form.coach['coachName'] = obj.name
-        this.form.coach['coachSurname'] = obj.surname
+        this.form.coach['name'] = obj.name
+        this.form.coach['surname'] = obj.surname
       }
     })
   }
