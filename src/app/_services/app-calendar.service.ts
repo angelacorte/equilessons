@@ -20,7 +20,6 @@ export class AppCalendarService {
 
     const data: CalendarSchedulerEvent[] | PromiseLike<CalendarSchedulerEvent[]> = [];
     lessons.forEach((l: LessonState)=>{
-      console.log("value app calendar " + l)
       // let lessonRefactored = this.lessonService.matchPairs(value);
       let contentString: string = 'Clicca per ulteriori informazioni';
 
@@ -28,7 +27,7 @@ export class AppCalendarService {
         id: l.lessonId,
         start: new Date(l.beginDate),
         end: new Date(l.endDate),
-        title: 'Istruttore: ' + l.coach['coachName'] + ' ' + l.coach['coachSurname'],
+        title: 'Istruttore: ' + l.coach['name'] + ' ' + l.coach['surname'],
         content: contentString,
         data: l,
         color: { primary: '#E0E0E0', secondary: '#EEEEEE' },
