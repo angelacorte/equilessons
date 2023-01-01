@@ -188,9 +188,9 @@ async function matchPairs(lessons) {
       endDate: l.endDate,
       arena: l.arena[0], //could be arena[0]
       coach: {
-        coachId: l.coach[0]['_id'],  //could be coach[0]
-        coachName: l.coach[0]['name'], //could be coach[0]
-        coachSurname: l.coach[0]['surname']  //could be coach[0]
+        _id: l.coach[0]['_id'],  //could be coach[0]
+        name: l.coach[0]['name'], //could be coach[0]
+        surname: l.coach[0]['surname']  //could be coach[0]
       },
       pairs: [],
       notes: l.notes
