@@ -50,11 +50,11 @@ exports.updateLesson = function (req,res){
     notes: req.body.notes
   };
 
-  Lesson.updateOne({_id: new ObjectId(req.body._id)}, update).then(result=>{
-    if(result.nModified > 0){
-      return res.status(200).json(result);
+  Lesson.updateOne({_id: new ObjectId(req.body.lessonId)}, update).then(result=>{
+    if(result.modifiedCount > 0){
+      return res.send({status:200});
     }else{
-      return res.sendStatus(500);
+      return res.send({status:500});
     }
   })
 };
