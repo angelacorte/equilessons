@@ -1,14 +1,15 @@
 export enum SnackBarActions {
-  REFRESH,
+  REFRESH, //without reloading the page, eg. the tables
   RETRY,
   RELOAD,
   LOGIN,
-  DO_NOTHING
+  DO_NOTHING,
+  ASSIGN
 }
 
 export enum SnackBarMessages{
-  OK = 'Azione compiuta con successo.',
-  RETRY = 'È stato riscontrato un problema, riprova.',
+  SUCCESS = 'Azione compiuta con successo.',
+  PROBLEM = 'È stato riscontrato un problema, riprova.',
   NOTHING = "Non è stata compiuta alcuna azione",
   NOT_POSSIBLE = "Non è possibile svolgere l'azione richiesta."
 

@@ -123,13 +123,13 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     if(this.toRemove.length > 0){
       this.userService.removeUser(this.toRemove).subscribe(resp =>{
         if(resp.status == 200){
-          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.RELOAD);
+          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.RELOAD);
         }else{
-          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+          this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
 
         }
       }, () => {
-        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
       })
     }
   }
@@ -145,15 +145,15 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
             tmpUser.temporary = true;
             this.users.push(tmpUser);
             // this.resetForm();
-            this.openSnackbar(SnackBarMessages.OK, SnackBarActions.RELOAD);
+            this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.RELOAD);
           }else if(data.status == 409){
             this.openSnackbar(SignupMessages.PRESENT, SnackBarActions.RETRY);
           }else{
-            this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY)
+            this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
           }
         },
         err => {
-          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+          this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
         }
       );
     }

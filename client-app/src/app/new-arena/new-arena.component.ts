@@ -54,7 +54,7 @@ export class NewArenaComponent implements OnInit {
         this.arenas = await this.getArenas(this.infos._id)
         this.setDataSource(this.arenas);
       }else{
-        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RELOAD);
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD);
       }
     } else {
       window.location.assign('/notAllowed');
@@ -68,7 +68,7 @@ export class NewArenaComponent implements OnInit {
           this.setDataSource(this.arenas);
           this.toRemove = []
         }else{
-          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY)
+          this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
         }
       })
     }else{
@@ -86,11 +86,11 @@ export class NewArenaComponent implements OnInit {
         if (res.status == 200) {
           this.arenas.push(res.newArenas[0])
           this.setDataSource(this.arenas)
-          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH);
+          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH);
         }
       })
     } else {
-      this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+      this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
     }
   }
 
@@ -114,7 +114,7 @@ export class NewArenaComponent implements OnInit {
       if (res.status == 200) {
         return res.arenas;
       } else if (res.status == 400 || res.status == 500) {
-        this.openSnackbar(SnackBarMessages.RETRY,SnackBarActions.RELOAD);
+        this.openSnackbar(SnackBarMessages.PROBLEM,SnackBarActions.RELOAD);
       }
     });
   }
