@@ -12,11 +12,12 @@ import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import { NotificationType, Notification } from '../_utils/Notification';
-import { NotificationService } from '../_services/notification.service';
-import {Coach} from "../_utils/Person";
+import {Notification, NotificationType} from '../_utils/Notification';
+import {NotificationService} from '../_services/notification.service';
+import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 import {HorseInfos} from "../_utils/Horse";
 import {ArenaInfo} from "../_utils/Arena";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-dialog-modify-lesson-view',
@@ -65,7 +66,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
   updateLesson !: LessonState;
   isClub:boolean = false;
-  infos:any;
+  infos!: UserInfos | ClubInfos;
   arenas: ArenaInfo[] = [];
   riders = [];
   horses: HorseInfos[] = [];
@@ -90,13 +91,9 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
       this.form.clubId = this.infos['_id'];
       this.arenas = await this.getClubArenas(this.infos['_id']);
-      console.log("arenas ", this.arenas)
       this.riders = await this.getClubAthletes(this.infos['_id']);
-      console.log("riders ", this.riders)
       this.horses = await this.getScholasticHorses(this.infos['_id']);
-      console.log("horsez ", this.horses)
       this.coaches = await this.getClubCoaches(this.infos['_id']);
-      console.log("coaches ", this.coaches)
       this.updateLesson = this.data;
       await this.modifyLesson();
       this.dataSource.data = this.form.pairs;
@@ -112,8 +109,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     //todo check why doesn't show the date
 
     //convert the date in a format supported by html
-    this.form.lessonDate = lessonBeginDate.getFullYear() + '-' + (lessonBeginDate.getMonth() + 1) + '-' + lessonBeginDate.getDate();
-    console.log("lesson date", this.form.lessonDate)
+    this.form.lessonDate = lessonBeginDate //.getFullYear() + '-' + (lessonBeginDate.getMonth() + 1) + '-' + lessonBeginDate.getDate();
     this.form.lessonHour = this.getXXTime(lessonBeginDate.getHours()) + ':' + this.getXXTime(lessonBeginDate.getMinutes())
     //calculate the lesson duration
     this.form.lessonDuration = (lessonEndDate.valueOf() - lessonBeginDate.valueOf()) / 60000;
@@ -167,7 +163,9 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
   async onSave() {
     let beginDate = new Date(this.form.lessonDate);
+    beginDate.setHours(this.form.lessonHour.substring(0,2), this.form.lessonHour.substring(3,5));
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
+
     let pairs: { riderId: any; horseId: any; }[] = [];
 
     this.form.pairs.forEach((val: any) =>{
@@ -179,35 +177,43 @@ export class DialogModifyLessonViewComponent implements OnInit {
     })
 
     let clubId;
-    if(this.isClub) clubId = this.infos['_id'];
-    else clubId = this.infos['clubId'];
+    if(this.isClub) {
+      clubId = this.infos['_id'];
+    } else {
+      // @ts-ignore
+      clubId = this.infos['clubId'];
+    }
 
     const lesson = {
-      _id: this.updateLesson.lessonId,
+      lessonId: this.updateLesson.lessonId,
       beginDate: beginDate,
       endDate: endDate,
       arenaId: this.form.arena['_id'],
-      coachId: this.form.coach['coachId'],
+      coachId: this.form.coach['_id'],
       clubId: clubId,
       pairs: pairs,
       notes: this.form.notes
     }
-
     try {
-      let newLesson: LessonState = await this.lessonService.updateLesson(lesson).toPromise()
-      this.openSnackbar("Lezione aggiornata con successo")
-      const notification = Notification(
-        this.tokenStorage.getInfos(this.isClub)._id,
-        pairs.pop()?.riderId,
-        NotificationType.UPDATE,
-        new Date(),
-        newLesson.lessonId,
-        newLesson.beginDate,
-        newLesson.notes
-      )
-      await this.notificationService.createNotification(notification)
+      await this.lessonService.updateLesson(lesson).then(async res => {
+        if (res.status == 200) {
+          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH)
+          const notification = Notification(
+            this.tokenStorage.getInfos(this.isClub)._id,
+            pairs.pop()?.riderId,
+            NotificationType.UPDATE,
+            new Date(),
+            lesson.lessonId,
+            lesson.beginDate,
+            lesson.notes
+          )
+          await this.notificationService.createNotification(notification)
+        } else {
+          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+        }
+      })
     } catch(err) {
-      this.openSnackbar("Errore nell'aggiornamento della lezione, riprova.");
+      this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
     }
   }
 
@@ -267,13 +273,11 @@ export class DialogModifyLessonViewComponent implements OnInit {
     let today = new Date();
     let lessonDay = new Date(this.updateLesson.beginDate);
     if (today > lessonDay) {
-      this._snackBar.open("Non è possibile cancellare una lezione passata", "Ok", {
-        duration: 5000
-      });
+      this.openSnackbar(SnackBarMessages.NOT_POSSIBLE, SnackBarActions.DO_NOTHING);
     } else if (today <= lessonDay) {
       try {
         await this.lessonService.deleteLesson(this.updateLesson.lessonId)
-        this.openSnackbar("Rimozione avvenuta con successo.")
+        this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH)
         let recipient = this.updateLesson.pairs.pop()?.riderInfo.riderId
         if(!recipient) throw new Error
         const notification = Notification(
@@ -287,17 +291,28 @@ export class DialogModifyLessonViewComponent implements OnInit {
         )
         await this.notificationService.createNotification(notification)
       } catch(err) {
-        this.openSnackbar("Qualcosa è andato storto, riprova.")
+        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY)
       }
     }
   }
 
-  private openSnackbar(message:any){
+  private openSnackbar(message:string, option: SnackBarActions){
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
     snackBarRef.afterDismissed().subscribe(()=>{
-      window.location.reload();
+      switch (option) {
+        case SnackBarActions.REFRESH:
+          window.location.reload();
+          break;
+        case SnackBarActions.RETRY:
+          break;
+        case SnackBarActions.RELOAD:
+          window.location.reload();
+          break;
+        case SnackBarActions.DO_NOTHING:
+          break;
+      }
     })
   }
 
