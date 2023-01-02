@@ -37,7 +37,7 @@ export class NewArenaComponent implements OnInit {
   dataSource = new MatTableDataSource(this.arenas);
   displayedColumns = ['checkbox', 'arenaName'];
   isLoggedIn = false;
-  infos?: ClubInfos;
+  infos!: ClubInfos;
   toUpdate: ArenaInfo[] = [];
   toRemove: string[] = [];
 

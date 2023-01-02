@@ -32,7 +32,7 @@ export class AddCoachComponent implements OnInit {
   coaches:Coach[]= [];
   dataSource = new MatTableDataSource(this.coaches);
   isLoggedIn = false;
-  infos?: ClubInfos;
+  infos!: ClubInfos;
   displayedColumns = ['checkbox', 'istruttore'];
   coachId: string = "";
   users: UserInfos[] = [];
