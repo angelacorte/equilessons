@@ -3,6 +3,7 @@ let Horse = db.horse;
 
 let ObjectId = require('mongodb').ObjectID;
 
+
 /**
  * Add new horse, linked to the person who adds it and the club in which the owner is subscribed to
  * @param req
@@ -12,9 +13,10 @@ exports.addHorse = function (req,res){
   let newHorse = new Horse(req.body);
   newHorse.save(function(err, horse) {
     if (err){
-      res.status(400).json(err);
+      res.send({status:400, err})
+    }else{
+      res.send({status: 200, horse: horse})
     }
-    res.status(200).json(horse);
   });
 }
 

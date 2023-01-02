@@ -38,7 +38,7 @@ export class HorseService {
     return this.http.get(baseURL + '/horse/' + horseId, httpOptions).toPromise();
   }
 
-  removeHorses(horseIds: string[]){
+  removeHorses(horseIds: string[]): Promise<any>{
     return this.http.delete(baseURL + '/removeHorses', {body: horseIds}).toPromise();
   }
 }
