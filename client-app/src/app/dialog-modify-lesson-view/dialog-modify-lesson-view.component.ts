@@ -197,7 +197,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     try {
       await this.lessonService.updateLesson(lesson).then(async res => {
         if (res.status == 200) {
-          this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH)
+          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH)
           const notification = Notification(
             this.tokenStorage.getInfos(this.isClub)._id,
             pairs.pop()?.riderId,
@@ -209,11 +209,11 @@ export class DialogModifyLessonViewComponent implements OnInit {
           )
           await this.notificationService.createNotification(notification)
         } else {
-          this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+          this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
         }
       })
     } catch(err) {
-      this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY);
+      this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
     }
   }
 
@@ -277,7 +277,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     } else if (today <= lessonDay) {
       try {
         await this.lessonService.deleteLesson(this.updateLesson.lessonId)
-        this.openSnackbar(SnackBarMessages.OK, SnackBarActions.REFRESH)
+        this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH)
         let recipient = this.updateLesson.pairs.pop()?.riderInfo.riderId
         if(!recipient) throw new Error
         const notification = Notification(
@@ -291,7 +291,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
         )
         await this.notificationService.createNotification(notification)
       } catch(err) {
-        this.openSnackbar(SnackBarMessages.RETRY, SnackBarActions.RETRY)
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
       }
     }
   }
