@@ -17,3 +17,10 @@
 
 # Environment specifications
 .env
+
+# Lock files
+*lock.*
+
+# Automatically generated files
+.angular
+node_modules
