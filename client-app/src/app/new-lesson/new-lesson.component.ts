@@ -51,7 +51,7 @@ export class NewLessonComponent implements OnInit {
   riders = [];
   isSuccessful = false;
   isLoggedIn = false;
-  infos?: ClubInfos | UserInfos;
+  infos!: ClubInfos | UserInfos;
   arenas: ArenaInfo[] = [];
   horses: HorseInfos[] = [];
   displayedColumns = ['checkbox', 'allievo', 'cavallo'];
