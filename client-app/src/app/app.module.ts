@@ -64,6 +64,7 @@ import { PersonalInfosComponent } from './personal-infos/personal-infos.componen
 import { LessonHistoryComponent } from './lesson-history/lesson-history.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { NotificationsComponent } from './notifications/notifications.component';
+import { DialogModifyHorseComponent } from './dialog-modify-horse/dialog-modify-horse.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -90,7 +91,8 @@ registerLocaleData(localeIt);
     HorseManagementComponent,
     PersonalInfosComponent,
     LessonHistoryComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    DialogModifyHorseComponent
   ],
     imports: [
         BrowserModule,
