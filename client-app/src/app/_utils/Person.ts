@@ -36,3 +36,8 @@ export interface RiderInfo {
   riderName: string,
   riderSurname: string
 }
+
+export interface Login{
+  username: string,
+  password: string
+}
