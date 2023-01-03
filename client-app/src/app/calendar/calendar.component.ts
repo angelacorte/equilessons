@@ -216,7 +216,7 @@ export class CalendarComponent implements OnInit {
     if(this.isClub) id = this.infos._id
     else id = this.infos.clubId
 
-    this.lessonService.getLessonsInfos(id).then(async (response: any) => { //todo should be LessonState
+    this.lessonService.getLessonsByClubId(id).then(async (response: any) => {
       this.lessons = response
       this.appService.getEvents(this.lessons,this.actions)
         .then((events: CalendarSchedulerEvent[]) => this.events = events);
