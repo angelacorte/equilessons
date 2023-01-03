@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {map} from "rxjs/operators";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {ClubService} from "../_services/club.service";
 import {Observable, Observer} from "rxjs";
+import {ClubInfos, UserInfos} from "../_utils/Person";
 
 export interface ProfileTab{
   label: string,
@@ -24,11 +23,10 @@ export class ProfileComponent implements OnInit {
 
   roles: string[] = [];
   isLoggedIn = false;
-  infos:any;
-  user!: UserService | ClubService;
+  infos!: UserInfos | ClubInfos;
   isClub: boolean = false;
 
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private clubService: ClubService) {
+  constructor(private tokenStorage: TokenStorageService, private userService: UserService) {
     this.asyncTabsClub = new Observable((observer: Observer<ProfileTab[]>) => {
       setTimeout(() => {
         observer.next([
@@ -51,36 +49,32 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
-    if(this.isLoggedIn){
+    if (this.isLoggedIn) {
       this.isClub = this.tokenStorage.isClub();
       this.infos = this.tokenStorage.getInfos(this.isClub);
-
-      if(!this.isClub) this.fetchData();
+      if(this.infos){
+        if (!this.isClub) {
+          this.roles = await this.getRoles()
+        }
+      }
 
       //this.updateInfos();
-    }else{
+    } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
-  private fetchData() {
-    this.userService.getUserRoles(this.infos._id).pipe(map(responseData=>{
-      const dataArray = [];
-      for ( const key in responseData){
-        if(responseData.hasOwnProperty(key)){
-          if(key == 'roles'){
-            // @ts-ignore
-            dataArray.push(responseData[key])
-          }
-        }
+  private async getRoles(){
+    return await this.userService.getUserRoles(this.infos._id).then(res => {
+      if(res == 200){
+        return res.roles
+      }else{
+        //todo snackbar
       }
-      return dataArray;
-    })).subscribe(response=>{
-      this.roles = response[0];
-    });
+    })
   }
 
   /*private updateInfos(){

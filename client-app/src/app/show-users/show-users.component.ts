@@ -126,7 +126,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
   update() {
     if(this.toRemove.length > 0){
-      this.userService.removeUser(this.toRemove).subscribe(resp =>{
+      this.userService.removeUser(this.toRemove).then(resp =>{
         if(resp.status == 200){
           this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.RELOAD);
         }else{

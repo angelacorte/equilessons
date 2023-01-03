@@ -18,49 +18,31 @@ export class UserService {
 
   //This provides methods to access public and protected resources
 
-  getPublicContent(): Observable<any> { //TODO
-    return this.http.get(baseURL + 'all', { responseType: 'text' });
+  addRole(role:any, id:string): Promise<any>{ //todo add "coach" to user when adding a coach by club
+    return this.http.post(baseURL + '/user/roles', {role, id}).toPromise();
   }
 
-  addRole(role:any, id:any): Observable<any>{
-    return this.http.post(baseURL + '/user/roles', {role, id});
+  getUserRoles(id:string): Promise<any>{
+    return this.http.get(baseURL + '/user/roles/' + id).toPromise();
   }
 
-  getUserRoles(id:any): Observable<any>{
-    return this.http.get(baseURL + '/user/roles/' + id);
-  }
-
-  getUsersByClub(clubId:any): Observable<any>{
-    return this.http.get(baseURL + '/user/' + clubId);
-  }
-
-  removeUser(data:any): Observable<any>{
+  removeUser(data:any): Promise<any>{
     let options = {
       options: httpOptions,
       body: data
     }
-    return this.http.delete(baseURL + '/user', options);
+    return this.http.delete(baseURL + '/user', options).toPromise();
   }
 
-  changeClub(userId:any, clubId:any): Observable<any>{
-    return this.http.post(baseURL + '/user/changeClub', {userId, clubId});
+  changeClub(userId:any, clubId:any): Promise<any>{
+    return this.http.post(baseURL + '/user/changeClub', {userId, clubId}).toPromise();
   }
 
   getUserById(userId:string): Promise<any>{
     return this.http.get(baseURL + '/userinfo/' + userId, httpOptions).toPromise();
   }
 
-  getUserHorses(userId:any): Promise<any>{
+  getUserHorses(userId:string): Promise<any>{
     return this.http.get(baseURL + '/userhorse/' + userId, httpOptions).toPromise();
   }
-
-  /*
-  get(id: any): Observable<User> {
-    return this.http.get(`${baseUrl}/${id}`);
-  }
-
-    findByTitle(title: any): Observable<User[]> {
-    return this.http.get<User[]>(`${baseUrl}?title=${title}`);
-  }
-   */
 }
