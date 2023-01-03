@@ -40,7 +40,7 @@ export class ClubLoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.reloadPage();
-      }else if(res.status == 404 || res.status == 401){ //todo non controlla la password errata
+      }else if(res.status == 404 || res.status == 401){ //todo non controlla la password errata -> copy normal login
         this.errorMessage = res.description;
         this.isLoginFailed = true;
       }

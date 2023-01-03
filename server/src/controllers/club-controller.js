@@ -33,23 +33,24 @@ exports.clubLogin = function (req,res) { //TODO manage errors
         new: true
       }, ).then(result => {
         if (!result) {
-          res.status(500).json({"accessToken": accessToken, "refreshToken": refreshToken});
+          res.send({status: 400});
+        }else{
+          res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, club: club});
         }
-        res.status(200).json({"accessToken": accessToken, "refreshToken": refreshToken, "club": club});
       }).catch(err => {
-        console.log("Error: ", err.message);
+        res.send({status:500, error: err})
       });
     }
 
     let reasons = Club.failedLogin;
     switch (reason) {
       case reasons.NOT_FOUND:
-        res.status(404).json({"description": "incorrect username or password"});
+        res.send({status: 404, description: "incorrect username or password"});
         break;
       case reasons.PASSWORD_INCORRECT:
         // note: these cases are usually treated the same - don't tell
         // the user *why* the login failed, only that it did
-        res.status(401).json({"description": "incorrect username or password"});
+        res.send({status: 401, description: "incorrect username or password"});
         break;
     }
   });
@@ -136,9 +137,10 @@ exports.logout = function (req,res) {
     new:true
   }).then(result =>{
     if(!result){
-      return res.sendStatus(404).json({"description":"no token found"});
+      return res.send({status: 404, "description":"no token found"});
+    }else{
+      res.send({status: 200});
     }
-    res.sendStatus(204);
   }).catch(err => {
     console.log("Error: ", err.message);
   });
@@ -152,9 +154,10 @@ exports.logout = function (req,res) {
 exports.getAllClubs = function (req,res) {
   Club.find({},{_id:1,clubName:1}).then(result =>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400,message: "an error occurred"});
+    }else{
+      return res.send({status: 200, clubs: result})
     }
-    return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
