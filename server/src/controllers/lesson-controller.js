@@ -11,9 +11,10 @@ exports.createLesson = function (req,res){
   let newLesson = new Lesson(req.body);
   newLesson.save(function(err, lesson) {
     if (err){
-      res.send({status: 500, message: 'an error occurred'});
+      res.send({status: 400, message: 'an error occurred'});
+    }else{
+      res.send({status: 200, lesson: lesson})
     }
-    res.status(200).json(lesson);
   });
 };
 

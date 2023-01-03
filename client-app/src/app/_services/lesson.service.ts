@@ -20,26 +20,12 @@ export class LessonService {
 
   constructor(private http: HttpClient) { }
 
-  createLesson(data:any): Observable<any>{
-    return this.http.post(baseURL + '/lesson', data, httpOptions);
+  createLesson(data:any): Promise<any>{
+    return this.http.post(baseURL + '/lesson', data, httpOptions).toPromise();
   }
 
-  getClubsLessons(clubId: string): Observable<any> {
-    return this.http.get(baseURL + '/lesson/' + clubId, httpOptions);
-  }
-
-  getLessonsInfos(clubId: string): Promise<Object>{
+  getLessonsByClubId(clubId: string): Promise<Object>{
     return this.http.get(baseURL + '/lesson/getInfo/' + clubId, httpOptions).toPromise();
-  }
-
-  saveLessonState(data: LessonState){
-    window.sessionStorage.setItem(KEY, JSON.stringify(data));
-  }
-
-  getLessonState():LessonState{
-    const lesson = window.sessionStorage.getItem(KEY);
-    if(lesson) return JSON.parse(lesson);
-    else return lessonData;
   }
 
   deleteLesson(lessonId: string): Promise<Object>{

@@ -11,10 +11,11 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 import {HorseInfos} from "../_utils/Horse";
-import { NotificationService } from '../_services/notification.service';
-import { Notification, NotificationType } from '../_utils/Notification';
-import { LessonState } from '../_utils/Lesson';
+import {NotificationService} from '../_services/notification.service';
+import {Notification, NotificationType} from '../_utils/Notification';
+import {LessonState} from '../_utils/Lesson';
 import {ArenaInfo} from "../_utils/Arena";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-new-lesson',
@@ -114,12 +115,13 @@ export class NewLessonComponent implements OnInit {
     }
 
     try {
-      let d: LessonState = await this.lessonService.createLesson(lesson).toPromise()
-      let snackBarRef = this._snackBar.open("Lezione creata con successo", "Ok", {
-        duration: 3000
-      });
-      snackBarRef.afterDismissed().subscribe(()=>{
-        window.location.assign('/calendar');
+      let d: LessonState = await this.lessonService.createLesson(lesson).then(res =>{
+        if(res.status == 200){
+          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN)
+          return res.lesson
+        }else{
+          this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
+        }
       })
       const notification = Notification(
         this.tokenStorage.getInfos(this.isClub)._id,
@@ -132,10 +134,7 @@ export class NewLessonComponent implements OnInit {
       )
       await this.notificationService.createNotification(notification)
     } catch(err){
-      this._snackBar.open("Non è stato possibile creare la lezione", "Ok", {
-        duration: 3000
-      });
-      console.log('ERROR NEW LESSON', err);
+      this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
     }
   }
 
@@ -162,7 +161,6 @@ export class NewLessonComponent implements OnInit {
           this.coaches.push(c)
         })
         if(!this.isClub){
-          // @ts-ignore todo
           res.coaches = res.coaches.filter((coach: Coach) => coach._id !== this.infos._id);
         }
         return res.coaches
@@ -221,10 +219,6 @@ export class NewLessonComponent implements OnInit {
 
   }
 
-  isHorseInList(id: any) {
-    return this.lesson.some((obj)=>obj.horseInfo["horseId"] === id)
-  }
-
   isRider(rider: any) {
     this.riders.some((obj: any)=>{
       if(obj._id === rider){
@@ -244,5 +238,23 @@ export class NewLessonComponent implements OnInit {
     this.form.lessonDate = '';
     this.form.lessonHour = '';
     this.lesson = [];
+  }
+
+  private openSnackbar(message:string, option: SnackBarActions){
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=>{
+      switch (option) {
+        case SnackBarActions.ASSIGN:
+          window.location.assign("/home")
+          break;
+        case SnackBarActions.RELOAD:
+          window.location.reload();
+          break;
+        case SnackBarActions.RETRY:
+          break;
+      }
+    })
   }
 }
