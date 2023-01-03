@@ -64,9 +64,7 @@ export class ClubRegistrationComponent implements OnInit {
     let tmpRole = this.infos.user['roles'];
     tmpRole.push(role);*/
 
-    this.clubService.registration(registration).subscribe(response=>{
-      console.log("registration", registration);
-      console.log("response", response)
+    this.clubService.registration(registration).then(response=>{ //todo brutti messaggi? 
         this.isSuccessful = true;
         this.isSignUpFailed = false;
         // this.reloadPage();

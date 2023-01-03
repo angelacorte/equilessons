@@ -32,7 +32,21 @@ export class ClubLoginComponent implements OnInit {
   onSubmit() {
     let login = this.form;
 
-    this.clubService.clubLogin(login).subscribe(data=>{
+    this.clubService.clubLogin(login).then(res => {
+      console.log("club login ", res)
+      if(res.status == 200){
+        this.tokenStorage.saveToken(res.user.accessToken);
+        this.tokenStorage.saveUser(res.user);
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.reloadPage();
+      }else if(res.status == 404 || res.status == 401){ //todo non controlla la password errata
+        this.errorMessage = res.description;
+        this.isLoginFailed = true;
+      }
+    })
+
+    /*subscribe(data=>{
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data);
 
@@ -44,7 +58,7 @@ export class ClubLoginComponent implements OnInit {
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
       }
-    );
+    );*/
   }
 
   reloadPage(): void {

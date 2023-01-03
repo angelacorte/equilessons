@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable} from "rxjs";
+import {Login} from "../_utils/Person";
 
 const baseURL = 'http://localhost:5050/club';
 
@@ -15,19 +16,19 @@ export class ClubService {
 
   constructor(private http: HttpClient) { }
 
-  clubLogin(data:any):Observable<any>{
-    return this.http.post(baseURL + '/login', data, httpOptions);
+  clubLogin(data:Login):Promise<any>{
+    return this.http.post(baseURL + '/login', data, httpOptions).toPromise();
   }
 
-  registration(data:any): Observable<any>{ //id:any (owner's id)  /$(id)
-    return this.http.post(baseURL, data, httpOptions);
+  registration(data:any): Promise<any>{ //id:any (owner's id)  /$(id)
+    return this.http.post(baseURL, data, httpOptions).toPromise();
   }
 
-  getAllClubs(): Observable<any>{
-    return this.http.get(baseURL, httpOptions);
+  getAllClubs(): Promise<any>{
+    return this.http.get(baseURL, httpOptions).toPromise();
   }
 
-  addCoach(coaches:string[], clubId:any): Promise<any>{
+  addCoach(coaches:string[], clubId:string): Promise<any>{
     return this.http.post(baseURL + '/addCoach', {coaches, clubId}, httpOptions).toPromise();
   }
 

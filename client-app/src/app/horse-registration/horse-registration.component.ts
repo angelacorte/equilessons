@@ -92,14 +92,13 @@ export class HorseRegistrationComponent implements OnInit {
       form.scholastic = true;
     }
 
-    this.horseService.horseRegistration(form).subscribe((response)=>{
+    this.horseService.horseRegistration(form).then((response)=>{
       if(response.status == 200){
         /*if(!this.isClub && !tmpRole.includes(role)){
           tmpRole.push(role);
           this.userService.addRole(role, form.ownerId).then(res => {
             console.log("add role horse reg ", res)
           })
-
         }*/
         this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
       }else{

@@ -6,7 +6,7 @@ import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, Validators} from "@angular/forms";
-import {SignupMessages, SnackBarActions} from "../_utils/Utils";
+import {SignupMessages, SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-signup',
@@ -48,17 +48,13 @@ export class SignupComponent implements OnInit {
   }
 
   private fetchData() {
-    this.clubService.getAllClubs().pipe(map(responseData => {
-      const dataArray = [];
-      for (const key in responseData) {
-        if (responseData.hasOwnProperty(key)) {
-          dataArray.push({...responseData[key]})
-        }
+    this.clubService.getAllClubs().then(res => {
+      if(res.status == 200){
+        this.clubs = res.clubs;
+      }else{
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
       }
-      return dataArray;
-    })).subscribe(response => {
-      this.clubs = response;
-    });
+    })
   }
 
   onSubmit(): void {

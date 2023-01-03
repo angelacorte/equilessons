@@ -17,9 +17,8 @@ export class HorseService {
 
   constructor(private http: HttpClient) { }
 
-  horseRegistration(data:any): Observable<any>{
-    console.log("data horse reg", data);
-    return this.http.post(baseURL + '/horse', data, httpOptions);
+  horseRegistration(data:any): Promise<any>{
+    return this.http.post(baseURL + '/horse', data, httpOptions).toPromise();
   }
 
   getScholasticHorses(clubId: any): Promise<Object>{
