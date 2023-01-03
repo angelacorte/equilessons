@@ -6,12 +6,6 @@ import {UserService} from "../_services/user.service";
 import {ClubService} from "../_services/club.service";
 import {Observable, Observer} from "rxjs";
 
-const baseURL = 'http://localhost:5050';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
-
 export interface ProfileTab{
   label: string,
 }
@@ -31,7 +25,7 @@ export class ProfileComponent implements OnInit {
   roles: string[] = [];
   isLoggedIn = false;
   infos:any;
-  user:any;
+  user!: UserService | ClubService;
   isClub: boolean = false;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, private userService: UserService, private clubService: ClubService) {
@@ -42,6 +36,7 @@ export class ProfileComponent implements OnInit {
           {label: 'Gestione Cavalli'},
           {label: 'Gestione Istruttori'},
           {label: 'Gestione Utenti'},
+          {label: 'Informazioni Personali'},
         ]);
       }, 1000);
     });
