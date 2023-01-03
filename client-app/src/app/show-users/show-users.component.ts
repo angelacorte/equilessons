@@ -80,29 +80,34 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
   }
 
   private async getUserById(userId:any):Promise<any>{
-    return this.userService.getUserById(userId).toPromise();
+    return this.userService.getUserById(userId).then(res => {
+      if(res.status == 200){
+        return res.user
+      }else{
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
+      }
+    });
   }
 
-  private async getUserHorses(userId:any){
-    return this.userService.getUserHorses(userId).toPromise();
+  private async getUserHorses(userId:string){
+    return this.userService.getUserHorses(userId).then((res) => {
+      if(res.status == 200){
+        return res.horses[0].horses_infos
+      }else{
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD)
+      }
+    });
   }
 
-  async showInfos(userId: any) {
-    await this.getUserById(userId).then(async (response: any) => {
-      if (response.horse.length > 0) {
-        await this.getUserHorses(userId).then((resp:any)=>{
-          response.horse = resp[0].horses_infos;
-          this.dialog.open(DialogUserViewComponent, {
-            width: '600px',
-            data: response
-          });
-        })
-      }else {
+  async showInfos(userId: string) {
+    await this.getUserById(userId).then(async response => {
+      await this.getUserHorses(userId).then(res =>{
+        if(res.length > 0) response.horse = res
         this.dialog.open(DialogUserViewComponent, {
           width: '600px',
           data: response
         });
-      }
+      })
     })
   }
 
@@ -159,7 +164,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     }
   }
 
-  private openSnackbar(message:string, option: SnackBarActions){ //todo maybe change into enum
+  private openSnackbar(message:string, option: SnackBarActions){
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });

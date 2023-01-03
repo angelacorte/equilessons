@@ -7,7 +7,7 @@ export interface HorseInfos {
   horseFise?: string,
   horseOwner: HorseOwner,
   clubId: string,
-  horseBirthday?: Date,
+  horseBirthday: Date | string,
   riders: Array<RiderInfo>,
   scholastic?: boolean
 }

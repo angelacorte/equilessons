@@ -1,8 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {HorseInfos} from "../_utils/Horse";
 import {UserService} from "../_services/user.service";
-import {DialogModifyLessonViewComponent} from "../dialog-modify-lesson-view/dialog-modify-lesson-view.component";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {DialogModifyHorseComponent} from "../dialog-modify-horse/dialog-modify-horse.component";
 
 @Component({
   selector: 'app-dialog-horse-view',
@@ -16,14 +18,22 @@ export class DialogHorseViewComponent implements OnInit {
 
   constructor(private userService: UserService,
               public dialogRef: MatDialogRef<DialogHorseViewComponent>,
+              private _snackBar: MatSnackBar,
+              public dialog: MatDialog,
               @Inject(MAT_DIALOG_DATA) public data: HorseInfos) { }
 
   ngOnInit(): void {
     this.horse = this.data;
+    let date = new Date(this.horse.horseBirthday)
+    this.horse.horseBirthday = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
     if(this.horse.riders.length > 0) {
-      this.horse.riders.forEach((riderId) => {
-        this.userService.getUserById(riderId).toPromise().then((res) => {
-          this.riders.push(res);
+      this.horse.riders.forEach((rider) => {
+        this.userService.getUserById(rider.riderId).then((res) => {
+          if(res.status == 200){
+            this.riders.push(res.user)
+          }else{
+            this.openSnackbar(SnackBarMessages.NOT_POSSIBLE, SnackBarActions.RELOAD)
+          }
         })
       })
     }
@@ -35,9 +45,24 @@ export class DialogHorseViewComponent implements OnInit {
 
   onModify() {
     console.log("TO IMPLEMENT");
-   /* this.dialog.open(DialogModifyHorseViewComponent, {
+    //todo
+    this.onClose();
+    this.dialog.open(DialogModifyHorseComponent, {
       width: '650px',
       data: this.horse
-    });*/
+    })
+  }
+
+  private openSnackbar(message:string, option: SnackBarActions){
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=>{
+      switch (option) {
+        case SnackBarActions.RELOAD:
+          window.location.reload();
+          break;
+      }
+    })
   }
 }

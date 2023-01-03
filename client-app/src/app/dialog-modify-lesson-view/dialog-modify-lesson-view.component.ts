@@ -134,11 +134,11 @@ export class DialogModifyLessonViewComponent implements OnInit {
     });
   }
 
-  private async getClubAthletes(id:any):Promise<any>{
+  private async getClubAthletes(id:string):Promise<any>{
     return await this.clubService.getClubAthletes(id);
   }
 
-  private async getScholasticHorses(id:any):Promise<any>{
+  private async getScholasticHorses(id:string):Promise<any>{
     return await this.horseService.getScholasticHorses(id);
   }
 

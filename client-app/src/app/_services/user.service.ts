@@ -46,14 +46,14 @@ export class UserService {
     return this.http.post(baseURL + '/user/changeClub', {userId, clubId});
   }
 
-  getUserById(userId:any): Observable<any>{
-    return this.http.get(baseURL + '/userinfo/' + userId, httpOptions);
+  getUserById(userId:string): Promise<any>{
+    return this.http.get(baseURL + '/userinfo/' + userId, httpOptions).toPromise();
   }
 
-  getUserHorses(userId:any): Observable<any>{
-    return this.http.get(baseURL + '/userhorse/' + userId, httpOptions);
+  getUserHorses(userId:any): Promise<any>{
+    return this.http.get(baseURL + '/userhorse/' + userId, httpOptions).toPromise();
   }
-  
+
   /*
   get(id: any): Observable<User> {
     return this.http.get(`${baseUrl}/${id}`);

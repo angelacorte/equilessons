@@ -8,13 +8,14 @@ const {ObjectID, ObjectId} = require("mongodb");
  * @param res
  */
 exports.getUserById = function (req,res){
-  User.findOne({_id:new ObjectID(req.params.userId)},{password:0, token:0,__v:0}).then(result=>{
-    if(!result){
-      return res.status(500).send({message: "an error occurred"});
+  User.findOne({_id:new ObjectID(req.params.userId)},{password:0, token:0,__v:0}).then(user=>{
+    if(!user){
+      return res.send({status: 500, message: "error"});
+    }else{
+      return res.send({status: 200, user: user})
     }
-    return res.status(200).json(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, error: err});
   });
 };
 
@@ -136,9 +137,9 @@ exports.getUserHorses = function (req,res){
       }
     }, {
       '$project': {
-        '_id': 1,
+        '_id': 0,
         "horses_infos._id":1,
-        "horses_infos.horseName":1
+        "horses_infos.horseName":1,
       }
     }
   ];
@@ -147,13 +148,14 @@ exports.getUserHorses = function (req,res){
     horseName: 1
   }
 
-  User.aggregate(pipeline).sort(sort).then(result=>{
-    if(!result){
-      return res.status(500).send({message: "an error occurred"});
+  User.aggregate(pipeline).sort(sort).then(horses=>{
+    if(!horses){
+      return res.send({status: 500,message: "an error occurred"});
+    }else{
+      return res.send({status: 200, horses: horses});
     }
-    return res.status(200).send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500,error:err});
   });
 
 }
