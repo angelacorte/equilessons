@@ -14,7 +14,7 @@ const USER_KEY = 'auth-user';
 })
 export class HomeComponent implements OnInit {
   isLoggedIn = false;
-  infos?: ClubInfos | UserInfos;
+  infos!: ClubInfos | UserInfos;
   user: any;
   isClub = false;
 

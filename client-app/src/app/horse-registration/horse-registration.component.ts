@@ -1,11 +1,11 @@
-import {Component, OnInit, SimpleChanges} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
-import {map} from "rxjs/operators";
 import {HorseService} from "../_services/horse.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ClubService} from "../_services/club.service";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 
 @Component({
@@ -97,31 +97,22 @@ export class HorseRegistrationComponent implements OnInit {
     }
 
     this.horseService.horseRegistration(form).subscribe((response)=>{
-      this.submitted = true;
-      this.isSuccessful = true;
-      let snackBarRef = this._snackBar.open("Registrazione con successo", "Ok", {
-        duration: 3000
-      });
-      if(!this.isClub && !tmpRole.includes(role)){
-        tmpRole.push(role);
-        this.userService.addRole(role, form.ownerId).subscribe(resp=>{
-          this.infos['roles'] = tmpRole;
-          this.tokenStorage.saveUser(this.infos);
-        }, error =>{
-          console.log("ERROR HORSE REG", error);
-        })
+      if(response.status == 200){
+        if(!this.isClub && !tmpRole.includes(role)){
+          tmpRole.push(role);
+          this.userService.addRole(role, form.ownerId).subscribe(resp=>{
+            this.infos['roles'] = tmpRole;
+            this.tokenStorage.saveUser(this.infos);
+          }, error =>{
+            console.log("ERROR HORSE REG", error);
+          })
+        }
+        this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
+      }else{
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.DO_NOTHING);
       }
-      snackBarRef.afterDismissed().subscribe(()=>{
-        if(this.isClub) window.location.assign('/showHorses');
-        else window.location.assign('/profile');
-      });
     }, err => {
-      this._snackBar.open("Non è stato possibile registrare il cavallo", "Ok", {
-        duration: 3000
-      });
-      this.errorMessage = err.error.message;
-      this.isRegistrationFailed = true;
-      console.log("ERROR", err);
+      this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.DO_NOTHING);
     })
   }
 
@@ -176,5 +167,18 @@ export class HorseRegistrationComponent implements OnInit {
 
   isInList(id: any):boolean {
     return this.riders.some(obj=>obj['_id'] === id);
+  }
+
+  private openSnackbar(message:string, option: SnackBarActions){
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=>{
+      switch (option) {
+        case SnackBarActions.ASSIGN:
+          window.location.assign('/profile');
+          break;
+      }
+    })
   }
 }

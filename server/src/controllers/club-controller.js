@@ -248,12 +248,13 @@ exports.registerClub = function (req,res) {
  */
 exports.addCoach = function (req,res){
   Club.updateOne({_id:req.body.clubId},{clubCoach: req.body.coaches}).then(result=>{
-    if(result.ok !== 1){
-      return res.status(500).send({message: "an error occurred"});
+    if(result.modifiedCount > 0){
+      return res.send({status: 200});
+    }else{
+      return res.send({status: 400, message: "an error occurred"});
     }
-    return res.send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, err})
   });
 }
 

@@ -9,6 +9,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogHorseViewComponent} from "../dialog-horse-view/dialog-horse-view.component";
 import {HorseInfos} from "../_utils/Horse";
 import {UserService} from "../_services/user.service";
+import {ClubInfos, UserInfos} from "../_utils/Person";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-horse-management',
@@ -32,7 +34,7 @@ export class HorseManagementComponent implements OnInit {
   dataSource = new MatTableDataSource(this.horses);
   toRemove:string[] = [];
   isClub: boolean = false;
-  infos:any;
+  infos!: ClubInfos | UserInfos;
   isLoggedIn:boolean = false;
 
   constructor(private userService:UserService, public dialog: MatDialog, private _snackBar: MatSnackBar, private horseService: HorseService, private tokenStorage: TokenStorageService) { }
@@ -73,7 +75,7 @@ export class HorseManagementComponent implements OnInit {
         if(value._id === horseId && value.scholastic){
           this.horses.splice(index,1);
           this.toRemove.push(horseId);
-          this.dataSource.data = this.horses;
+          this.setDataSource(this.horses);
         }
       })
     }
@@ -89,12 +91,12 @@ export class HorseManagementComponent implements OnInit {
   }
 
   update() {
-    this.horseService.removeHorses(this.toRemove).then((res) => {}, (msg) => { //todo brutta roba ma non so fare altrimenti
-      console.log("MESSAGE ", msg);
+    this.horseService.removeHorses(this.toRemove).then((res) => {
+    }, (msg) => { //todo brutta roba ma non so fare altrimenti
       if(msg.status == 200){
-        this.openSnackbar("Modifiche apportate con successo");
+        this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH);
       }else{
-        this.openSnackbar("Modifiche non apportate");
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
       }
     })
   }
@@ -106,12 +108,16 @@ export class HorseManagementComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  private openSnackbar(message:any){
+  private openSnackbar(message:string, option: SnackBarActions){
     let snackBarRef = this._snackBar.open(message, "Ok", {
       duration: 3000
     });
     snackBarRef.afterDismissed().subscribe(()=>{
-      window.location.reload();
+      switch (option) {
+        case SnackBarActions.REFRESH:
+          this.setDataSource(this.horses)
+          break;
+      }
     })
   }
 
@@ -138,11 +144,15 @@ export class HorseManagementComponent implements OnInit {
 
   private async matchPrivateHorse() { //TODO add way to remove horse
     this.horses.forEach((h:HorseInfos, index) => {
-      this.horses[index]['horseOwner'] = {
-        ownerName: this.infos['name'],
-        ownerSurname: this.infos['surname'],
-        ownerId: this.infos['_id']
-      };
+      if(!this.isClub){
+        this.horses[index]['horseOwner'] = {
+        // @ts-ignore
+          ownerName: this.infos['name'],
+        // @ts-ignore
+          ownerSurname: this.infos['surname'],
+          ownerId: this.infos['_id']
+        };
+      }
     })
   }
 }

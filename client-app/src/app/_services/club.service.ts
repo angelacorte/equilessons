@@ -27,8 +27,8 @@ export class ClubService {
     return this.http.get(baseURL, httpOptions);
   }
 
-  addCoach(coaches:string[], clubId:any): Observable<any>{
-    return this.http.post(baseURL + '/addCoach', {coaches, clubId}, httpOptions);
+  addCoach(coaches:string[], clubId:any): Promise<any>{
+    return this.http.post(baseURL + '/addCoach', {coaches, clubId}, httpOptions).toPromise();
   }
 
   getClubAthletes(clubId: string): Promise<any>{
