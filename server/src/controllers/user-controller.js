@@ -10,7 +10,7 @@ const {ObjectID, ObjectId} = require("mongodb");
 exports.getUserById = function (req,res){
   User.findOne({_id:new ObjectID(req.params.userId)},{password:0, token:0,__v:0}).then(user=>{
     if(!user){
-      return res.send({status: 500, message: "error"});
+      return res.send({status: 400, message: "error"});
     }else{
       return res.send({status: 200, user: user})
     }
@@ -45,13 +45,14 @@ exports.getUsersByClub = function (req,res) { //todo maybe useless
  * @param res
  */
 exports.getUserRoles = function (req,res) {
-  User.findOne({_id:req.params.id},{roles:1}).then(result=>{
+  User.findOne({_id:req.params.id},{roles:1, _id:0}).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400, message: "an error occurred"});
+    }else{
+      return res.send({status: 200, roles: result});
     }
-    return res.status(200).send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, error: err});
   });
 }
 
@@ -62,10 +63,12 @@ exports.getUserRoles = function (req,res) {
  */
 exports.addRole = function (req,res){
   User.updateOne({_id:req.body.id},{$push:{roles: req.body.role}}).then(result=>{
+    console.log("user update one result ", result)
     if(result.ok !== 1){
       return res.status(500).send({message: "an error occurred"});
+    }else{
+      return res.send({status: 200, roles: result})
     }
-    return res.status(200).send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -101,10 +104,11 @@ exports.removeUser = function (req,res){
   User.deleteMany(opts).then(result=>{
     if(result.deletedCount > 0){
       return res.send({status: 200, result});
+    }else{
+      return res.send({status: 400, message: "an error occurred"});
     }
-    return res.send({status: 500, message: "an error occurred"});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, error: err});
   });
 };
 

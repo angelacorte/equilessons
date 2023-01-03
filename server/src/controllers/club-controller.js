@@ -314,7 +314,7 @@ exports.getCoachByClubId = function (req,res) {
 
   Club.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
-      return res.send({status: 500, message: "an error occurred"});
+      return res.send({status: 400, message: "an error occurred"});
     }
     return res.send({status: 200, coaches: result[0].clubCoaches});
   }).catch(err=> {

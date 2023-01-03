@@ -86,9 +86,10 @@ exports.getLessonByArenaID = function (req,res){
 exports.getLessonByClubID = function (req,res){
   Lesson.find({"clubId": req.params.clubId}).sort({beginDate:1}).then(result=>{
     if(!result){
-      return res.send({status: 500, message: "an error occurred"});
+      return res.send({status: 400, message: "an error occurred"});
+    }else{
+      return res.send(result);
     }
-    return res.send(result);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
@@ -166,10 +167,11 @@ exports.getLessonsInfos = function (req,res) {
 
   Lesson.aggregate(pipeline).then(async result => {
     if (!result) {
-      return res.send({status: 500, message: "an error occurred"});
+      return res.send({status: 400, message: "an error occurred"});
+    }else{
+      let lesson = await matchPairs(result)
+      return res.send(lesson);
     }
-    let lesson = await matchPairs(result)
-    return res.send(lesson);
   }).catch(err=> {
     console.log("Error: ", err.message);
   });
