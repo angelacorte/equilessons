@@ -6,6 +6,7 @@ import {HorseService} from "../_services/horse.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ClubService} from "../_services/club.service";
 import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
+import {RiderInfo, UserInfos} from "../_utils/Person";
 
 
 @Component({
@@ -25,16 +26,11 @@ export class HorseRegistrationComponent implements OnInit {
     riders:[],
     scholastic:false
   }
-
-  isSuccessful = false;
-  isRegistrationFailed = false;
-  errorMessage = '';
-  submitted = false;
   isLoggedIn = false;
   infos: any;
-  users = [];
-  riders = [];
-  riderId: any;
+  users: UserInfos[] = [];
+  riders: RiderInfo[] = [];
+  riderId!: string;
   isClub: boolean = false;
   isOwnRider: boolean = false;
 
@@ -75,7 +71,7 @@ export class HorseRegistrationComponent implements OnInit {
 
   onSubmit(): void{
 
-    const role = 'horse-owner';
+    // const role = 'horse-owner';
     let tmpRole: any;
     if(!this.isClub) tmpRole = this.infos['roles'];
 
@@ -98,15 +94,13 @@ export class HorseRegistrationComponent implements OnInit {
 
     this.horseService.horseRegistration(form).subscribe((response)=>{
       if(response.status == 200){
-        if(!this.isClub && !tmpRole.includes(role)){
+        /*if(!this.isClub && !tmpRole.includes(role)){
           tmpRole.push(role);
-          this.userService.addRole(role, form.ownerId).subscribe(resp=>{
-            this.infos['roles'] = tmpRole;
-            this.tokenStorage.saveUser(this.infos);
-          }, error =>{
-            console.log("ERROR HORSE REG", error);
+          this.userService.addRole(role, form.ownerId).then(res => {
+            console.log("add role horse reg ", res)
           })
-        }
+
+        }*/
         this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
       }else{
         this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.DO_NOTHING);
@@ -130,22 +124,27 @@ export class HorseRegistrationComponent implements OnInit {
     }
   }
 
-  addRiderToList(riderId: any) {
+  addRiderToList(riderId: string) {
     if(this.infos['_id'] === riderId){
-      let val = {
-        _id: riderId,
-        name: this.infos['name'],
-        surname: this.infos['surname']
+      let newRider: RiderInfo = {
+        riderId: riderId,
+        riderName: this.infos['name'],
+        riderSurname: this.infos['surname']
       }
-      // @ts-ignore
-      this.riders.push(val);
+      this.riders.push(newRider);
+    }else{
+      this.users.forEach((value) => {
+        if(value['_id'] === riderId && !this.riders.some(obj=>obj['riderId'] === riderId)){
+          let newRider: RiderInfo = {
+            riderId: riderId,
+            riderName: value['name'],
+            riderSurname: value['surname']
+          }
+          this.riders.push(newRider);
+          console.log("riders ", this.riders);
+        }
+      });
     }
-    this.users.forEach((value) => {
-      if(value['_id'] === riderId && !this.riders.some(obj=>obj['_id'] === riderId)){
-        this.riders.push(value);
-        console.log("riders ", this.riders);
-      }
-    });
   }
 
   isRiderUnchecked(rider: any) {
@@ -159,14 +158,14 @@ export class HorseRegistrationComponent implements OnInit {
 
   private removeDoc(doc: any){
     this.riders.forEach((item,index)=>{
-      if(item['_id'] === doc['_id']){
+      if(item['riderId'] === doc['_id']){
         this.riders.splice(index, 1);
       }
     });
   }
 
-  isInList(id: any):boolean {
-    return this.riders.some(obj=>obj['_id'] === id);
+  isInList(id: string):boolean {
+    return this.riders.some(obj=>obj['riderId'] === id);
   }
 
   private openSnackbar(message:string, option: SnackBarActions){
