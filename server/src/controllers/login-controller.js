@@ -9,28 +9,26 @@ require('dotenv').config();
  * @param res
  */
 exports.login = function (req,res) {
-  User.getAuthenticated(req.body.username, req.body.password, function (err, user, reason) {
+  User.getAuthenticated(req.body.username, req.body.password, async function (err, user, reason) {
     if (err) {
-      throw err;
+      res.send({status: 500, message: "an error occurred", error: err})
     }
     if (user) {
-      const accessToken = generateAccessToken(user._id);
-      const refreshToken = jwt.sign(JSON.stringify(user._id), `${process.env.REFRESH_TOKEN_SECRET}`, { }, //todo options
-        function(err, token){
-          if(err) throw err;
-          else return token;
-      });
+      const accessToken = await generateAccessToken(user._id);
+      const refreshToken = jwt.sign(JSON.stringify(user._id), `${process.env.REFRESH_TOKEN_SECRET}`);
 
       const filter = {"_id": user._id};
       const update = {"token": refreshToken};
 
       User.findOneAndUpdate(filter, update, {
         new: true
-      }).then(result => {
-        if (!result) {
-          res.send({status: 500, accessToken: accessToken, refreshToken: refreshToken});
+      }).then(userRes => {
+        if (!userRes) {
+          res.send({status: 400, accessToken: accessToken, refreshToken: refreshToken});
+        }else{
+          delete userRes.password
+          res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, user: userRes});
         }
-        res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, user: user});
       })/*.catch(err => {
         console.log("Error: ", err.message);
       });*/
@@ -55,7 +53,7 @@ exports.authenticate = function authenticateToken(req,res,next) {
   const token = authHeader && authHeader.split(' ')[1] //takes the token if exists
 
   if(token == null || typeof token === undefined){
-    return res.status(401);
+    return res.sendStatus(401);
   }
 
   jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, {},(err,user)=>{ //todo options
@@ -66,9 +64,7 @@ exports.authenticate = function authenticateToken(req,res,next) {
       if(!user){ return res.sendStatus(404); }
       req.user = user;
       next();
-    })/*.catch(err => {
-      console.log("Error: ", err.message);
-    })*/
+    })
   })
 }
 

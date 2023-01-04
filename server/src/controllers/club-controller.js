@@ -13,33 +13,28 @@ let ObjectId = require('mongodb').ObjectID;
  * @param req
  * @param res
  */
-exports.clubLogin = function (req,res) { //TODO manage errors
-  Club.getAuthenticated(req.body.clubEmail, req.body.clubPassword, function (err, club, reason) {
+exports.clubLogin = function (req,res) {
+  Club.getAuthenticated(req.body.clubEmail, req.body.clubPassword, async function (err, club, reason) {
     if (err) {
-      throw err;
+      res.send({status: 500, message: "an error occurred", error: err})
     }
     if (club) {
-      const accessToken = generateAccessToken(club._id);
-      const refreshToken = jwt.sign(JSON.stringify(club._id), `${process.env.REFRESH_TOKEN_SECRET}`, {}, //todo options
-        function (err, token){
-          if(err) throw err;
-          else return token;
-      });
+      const accessToken = await generateAccessToken(club._id);
+      const refreshToken = jwt.sign(JSON.stringify(club._id), `${process.env.REFRESH_TOKEN_SECRET}`);
 
       const filter = {"_id": club._id};
       const update = {"token": refreshToken};
 
       Club.findOneAndUpdate(filter, update, {
         new: true
-      }, ).then(result => {
-        if (!result) {
-          res.send({status: 400});
-        }else{
-          res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, club: club});
+      },).then(clubRes => {
+        if (!clubRes) {
+          res.send({status: 400, accessToken: accessToken, refreshToken: refreshToken});
+        } else {
+          delete clubRes.clubPassword
+          res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, club: clubRes});
         }
-      }).catch(err => {
-        res.send({status:500, error: err})
-      });
+      })
     }
 
     let reasons = Club.failedLogin;
@@ -68,13 +63,11 @@ exports.authenticate = function authenticateToken(req,res,next) {
   const token = authHeader && authHeader.split(' ')[1] //takes the token if exists
 
   if(token == null || typeof token === undefined){
-    return res.status(401);
+    return res.sendStatus(401);
   }
 
-  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, { expiresIn: '30d' },(err,club)=>{
+  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, { },(err,club)=>{
     if(err){
-      console.log("TOKEN: ", + token);
-      console.log('ERROR', err);
       return res.sendStatus(403);
     }
 
@@ -82,15 +75,12 @@ exports.authenticate = function authenticateToken(req,res,next) {
       if(err){
         return res.sendStatus(500);
       }
-      console.log("CLUB", club)
       if(!club){
         return res.sendStatus(404);
       }
       req.club = club;
       next();
-    }).catch(err => {
-      console.log("Error: ", err.message);
-    });
+    })
   })
 }
 
@@ -112,7 +102,7 @@ exports.token = function (req,res){
     if(doc == null){
       return res.sendStatus(403);
     }
-    jwt.verify(refreshToken,`${process.env.REFRESH_TOKEN_SECRET}`, {expiresIn: '30d'},(err,club)=>{
+    jwt.verify(refreshToken,`${process.env.REFRESH_TOKEN_SECRET}`, {},(err,club)=>{
       if(err){
         return res.sendStatus(403);
       }
@@ -236,7 +226,7 @@ exports.registerClub = function (req,res) {
         }
         res.status(200).json(club);
       }).then(r  => {
-        console.log('THEN WHAT')
+        console.log('THEN WHAT') //todo
       });
     }
   }).catch(err=> {
