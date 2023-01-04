@@ -67,7 +67,7 @@ export class NewLessonComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
     this.isClub = this.tokenStorage.isClub();
 
-    if(this.isLoggedIn) {
+    if(this.isLoggedIn) { //todo add check on roles
       this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
       if(this.isClub && this.infos) {
         this.form.clubId = this.infos['_id'];
@@ -76,7 +76,7 @@ export class NewLessonComponent implements OnInit {
         this.form.clubId = this.infos['clubId'];
       }
 
-      if (this.isClub || this.tokenStorage.isCoach(this.infos)) { //check on user's login
+      if (this.isClub) { //check on user's login
         this.coaches = await this.getClubCoaches(this.form.clubId);
         this.arenas = await this.getClubArenas(this.form.clubId);
         this.riders = await this.getClubAthletes(this.form.clubId);

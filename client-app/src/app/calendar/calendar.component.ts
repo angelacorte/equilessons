@@ -32,8 +32,6 @@ import {AppCalendarService} from "../_services/app-calendar.service";
 import {DialogUserViewComponent} from "../dialog-user-view/dialog-user-view.component";
 import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 import {MatDialog} from "@angular/material/dialog";
-import {response} from "express";
-// import {addMonths} from "@syncfusion/ej2-angular-schedule";
 
 @Component({
   selector: 'app-calendar',
@@ -46,7 +44,7 @@ import {response} from "express";
 })
 
 export class CalendarComponent implements OnInit {
-  title = 'Angular Calendar Scheduler Demo';
+  title = 'Calendario lezioni ';
 
   CalendarView = CalendarView;
 
@@ -65,17 +63,15 @@ export class CalendarComponent implements OnInit {
 
   minDate: Date = new Date();
   maxDate: Date = endOfDay(addMonths(new Date(), 1));
-  // @ts-ignore
-  dayModifier: Function;
-  // @ts-ignore
-  hourModifier: Function;
+  dayModifier!: Function;
+  hourModifier!: Function;
   segmentModifier: Function;
   eventModifier: Function;
   prevBtnDisabled: boolean = false;
   nextBtnDisabled: boolean = false;
 
   isLoggedIn = false;
-  infos: any;
+  infos!: any;
   lessons: LessonState[] = [];
   isClub: boolean = false;
 
@@ -99,13 +95,9 @@ export class CalendarComponent implements OnInit {
     }
   ];
 
-  // @ts-ignore
-  events: CalendarSchedulerEvent[];
+  events!: CalendarSchedulerEvent[];
 
-  // @ts-ignore
-  dateFormatter: SchedulerDateFormatter;
-  // @ts-ignore
-  @ViewChild(CalendarSchedulerViewComponent) calendarScheduler: CalendarSchedulerViewComponent;
+  @ViewChild(CalendarSchedulerViewComponent) calendarScheduler!: CalendarSchedulerViewComponent;
 
   constructor(@Inject(LOCALE_ID) locale: string, public dialog: MatDialog, private lessonService: LessonService, private tokenStorage: TokenStorageService, private appService: AppCalendarService, private dateAdapter: DateAdapter) {
     this.locale = locale;
@@ -129,29 +121,26 @@ export class CalendarComponent implements OnInit {
     this.dateOrViewChanged();
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
-    if(this.isLoggedIn) {
+    if (this.isLoggedIn) {
       this.isClub = this.tokenStorage.isClub();
-      this.infos = this.tokenStorage.getInfos(this.isClub);
-      this.fetchData();
+      this.infos = await this.tokenStorage.getInfos(this.isClub);
+      await this.fetchData();
     }
   }
 
   viewDaysOptionChanged(viewDays: string): void {
-    console.log('viewDaysOptionChanged', viewDays);
     this.calendarScheduler.setViewDays(Number(viewDays));
   }
 
   changeDate(date: Date): void {
-    console.log('changeDate', date);
     this.viewDate = date;
     this.dateOrViewChanged();
   }
 
   changeView(view: CalendarView): void {
-    console.log('changeView', view);
     this.view = view;
     this.dateOrViewChanged();
   }
@@ -201,9 +190,6 @@ export class CalendarComponent implements OnInit {
   }
 
   eventTimesChanged({ event, newStart, newEnd, type }: SchedulerEventTimesChangedEvent): void {
-    console.log('eventTimesChanged Type', type);
-    console.log('eventTimesChanged Event', event);
-    console.log('eventTimesChanged New Times', newStart, newEnd);
     // @ts-ignore
     const ev: CalendarSchedulerEvent = this.events.find(e => e.id === event.id);
     ev.start = newStart;
@@ -211,15 +197,23 @@ export class CalendarComponent implements OnInit {
     this.refresh.next();
   }
 
-  private fetchData(){
+  private async fetchData() {
     let id: string;
-    if(this.isClub) id = this.infos._id
-    else id = this.infos.clubId
 
-    this.lessonService.getLessonsByClubId(id).then(async (response: any) => {
-      this.lessons = response
-      this.appService.getEvents(this.lessons,this.actions)
-        .then((events: CalendarSchedulerEvent[]) => this.events = events);
+    if (this.isClub) {
+      this.title += this.infos.clubName
+      id = this.infos._id
+    } else {
+      id = this.infos.clubId
+      this.title += this.infos.name
+    }
+
+    await this.lessonService.getLessonsByClubId(id).then((res: any) => {
+      if (res.status == 200) {
+        this.lessons = res.lessons
+        this.appService.getEvents(this.lessons, this.actions)
+          .then((events: CalendarSchedulerEvent[]) => this.events = events);
+      }
     })
   }
 

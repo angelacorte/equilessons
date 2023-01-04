@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from "./_services/token-storage.service";
+import {ClubInfos, UserInfos} from "./_utils/Person";
 
 @Component({
   selector: 'app-root',
@@ -9,25 +10,21 @@ import {TokenStorageService} from "./_services/token-storage.service";
 export class AppComponent implements OnInit{
   title = 'equilessons';
 
-  private roles: string[] = [];
   isLoggedIn = false;
   username?: string;
   isClub = false;
+  infos !: ClubInfos | UserInfos
+  constructor(private tokenStorageService: TokenStorageService) {
+  }
 
-  constructor(private tokenStorageService: TokenStorageService) { }
-
-  ngOnInit(): void {
+  ngOnInit() {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
-    if(this.isLoggedIn){
-      const user = this.tokenStorageService.getUser();
-      this.roles = user.roles;
-      if(user.user === undefined){
-        this.username = user.club.clubName;
-        this.isClub = true;
-      }else{
-        this.username = user.user.username;
-      }
+    if (this.isLoggedIn) {
+      this.isClub = this.tokenStorageService.isClub();
+      this.infos = this.tokenStorageService.getInfos(this.isClub);
+      // @ts-ignore
+      this.username = this.isClub ? this.infos['clubName'] : this.infos['name']
     }
   }
 

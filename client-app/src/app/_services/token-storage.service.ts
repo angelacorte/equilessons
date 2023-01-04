@@ -33,7 +33,7 @@ export class TokenStorageService {
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(CLUB_KEY);
   }
-  public saveUser(user: ClubInfos){
+  public saveUser(user: UserInfos){
     this.removeItems()
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
