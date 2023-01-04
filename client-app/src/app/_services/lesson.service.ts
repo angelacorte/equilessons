@@ -35,8 +35,4 @@ export class LessonService {
   updateLesson(lesson:any):Promise<any>{
     return this.http.post(baseURL + '/lesson/update', lesson, {responseType: 'json'}).toPromise();
   }
-
-  deleteLessonState(){
-    window.sessionStorage.removeItem(KEY);
-  }
 }
