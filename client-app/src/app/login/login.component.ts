@@ -33,39 +33,27 @@ export class LoginComponent implements OnInit {
   onSubmit(): void{
     const {username, password} = this.form;
 
-    this.authService.login(username, password).subscribe(
-      data => {
-        switch (data.status) {
-          case 404:
-            this.isLoginFailed = true;
-            this.errorMessage = LoginMessages.FAILED
-            break;
-          case 401:
-            this.isLoginFailed = true;
-            this.errorMessage = LoginMessages.FAILED
-            break;
-          case 200:
-            this.tokenStorage.saveToken(data.accessToken);
-            this.tokenStorage.saveUser(data);
-            this.isLoggedIn = true
-            this.roles = this.tokenStorage.getUser().roles;
-            this.reloadPage();
-            break;
-          case 500:
-            this.isLoginFailed = true;
-            this.errorMessage = LoginMessages.ERROR
-            break
-        }
-      },
-      err => {
-        this.errorMessage = err.statusText;
-        this.isLoginFailed = true;
+    this.authService.login(username, password).then(res => {
+      switch (res.status) {
+        case 404:
+          this.isLoginFailed = true;
+          this.errorMessage = LoginMessages.FAILED
+          break;
+        case 401:
+          this.isLoginFailed = true;
+          this.errorMessage = LoginMessages.FAILED
+          break;
+        case 200:
+          this.tokenStorage.saveToken(res.accessToken);
+          this.tokenStorage.saveUser(res.user);
+          this.roles = this.tokenStorage.getUser().roles;
+          this.isLoggedIn = true
+          break;
+        case 500:
+          this.isLoginFailed = true;
+          this.errorMessage = LoginMessages.ERROR
+          break
       }
-    );
+    })
   }
-
-  reloadPage(): void {
-    window.location.assign('/home');
-  }
-
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
+import {LoginMessages} from "../_utils/Utils";
 
 @Component({
   selector: 'app-club-login',
@@ -25,7 +26,6 @@ export class ClubLoginComponent implements OnInit {
   ngOnInit(): void {
     if(this.tokenStorage.getToken()){
       this.isLoggedIn = true;
-      this.roles = this.tokenStorage.getUser().roles;
     }
   }
 
@@ -33,35 +33,26 @@ export class ClubLoginComponent implements OnInit {
     let login = this.form;
 
     this.clubService.clubLogin(login).then(res => {
-      console.log("club login ", res)
-      if(res.status == 200){
-        this.tokenStorage.saveToken(res.user.accessToken);
-        this.tokenStorage.saveUser(res.user);
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.reloadPage();
-      }else if(res.status == 404 || res.status == 401){ //todo non controlla la password errata -> copy normal login
-        this.errorMessage = res.description;
-        this.isLoginFailed = true;
+      switch (res.status){
+        case 404:
+          this.isLoginFailed = true;
+          this.errorMessage = LoginMessages.FAILED
+          break;
+        case 401:
+          this.isLoginFailed = true;
+          this.errorMessage = LoginMessages.FAILED
+          break;
+        case 200:
+          this.tokenStorage.saveToken(res.accessToken);
+          this.tokenStorage.saveClub(res.club);
+          this.isLoginFailed = false;
+          this.isLoggedIn = true;
+          break;
+        case 500:
+          this.errorMessage = LoginMessages.ERROR
+          this.isLoginFailed = true;
+          break;
       }
     })
-
-    /*subscribe(data=>{
-        this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveUser(data);
-
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.reloadPage();
-      },
-      err => {
-        this.errorMessage = err.error.message;
-        this.isLoginFailed = true;
-      }
-    );*/
-  }
-
-  reloadPage(): void {
-    window.location.assign('/home');
   }
 }
