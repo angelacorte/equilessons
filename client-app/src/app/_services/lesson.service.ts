@@ -10,9 +10,6 @@ const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
-let lessonData !: LessonState;
-const KEY = "lesson-data";
-
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +22,7 @@ export class LessonService {
   }
 
   getLessonsByClubId(clubId: string): Promise<Object>{
-    return this.http.get(baseURL + '/lesson/getInfo/' + clubId, httpOptions).toPromise();
+    return this.http.get(baseURL + '/lesson/getInfo/' + clubId).toPromise();
   }
 
   deleteLesson(lessonId: string): Promise<Object>{
