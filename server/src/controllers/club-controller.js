@@ -31,7 +31,7 @@ exports.clubLogin = function (req,res) {
         if (!clubRes) {
           res.send({status: 400, accessToken: accessToken, refreshToken: refreshToken});
         } else {
-          delete clubRes.clubPassword
+          delete clubRes.clubPassword //todo non worka
           res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, club: clubRes});
         }
       })

@@ -26,7 +26,7 @@ exports.login = function (req,res) {
         if (!userRes) {
           res.send({status: 400, accessToken: accessToken, refreshToken: refreshToken});
         }else{
-          delete userRes.password
+          delete userRes.password //todo non worka
           res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, user: userRes});
         }
       })/*.catch(err => {

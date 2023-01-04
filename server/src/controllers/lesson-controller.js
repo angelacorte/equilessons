@@ -89,7 +89,7 @@ exports.getLessonByClubID = function (req,res){
     if(!result){
       return res.send({status: 400, message: "an error occurred"});
     }else{
-      return res.send(result);
+      return res.send({status: 200, lesson: result});
     }
   }).catch(err=> {
     console.log("Error: ", err.message);
@@ -170,11 +170,11 @@ exports.getLessonsInfos = function (req,res) {
     if (!result) {
       return res.send({status: 400, message: "an error occurred"});
     }else{
-      let lesson = await matchPairs(result)
-      return res.send(lesson);
+      let lessons = await matchPairs(result)
+      return res.send({status: 200, lessons: lessons});
     }
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, error: err});
   });
 }
 
