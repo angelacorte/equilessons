@@ -144,8 +144,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
       let tmpUser = this.form;
       tmpUser.clubId = this.infos._id;
 
-      this.authService.signTemporary(tmpUser).subscribe(
-        data => {
+      this.authService.signTemporary(tmpUser).then(data => {
           if(data.status == 200){
             tmpUser.temporary = true;
             this.users.push(tmpUser);

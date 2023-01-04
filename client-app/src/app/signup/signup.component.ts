@@ -60,8 +60,7 @@ export class SignupComponent implements OnInit {
   onSubmit(): void {
     let user = this.form;
 
-    this.authService.signup(user).subscribe(
-      data => {
+    this.authService.signup(user).then(data => {
         switch (data.status) {
           case 200:
             this.openSnackbar(SignupMessages.LOGIN, SnackBarActions.LOGIN);

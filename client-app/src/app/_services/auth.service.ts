@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {UserInfos} from "../_utils/Person";
+import {Login, UserInfos} from "../_utils/Person";
 
 const baseURL = 'http://localhost:5050';
 
@@ -18,18 +18,18 @@ export class AuthService {
 
   //this sends POST requests to back-end
 
-  login(username:string, password: string): Observable<any>{
+  login(username:string, password: string): Promise<any>{
     return this.http.post(baseURL + '/login', {
       username,
       password
-    }, httpOptions);
+    }, httpOptions).toPromise();
   }
 
-  signup(data:UserInfos): Observable<any>{
-    return this.http.post(baseURL + '/signup', data, httpOptions);
+  signup(data:UserInfos): Promise<any>{
+    return this.http.post(baseURL + '/signup', data, httpOptions).toPromise();
   }
 
-  signTemporary(data: {name: string, surname: string, telephoneNumber: number}): Observable<any>{
-    return this.http.post(baseURL + '/addTemporary', data, httpOptions);
+  signTemporary(data: {name: string, surname: string, telephoneNumber: number}): Promise<any>{
+    return this.http.post(baseURL + '/addTemporary', data, httpOptions).toPromise();
   }
 }
