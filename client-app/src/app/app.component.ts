@@ -1,35 +1,42 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {TokenStorageService} from "./_services/token-storage.service";
 import {ClubInfos, UserInfos} from "./_utils/Person";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
-  title = 'equilessons';
+export class AppComponent implements OnInit {
+  title = 'Equilessons';
 
-  isLoggedIn = false;
-  username?: string;
+  @Input() isLoggedIn = false;
+  @Input() username?: string;
   isClub = false;
   infos !: ClubInfos | UserInfos
-  constructor(private tokenStorageService: TokenStorageService) {
+  isCoach!: boolean;
+  constructor(private tokenStorage: TokenStorageService, private router: Router) {
   }
 
   ngOnInit() {
-    this.isLoggedIn = !!this.tokenStorageService.getToken();
-
     if (this.isLoggedIn) {
-      this.isClub = this.tokenStorageService.isClub();
-      this.infos = this.tokenStorageService.getInfos(this.isClub);
-      // @ts-ignore
-      this.username = this.isClub ? this.infos['clubName'] : this.infos['name']
+      this.isClub = this.tokenStorage.isClub();
+      this.infos = this.tokenStorage.getInfos(this.isClub);
+      if(!this.isClub) this.isCoach = this.tokenStorage.isCoach()
+    }else{
+      this.router.events.subscribe(event => {
+        if (event.constructor.name === "NavigationEnd") {
+          this.isLoggedIn = !!this.tokenStorage.getToken();
+          this.isClub = this.tokenStorage.isClub()
+          if(!this.isClub) this.isCoach = this.tokenStorage.isCoach()
+          this.infos = this.tokenStorage.getInfos(this.isClub)
+        }
+      })
     }
   }
-
   logout(): void {
-    this.tokenStorageService.logout();
+    this.tokenStorage.logout();
     window.location.replace("/");
   }
 }

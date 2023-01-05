@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { AuthService} from "../_services/auth.service";
 import { TokenStorageService} from "../_services/token-storage.service";
 import {LoginMessages} from "../_utils/Utils";
+import {Route, Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -15,13 +16,13 @@ export class LoginComponent implements OnInit {
     password: ""
   };
 
-  isLoggedIn = false;
+  @Output() isLoggedIn = false
   isLoginFailed = false;
   errorMessage = '';
   roles: string[] = [];
-  username?: string;
+  @Output() username?: string;
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) { }
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
     if(this.tokenStorage.getToken()){
@@ -46,8 +47,7 @@ export class LoginComponent implements OnInit {
         case 200:
           this.tokenStorage.saveToken(res.accessToken);
           this.tokenStorage.saveUser(res.user);
-          this.roles = this.tokenStorage.getUser().roles;
-          this.isLoggedIn = true
+          this.router.navigateByUrl('calendar')
           break;
         case 500:
           this.isLoginFailed = true;

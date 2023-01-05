@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
 import {LoginMessages} from "../_utils/Utils";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-club-login',
@@ -21,7 +22,7 @@ export class ClubLoginComponent implements OnInit {
   username?: string;
 
 
-  constructor(private tokenStorage: TokenStorageService, private clubService: ClubService) { }
+  constructor(private tokenStorage: TokenStorageService, private clubService: ClubService, private router: Router) { }
 
   ngOnInit(): void {
     if(this.tokenStorage.getToken()){
@@ -45,8 +46,7 @@ export class ClubLoginComponent implements OnInit {
         case 200:
           this.tokenStorage.saveToken(res.accessToken);
           this.tokenStorage.saveClub(res.club);
-          this.isLoginFailed = false;
-          this.isLoggedIn = true;
+          this.router.navigateByUrl('calendar')
           break;
         case 500:
           this.errorMessage = LoginMessages.ERROR

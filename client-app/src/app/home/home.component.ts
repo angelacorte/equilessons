@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { UserService } from '../_services/user.service';
 import {TokenStorageService} from "../_services/token-storage.service";
 import {print} from "@syncfusion/ej2-angular-schedule";
@@ -13,7 +13,7 @@ const USER_KEY = 'auth-user';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  isLoggedIn = false;
+  @Input() isLoggedIn = false;
   infos!: ClubInfos | UserInfos;
   user: any;
   isClub = false;
