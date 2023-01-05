@@ -15,7 +15,7 @@
     <div class="calendar-container" *ngIf="events">
       <div class="row mt-4">
         <div class="col-md-4 text-left">
-          <a class="btn" href="/newLesson">NUOVA LEZIONE</a>
+          <a class="btn" *ngIf="isClub || isCoach" href="/newLesson">NUOVA LEZIONE</a>
           <a class="btn ml-3" href="/lessonHistory">STORICO LEZIONI</a> <!-- TODO-->
         </div>
         <div class="col-md-4 text-center">

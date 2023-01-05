@@ -27,9 +27,7 @@ import {Subject} from "rxjs";
 import {LessonService} from "../_services/lesson.service";
 import {LessonState} from "../_utils/Lesson";
 import {TokenStorageService} from "../_services/token-storage.service";
-import {map} from "rxjs/operators";
 import {AppCalendarService} from "../_services/app-calendar.service";
-import {DialogUserViewComponent} from "../dialog-user-view/dialog-user-view.component";
 import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 import {MatDialog} from "@angular/material/dialog";
 
@@ -74,6 +72,8 @@ export class CalendarComponent implements OnInit {
   infos!: any;
   lessons: LessonState[] = [];
   isClub: boolean = false;
+  isCoach: boolean = false;
+
 
 
   actions: CalendarSchedulerEventAction[] = [
@@ -127,6 +127,7 @@ export class CalendarComponent implements OnInit {
     if (this.isLoggedIn) {
       this.isClub = this.tokenStorage.isClub();
       this.infos = await this.tokenStorage.getInfos(this.isClub);
+      if (!this.isClub) this.isCoach = this.tokenStorage.isCoach()
       await this.fetchData();
     }
   }

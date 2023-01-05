@@ -18,12 +18,14 @@ import {HorseManagementComponent} from "./horse-management/horse-management.comp
 import {LessonHistoryComponent} from "./lesson-history/lesson-history.component";
 import {PersonalInfosComponent} from "./personal-infos/personal-infos.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
+import {AppComponent} from "./app.component";
 
 const routes: Routes = [
   {path: '', redirectTo:'home', pathMatch:'full'},
+  {path: 'logged', component: AppComponent},
   {path: 'home', component: HomeComponent},
-  {path:`login`, component: LoginComponent},
-  {path: `signup`, component: SignupComponent}, //es: profile/:id -> profile details
+  {path: 'login', component: LoginComponent},
+  {path: 'signup', component: SignupComponent}, //es: profile/:id -> profile details
   {path: 'profile', component: ProfileComponent},
   {path: 'newClub', component: ClubRegistrationComponent},
   {path: 'horseRegistration', component: HorseRegistrationComponent},
@@ -38,7 +40,7 @@ const routes: Routes = [
   {path: 'lessonHistory', component:LessonHistoryComponent},
   {path: 'personalInfos', component:PersonalInfosComponent},
   {path: 'notifications', component:NotificationsComponent},
-  {path: `**`, component: PageNotFoundComponent}
+  {path: '**', component: PageNotFoundComponent}
 ];
 
 @NgModule({
