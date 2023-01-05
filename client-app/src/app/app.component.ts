@@ -14,10 +14,13 @@ export class AppComponent implements OnInit{
   isLoggedIn = false;
   username?: string;
   isClub = false;
+  perm = ""
 
-  constructor(private tokenStorageService: TokenStorageService, private socketIoService: SocketIoService) { }
+  constructor(private tokenStorageService: TokenStorageService, private socketIoService: SocketIoService) { 
+    
+  }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
     if(this.isLoggedIn){
@@ -29,6 +32,16 @@ export class AppComponent implements OnInit{
       }else{
         this.username = user.user.username;
       }
+    }
+
+    this.perm = await Notification.requestPermission()
+    if(this.perm === "granted"){
+      console.log("notification permission granted")
+      this.socketIoService.eventObservable('notify-client').subscribe((data)=>{
+        new Notification(`Hai una nuova notifica di tipo ${data.data.notificationType}`)
+      })
+    } else {
+      console.log("permission not granted")
     }
   }
 
