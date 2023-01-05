@@ -5,6 +5,8 @@ import {ClubService} from "../_services/club.service";
 import {AuthService} from "../_services/auth.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
+import {SignupMessages, SnackBarActions} from "../_utils/Utils";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 const baseURL = 'http://localhost:5050';
 
@@ -38,14 +40,12 @@ export class ClubRegistrationComponent implements OnInit {
   isSignUpFailed = true;
   hide = true;
 
-  constructor(private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService, private userService: UserService) { }
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private clubService: ClubService, private tokenStorage: TokenStorageService, private userService: UserService) { }
 
   ngOnInit(): void {
-    /*this.isLoggedIn = !!this.tokenStorage.getToken();
-
-    if(this.isLoggedIn){
-      this.infos = this.tokenStorage.getUser();
-    }*/
+    if (!!this.tokenStorage.getToken()) { //if user is logged in
+      window.location.assign('home');
+    }
   }
 
   onSubmit(): void{
@@ -57,51 +57,36 @@ export class ClubRegistrationComponent implements OnInit {
       clubTelephone: this.form.clubTelephone,
       clubCity: this.form.clubCity,
       clubAddress: this.form.clubAddress,
-      //clubOwnerId: this.infos.user._id
     };
 
-/*    const role = 'club-owner';
-    let tmpRole = this.infos.user['roles'];
-    tmpRole.push(role);*/
-
-    this.clubService.registration(registration).then(response=>{ //todo brutti messaggi? 
-        this.isSuccessful = true;
-        this.isSignUpFailed = false;
-        // this.reloadPage();
-      },
-      err => {
-        this.errorMessage = err.error.message;
-        this.isSignUpFailed = true;
-      }
+    this.clubService.registration(registration).then(response=>{ //todo brutti messaggi?
+      console.log("response registration ", response)
+      switch (response.status) {
+        case 409:
+          this.openSnackbar(SignupMessages.ALREADY_EXISTS, SnackBarActions.RETRY);
+          break;
+        case 200:
+          this.openSnackbar(SignupMessages.LOGIN, SnackBarActions.LOGIN);
+          break;
+        case 400:
+          this.openSnackbar(SignupMessages.FAILED, SnackBarActions.RELOAD);
+          break;
+        }
+      }, () => {this.openSnackbar(SignupMessages.FAILED, SnackBarActions.RELOAD); }
     );
-
-    /*this.clubService.registration(registration).subscribe(response=>{
-        this.submitted = true;
-        console.log("response club service registration ", response);
-        this.userService.changeClub(registration.clubOwnerId, response._id).subscribe(r=>{
-            this.userService.addRole(role, registration.clubOwnerId).subscribe(resp =>{
-              console.log("updated user");
-              console.log("response.id", response._id);
-//              this.tokenStorage.modifyUserClub(response._id);
-              this.infos.user['clubId'] = response._id;
-              this.infos.user['roles'] = tmpRole;
-              this.tokenStorage.saveUser(this.infos);
-              this.isSuccessful = true;
-
-              //console.log("this.infos.user['clubId']", this.infos.user['clubId']);
-            },
-                e => {
-              console.log(e);
-            })
-        },
-          er=>{
-          console.log(er);
-          })
-      },
-      err => {
-        this.errorMessage = err.error.message;
-        this.isRegistrationFailed = true;
-        console.log(err);
-      })*/
+  }
+  private openSnackbar(message: string, option: SnackBarActions) {
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=> {
+      switch (option) {
+        case SnackBarActions.LOGIN:
+          window.location.assign('/clubLogin');
+          break;
+        case SnackBarActions.RELOAD || SnackBarActions.RETRY:
+          window.location.reload();
+      }
+    })
   }
 }

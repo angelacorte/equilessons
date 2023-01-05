@@ -217,20 +217,20 @@ exports.getClubArenas = function (req,res) { //TODO maybe it's a duplicate, the 
 exports.registerClub = function (req,res) {
   Club.findOne({clubEmail:req.body.clubEmail}).then(tmpClub=>{
     if(tmpClub){
-      res.status(409).send({"description": "email already in use"})
+      res.send({status: 409, description: "email already in use"})
     }else{
       let newClub = new Club(req.body);
       newClub.save(function (err, club) {
         if (err) {
-          res.send(err);
+          res.send({status: 400, message: "error while saving club"})
+        }else{
+          delete club.clubPassword
+          return res.send({status: 200, message: "club added", club});
         }
-        res.status(200).json(club);
-      }).then(r  => {
-        console.log('THEN WHAT') //todo
-      });
+      })
     }
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    res.send({status: 500, message: "an error occurred", error: err})
   });
 }
 
