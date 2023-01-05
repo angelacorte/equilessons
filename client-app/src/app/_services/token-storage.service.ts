@@ -10,13 +10,9 @@ const CLUB_KEY = 'auth-club';
   providedIn: 'root'
 })
 export class TokenStorageService {
-
   constructor(private lessonService:LessonService) { }
 
   logout(): void{
-/*    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem(USER_KEY)
-    localStorage.removeItem(CLUB_KEY)*/
     localStorage.clear();
   }
 
@@ -58,6 +54,13 @@ export class TokenStorageService {
     return !localStorage.getItem(USER_KEY)
   }
 
+  public isCoach(): boolean{
+    let user = this.getUser()
+    if(user){
+      console.log("user roles ", user.roles)
+      return user.roles.some((key: string) => key === 'coach')
+    }else return false
+  }
   public getInfos(isClub:boolean){
     return isClub ? this.getClub() : this.getUser();
   }
