@@ -18,8 +18,9 @@ export class AppComponent implements OnInit {
   infos !: ClubInfos | UserInfos
   isCoach!: boolean;
   perm=""
-
-  constructor(private tokenStorage: TokenStorageService, private router: Router, private socketIoService: SocketIoService) { }
+  constructor(private tokenStorage: TokenStorageService,  private router: Router , private socketIoService: SocketIoService) { 
+    
+  }
 
   async ngOnInit(): Promise<void> {
     if (this.isLoggedIn) {
