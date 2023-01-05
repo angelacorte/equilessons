@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import { SocketIoService } from './_services/socket-io.service';
 import {TokenStorageService} from "./_services/token-storage.service";
 
 @Component({
@@ -14,7 +15,7 @@ export class AppComponent implements OnInit{
   username?: string;
   isClub = false;
 
-  constructor(private tokenStorageService: TokenStorageService) { }
+  constructor(private tokenStorageService: TokenStorageService, private socketIoService: SocketIoService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
