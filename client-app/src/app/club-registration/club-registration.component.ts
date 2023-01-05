@@ -1,18 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {map} from "rxjs/operators";
+import {HttpClient} from "@angular/common/http";
 import {ClubService} from "../_services/club.service";
-import {AuthService} from "../_services/auth.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {SignupMessages, SnackBarActions} from "../_utils/Utils";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
-const baseURL = 'http://localhost:5050';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
 
 @Component({
   selector: 'app-club-registration',
@@ -59,8 +52,7 @@ export class ClubRegistrationComponent implements OnInit {
       clubAddress: this.form.clubAddress,
     };
 
-    this.clubService.registration(registration).then(response=>{ //todo brutti messaggi?
-      console.log("response registration ", response)
+    this.clubService.registration(registration).then(response=>{
       switch (response.status) {
         case 409:
           this.openSnackbar(SignupMessages.ALREADY_EXISTS, SnackBarActions.RETRY);

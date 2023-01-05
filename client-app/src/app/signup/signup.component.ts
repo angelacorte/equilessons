@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../_services/auth.service";
-import {map} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
@@ -59,7 +58,6 @@ export class SignupComponent implements OnInit {
 
   onSubmit(): void {
     let user = this.form;
-
     this.authService.signup(user).then(data => {
         switch (data.status) {
           case 200:
