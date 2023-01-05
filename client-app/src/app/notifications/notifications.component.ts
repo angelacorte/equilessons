@@ -9,6 +9,7 @@ import {HorseService} from "../_services/horse.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {NotificationMessage, NotificationType} from "../_utils/Notification";
 import { NotificationService } from '../_services/notification.service';
+import { SocketIoService } from 'app/_services/socket-io.service';
 
 @Component({
   selector: 'app-notifications',
@@ -31,18 +32,31 @@ export class NotificationsComponent implements OnInit {
   dataSource = new MatTableDataSource(this.notifications);
   isClub: boolean = false;
   isLoggedIn: boolean = false;
-  constructor(private notificationService: NotificationService, private userService:UserService, public dialog: MatDialog, private _snackBar: MatSnackBar, private horseService: HorseService, private tokenStorage: TokenStorageService) { }
+  userId: string = ""
+  constructor(
+    private notificationService: NotificationService, 
+    private userService:UserService, 
+    public dialog: MatDialog, 
+    private _snackBar: MatSnackBar, 
+    private horseService: HorseService, 
+    private tokenStorage: TokenStorageService,
+    private socketIoService: SocketIoService) { 
+      this.isClub = this.tokenStorage.isClub();
+      this.isLoggedIn = !!this.tokenStorage.getToken();
+      this.userId = this.tokenStorage.getInfos(this.isClub)._id
+  
+      
+      this.socketIoService.eventObservable('notify-client').subscribe((data)=>{
+        console.log("received notification")
+        this.refreshNotifications(this.userId)
+      })
+
+    }
 
   async ngOnInit(): Promise<void> {
-    this.isClub = this.tokenStorage.isClub();
-    this.isLoggedIn = !!this.tokenStorage.getToken();
-    let userId = this.tokenStorage.getInfos(this.isClub)._id
-
     if(this.isLoggedIn){ 
       //call the service to retrieve user's notifications
-      this.notifications = await this.notificationService.getNotifications(userId)
-      console.log(JSON.stringify(this.notifications))
-      this.setDataSource(this.notifications)
+      await this.refreshNotifications(this.userId)
     }
   }
 
@@ -51,6 +65,15 @@ export class NotificationsComponent implements OnInit {
     this.dataSource.data = data;
     this.dataSource.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  private async refreshNotifications(userId: string): Promise<void>{
+    try {
+      this.notifications = await this.notificationService.getNotifications(userId)
+      this.setDataSource(this.notifications)
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   checkNotification(n: NotificationMessage) {
