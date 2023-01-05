@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {Roles} from "../_utils/Person";
 // import { User } from '../_models/user.model';
 
 const baseURL = 'http://localhost:5050';
@@ -18,8 +19,15 @@ export class UserService {
 
   //This provides methods to access public and protected resources
 
-  addRole(role:any, id:string): Promise<any>{ //todo add "coach" to user when adding a coach by club
+  addRole(role:Roles, id:string): Promise<any>{ //todo add "coach" to user when adding a coach by club
     return this.http.post(baseURL + '/user/roles', {role, id}).toPromise();
+  }
+  removeRole(role: Roles, id: string): Promise<any>{
+    let options = {
+      options: httpOptions,
+      body: {role, id}
+    }
+    return this.http.delete(baseURL + '/user/removeRole', options).toPromise();
   }
 
   getUserRoles(id:string): Promise<any>{
