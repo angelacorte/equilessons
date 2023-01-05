@@ -1,25 +1,39 @@
 require('dotenv').config()
 
 const cors = require("cors");
-// const jwt = require('jsonwebtoken')
 let bodyParser = require("body-parser");
 const routes = require('./routes/routes');
 const db = require("./models/index")
 
 let corsOptions = {
-  origin: "http://localhost:4200"
+  origin: "*",
 };
 
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
+const sockets = require('./utils/socket').sockets
 
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
+// Assign a unique ID to each socket when it connects
+io.on('connection', (socket) => {
+  socket.emit('ask-to-save-info')
+  socket.on('save-client-info', (userId) => {
+    console.log(`a user connected: ${userId}`);
+    sockets.set(userId, socket)
+  })
+  socket.on('disconnect', ()=>{
+    console.log(`a user disconnected`)
+  })
+});
 
 app.use(cors(corsOptions));
-/*let jsonParser = bodyParser.json();
-let urlencodedParser = bodyParser.urlencoded({extended: false});*/
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
