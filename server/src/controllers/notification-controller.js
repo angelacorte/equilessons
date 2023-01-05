@@ -1,9 +1,14 @@
 const Notification = require("../models/notification-model")
 
+const sockets = require('../utils/socket').sockets
+
 exports.addNotification = async (req, res) => {
     let n = new Notification(req.body)
     try {
+        //store the notification message inside the database
         let notification = await n.save()
+        //send a push notification to the client socket
+        pushNotificationToClientSocket(n.recipientId, n)
         res.status(201).json(notification)
     } catch(err) {
         res.send(err)
@@ -18,3 +23,8 @@ exports.getUserNotifications = async (req, res) => {
         res.send(err)
     }
 }
+
+const pushNotificationToClientSocket = (id, notification) => {
+    const socket = sockets.get(""+id);
+    socket.emit('notify-client', { data: notification });
+};
