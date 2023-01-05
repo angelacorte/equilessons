@@ -18,9 +18,16 @@ services:
     ports:
       - '27017:27017'
 
-  client:
-    container_name: equilessons-client
+  client-1:
+    container_name: equilessons-client-one
     restart: always
     build: ./client-app
     ports:
       - '4200:4200'
+
+  client-2:
+    container_name: equilessons-client-two
+    restart: always
+    build: ./client-app
+    ports:
+      - '4201:4200'
