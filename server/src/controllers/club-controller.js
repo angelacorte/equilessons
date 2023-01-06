@@ -26,12 +26,14 @@ exports.clubLogin = function (req,res) {
       const update = {"token": refreshToken};
 
       Club.findOneAndUpdate(filter, update, {
-        new: true
+        new: true,
+        projection: {
+          'clubPassword': 0
+        }
       },).then(clubRes => {
         if (!clubRes) {
           res.send({status: 400, accessToken: accessToken, refreshToken: refreshToken});
         } else {
-          delete clubRes.clubPassword //todo non worka
           res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, club: clubRes});
         }
       })

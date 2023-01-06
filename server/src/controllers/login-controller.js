@@ -21,12 +21,14 @@ exports.login = function (req,res) {
       const update = {"token": refreshToken};
 
       User.findOneAndUpdate(filter, update, {
-        new: true
+        new: true,
+        projection: {
+          'password': 0
+        }
       }).then(userRes => {
         if (!userRes) {
           res.send({status: 400, accessToken: accessToken, refreshToken: refreshToken});
         }else{
-          delete userRes.password //todo non worka
           res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, user: userRes});
         }
       })/*.catch(err => {
