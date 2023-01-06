@@ -87,14 +87,29 @@ exports.removeRole = function (req, res){
 
 
 /**
- * Change the club of a specific user
+ * Update user's infos
  * @param req
  * @param res
  */
-exports.changeClub = function (req,res) {
-  User.updateOne({_id:req.body.userId}, {clubId: req.body.clubId}).then(result=>{
+exports.updateUser = function (req,res){ //todo
+  let update = {
+    name: req.body.name,
+    surname: req.body.surname,
+    email: req.body.email,
+    birthday: req.body.birthday,
+    username: req.body.username,
+    phoneNumber: req.body.phoneNumber,
+    taxcode: req.body.taxcode,
+    city: req.body.city,
+    address: req.body.address,
+    nrFise: req.body.nrFise,
+    clubId: req.body.clubId,
+  }
+  //TODO add check on email already in use
+  User.updateOne({_id:req.body._id}, update).then(result=>{
+    console.log("update user ", result)
     if(result.modifiedCount > 0){
-      return res.status(200).json({"clubId": req.body.clubId});
+      return res.send({status: 200, user: update});
     }else{
       return res.sendStatus(400)
     }
@@ -125,14 +140,6 @@ exports.removeUser = function (req,res){
   });
 };
 
-/**
- * Update user's infos
- * @param req
- * @param res
- */
-exports.updateUser = function (req,res){ //todo
-
-};
 
 /**
  * Get all the horses linked to a specific user

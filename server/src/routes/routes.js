@@ -108,8 +108,8 @@ module.exports = function (app){
   app.route('/user/removeRole')
     .delete(userController.removeRole);
 
-  app.route('/user/changeClub')
-    .post(userController.changeClub);
+  app.route('/user/updateUser')
+    .post(userController.updateUser);
 
   app.route('/user/:clubId')
     .get(userController.getUsersByClub);

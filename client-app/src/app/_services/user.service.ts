@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {Roles} from "../_utils/Person";
+import {Roles, UserInfos} from "../_utils/Person";
 // import { User } from '../_models/user.model';
 
 const baseURL = 'http://localhost:5050';
@@ -42,8 +42,9 @@ export class UserService {
     return this.http.delete(baseURL + '/user', options).toPromise();
   }
 
-  changeClub(userId:any, clubId:any): Promise<any>{
-    return this.http.post(baseURL + '/user/changeClub', {userId, clubId}).toPromise();
+  updateUser(data: UserInfos): Promise<any>{
+    console.log("data is ", data)
+    return this.http.post(baseURL + '/user/updateUser', data).toPromise();
   }
 
   getUserById(userId:string): Promise<any>{
