@@ -7,8 +7,9 @@ import {ClubService} from "../_services/club.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
-import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
+import {ClubInfos, Coach, Roles, UserInfos} from "../_utils/Person";
+import {Action, SnackBarActions, SnackBarMessages} from "../_utils/Utils";
+import {UserService} from "../_services/user.service";
 
 @Component({
   selector: 'app-add-coach',
@@ -38,8 +39,10 @@ export class AddCoachComponent implements OnInit {
   coachId: string = "";
   users: UserInfos[] = [];
   toUpdate: string[]= [];
+  toAdd: string[] = [];
+  toRemove: string[] = [];
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
+  constructor(private http: HttpClient, private userService: UserService, private _snackBar: MatSnackBar, private lessonService: LessonService, private tokenStorage: TokenStorageService, private clubService: ClubService) { }
 
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -59,11 +62,13 @@ export class AddCoachComponent implements OnInit {
   async onSubmit() {
     this.coaches.forEach((value) => {
       this.toUpdate.push(value._id);
-    })
+    });
     if (this.infos) {
-      this.clubService.addCoach(this.toUpdate, this.infos._id).then((res) => {
+      this.clubService.updateCoach(this.toUpdate, this.infos._id).then((res) => {
         if (res.status == 200) {
           this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH);
+          if(this.toAdd.length > 0) this.updateCoachRole(this.toAdd, Action.ADD)
+          if(this.toRemove.length > 0) this.updateCoachRole(this.toRemove, Action.REMOVE)
         } else {
           this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
         }
@@ -83,6 +88,7 @@ export class AddCoachComponent implements OnInit {
           name: value['name'],
           surname: value['surname']
         };
+        this.toAdd.push(coachId)
         this.coaches.push(coach);
         this.form.coachId = '';
         this.setDataSource(this.coaches);
@@ -91,12 +97,32 @@ export class AddCoachComponent implements OnInit {
     }))
   }
 
-  private async getCoaches(clubId:string): Promise<any>{ //todo maybe find a nicer way to do it? don't know
+  private updateCoachRole(coaches: string[], action: Action){
+    switch (action){
+      case Action.REMOVE:
+        coaches.forEach(c => {
+          this.userService.removeRole(Roles.COACH, c).then(r => {
+            if(r.status == 200) this.toRemove = []
+            else this.openSnackbar("Rimuovi | " + SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
+          })
+        })
+        break;
+      case Action.ADD:
+        coaches.forEach(c => {
+          this.userService.addRole(Roles.COACH, c).then(r => {
+            if(r.status == 200) this.toAdd = []
+            else this.openSnackbar("Aggiungi | " + SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
+          })
+        })
+        break;
+    }
+  }
+  private async getCoaches(clubId:string): Promise<any>{
     return await this.clubService.getClubCoaches(clubId).then((res) => {
       if(res.status == 200){
         return res.coaches
       }else{
-        //todo
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
       }
     });
   }
@@ -109,6 +135,7 @@ export class AddCoachComponent implements OnInit {
     if(!e.target.checked){
       this.coaches.forEach((item,index)=>{
         if(item._id === coachId){
+          this.toRemove.push(coachId)
           this.coaches.splice(index, 1);
           this.setDataSource(this.coaches);
           this.dataSource.data = this.coaches;

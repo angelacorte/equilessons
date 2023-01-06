@@ -28,8 +28,8 @@ export class ClubService {
     return this.http.get(baseURL, httpOptions).toPromise();
   }
 
-  addCoach(coaches:string[], clubId:string): Promise<any>{
-    return this.http.post(baseURL + '/addCoach', {coaches, clubId}, httpOptions).toPromise();
+  updateCoach(coaches:string[], clubId:string): Promise<any>{
+    return this.http.post(baseURL + '/updateCoach', {coaches, clubId}, httpOptions).toPromise();
   }
 
   getClubAthletes(clubId: string): Promise<any>{

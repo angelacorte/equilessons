@@ -1,6 +1,6 @@
 const db = require("../models");
 let User = db.user;
-const {ObjectID, ObjectId} = require("mongodb");
+const {ObjectId} = require("mongodb");
 
 /**
  * Get user's infos by user ID
@@ -8,9 +8,9 @@ const {ObjectID, ObjectId} = require("mongodb");
  * @param res
  */
 exports.getUserById = function (req,res){
-  User.findOne({_id:new ObjectID(req.params.userId)},{password:0, token:0,__v:0}).then(user=>{
+  User.findOne({_id:new ObjectId(req.params.userId)},{password:0, token:0,__v:0}).then(user=>{
     if(!user){
-      return res.send({status: 400, message: "error"});
+      return res.send({status: 400, message: "Bad request"});
     }else{
       return res.send({status: 200, user: user})
     }
@@ -31,11 +31,11 @@ exports.getUsersByClub = function (req,res) { //todo maybe useless
   }
   User.find({clubId:req.params.clubId}, {name:1,surname:1}).sort(sort).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.status(400)
     }
-    return res.status(200).send(result);
+    return res.send({status: 200, result});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "Error ", error: err});
   });
 }
 
@@ -47,7 +47,7 @@ exports.getUsersByClub = function (req,res) { //todo maybe useless
 exports.getUserRoles = function (req,res) {
   User.findOne({_id:req.params.id},{roles:1, _id:0}).then(result=>{
     if(!result){
-      return res.send({status: 400, message: "an error occurred"});
+      return res.sendStatus(400);
     }else{
       return res.send({status: 200, roles: result});
     }
@@ -63,16 +63,28 @@ exports.getUserRoles = function (req,res) {
  */
 exports.addRole = function (req,res){
   User.updateOne({_id:req.body.id},{$push:{roles: req.body.role}}).then(result=>{
-    console.log("user update one result ", result)
-    if(result.ok !== 1){
-      return res.status(500).send({message: "an error occurred"});
+    if(result.modifiedCount > 0 ){
+      return res.send({status: 200})
     }else{
-      return res.send({status: 200, roles: result})
+      return res.send({status: 400, message: "Bad request"});
     }
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
+
+exports.removeRole = function (req, res){
+  User.updateOne({_id:req.body.id}, {$pull:{roles: req.body.role}}).then(result => {
+    if(result.modifiedCount > 0 ){
+      return res.send({status: 200})
+    }else{
+      return res.send({status: 400, message: "Bad request"});
+    }
+  }).catch(err=> {
+    return res.send({status: 500, message: "an error occurred", error: err});
+  })
+}
+
 
 /**
  * Change the club of a specific user
@@ -81,12 +93,13 @@ exports.addRole = function (req,res){
  */
 exports.changeClub = function (req,res) {
   User.updateOne({_id:req.body.userId}, {clubId: req.body.clubId}).then(result=>{
-    if(result.ok !== 1){
-      return res.status(500).send({message: "an error occurred"});
+    if(result.modifiedCount > 0){
+      return res.status(200).json({"clubId": req.body.clubId});
+    }else{
+      return res.sendStatus(400)
     }
-    return res.status(200).json({"clubId": req.body.clubId});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 
@@ -105,10 +118,10 @@ exports.removeUser = function (req,res){
     if(result.deletedCount > 0){
       return res.send({status: 200, result});
     }else{
-      return res.send({status: 400, message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
     }
   }).catch(err=> {
-    return res.send({status: 500, error: err});
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 };
 
@@ -117,7 +130,7 @@ exports.removeUser = function (req,res){
  * @param req
  * @param res
  */
-exports.updateUser = function (req,res){
+exports.updateUser = function (req,res){ //todo
 
 };
 
@@ -154,12 +167,12 @@ exports.getUserHorses = function (req,res){
 
   User.aggregate(pipeline).sort(sort).then(horses=>{
     if(!horses){
-      return res.send({status: 500,message: "an error occurred"});
+      return res.send({status: 400,message: "Bad request"});
     }else{
       return res.send({status: 200, horses: horses});
     }
   }).catch(err=> {
-    return res.send({status: 500,error:err});
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 
 }

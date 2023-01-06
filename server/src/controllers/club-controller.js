@@ -224,7 +224,7 @@ exports.registerClub = function (req,res) {
         if (err) {
           res.send({status: 400, message: "error while saving club"})
         }else{
-          delete club.clubPassword
+          delete club.clubPassword //todo pare non worki
           return res.send({status: 200, message: "club added", club});
         }
       })
@@ -239,18 +239,17 @@ exports.registerClub = function (req,res) {
  * @param req
  * @param res
  */
-exports.addCoach = function (req,res){
+exports.updateCoach = function (req, res){
   Club.updateOne({_id:req.body.clubId},{clubCoach: req.body.coaches}).then(result=>{
     if(result.modifiedCount > 0){
       return res.send({status: 200});
     }else{
-      return res.send({status: 400, message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
     }
   }).catch(err=> {
-    return res.send({status: 500, err})
+    return res.send({status: 500, message: "Error ", error: err});
   });
 }
-
 /**
  * Get all people that have subscribed to a certain club (by clubs ID)
  * @param req
@@ -263,11 +262,11 @@ exports.getClubAthletes = function (req,res) {
   };
   User.find({"clubId":req.params.clubId}, {name:1, surname:1, horse:1, email:1, phoneNumber:1, clubId: 1}).sort(sort).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
     }
     return res.send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "Error ", error: err});
   });
 }
 
@@ -307,10 +306,10 @@ exports.getCoachByClubId = function (req,res) {
 
   Club.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
-      return res.send({status: 400, message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
     }
     return res.send({status: 200, coaches: result[0].clubCoaches});
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "Error ", error: err});
   });
 }

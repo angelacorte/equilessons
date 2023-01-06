@@ -26,3 +26,8 @@ export enum SignupMessages{
   FAILED = "La registrazione non è andata a buon fine, riprova.",
   PRESENT = "Utente già registrato."
 }
+
+export enum Action{
+  REMOVE,
+  ADD
+}

@@ -42,8 +42,8 @@ module.exports = function (app){
   app.route('/clubArenas')
     .get(clubController.getClubArenas); //return all the arenas in a club
 
-  app.route('/club/addCoach')
-    .post(clubController.addCoach);
+  app.route('/club/updateCoach')
+    .post(clubController.updateCoach);
 
   app.route('/club/coaches/:clubId')
     .get(clubController.getCoachByClubId);
@@ -103,7 +103,10 @@ module.exports = function (app){
     .get(userController.getUserRoles)
 
   app.route('/user/roles')
-    .post(userController.addRole);
+    .post(userController.addRole)
+
+  app.route('/user/removeRole')
+    .delete(userController.removeRole);
 
   app.route('/user/changeClub')
     .post(userController.changeClub);
