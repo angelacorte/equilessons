@@ -6,7 +6,7 @@ import {HorseService} from "../_services/horse.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ClubService} from "../_services/club.service";
 import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
-import {RiderInfo, UserInfos} from "../_utils/Person";
+import {RiderInfo, Roles, UserInfos} from "../_utils/Person";
 
 
 @Component({
@@ -71,8 +71,7 @@ export class HorseRegistrationComponent implements OnInit {
 
   onSubmit(): void{
 
-    // const role = 'horse-owner';
-    let tmpRole: any;
+    let tmpRole: Roles[] = [];
     if(!this.isClub) tmpRole = this.infos['roles'];
 
     const form = {
@@ -93,14 +92,19 @@ export class HorseRegistrationComponent implements OnInit {
     }
 
     this.horseService.horseRegistration(form).then((response)=>{
+      console.log("response ", response)
       if(response.status == 200){
-        /*if(!this.isClub && !tmpRole.includes(role)){
-          tmpRole.push(role);
-          this.userService.addRole(role, form.ownerId).then(res => {
-            console.log("add role horse reg ", res)
+        if(!tmpRole.some(r => r == Roles.HORSE_OWNER) && !this.isClub){
+          this.userService.addRole(Roles.HORSE_OWNER, form.ownerId).then(res => {
+            if(res.status == 200){
+              this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
+            }else{
+              this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.DO_NOTHING);
+            }
           })
-        }*/
-        this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
+        }else{
+          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
+        }
       }else{
         this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.DO_NOTHING);
       }

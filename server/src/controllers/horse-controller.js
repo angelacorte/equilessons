@@ -13,7 +13,7 @@ exports.addHorse = function (req,res){
   let newHorse = new Horse(req.body);
   newHorse.save(function(err, horse) {
     if (err){
-      res.send({status:400, err})
+      return res.send({status: 400, message: "Bad request " + err});
     }else{
       res.send({status: 200, horse: horse})
     }
@@ -28,11 +28,12 @@ exports.addHorse = function (req,res){
 exports.getScholasticHorses = function (req,res) {
   Horse.find({clubId:new ObjectId(req.params.clubId), scholastic:true}).sort({horseName:1}).then(result =>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
+    }else{
+      return res.send(result);
     }
-    return res.send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    res.send({status: 500, message: "an error occurred", error: err})
   });
 }
 
@@ -44,11 +45,12 @@ exports.getScholasticHorses = function (req,res) {
 exports.getHorseInfos = function (req,res){
   Horse.find({_id:new ObjectId(req.params.horseId)}).then(result=>{
     if(!result){
-      return res.status(400).json({message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
+    }else{
+      return res.send({status: 200, result: result});
     }
-    return res.status(200).json(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    res.send({status: 500, message: "an error occurred", error: err})
   });
 };
 
@@ -98,11 +100,12 @@ exports.getHorses = function (req,res){
 
   Horse.aggregate(pipeline).sort(sort).then(result=>{
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
+    }else{
+      return res.status(200).send(result);
     }
-    return res.status(200).send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    res.send({status: 500, message: "an error occurred", error: err})
   });
 }
 
@@ -113,11 +116,12 @@ exports.getPrivateHorses = function (req,res){ //todo must check also on riders,
 
   Horse.find({ownerId:req.params.ownerId}).sort(sort).then(result => {
     if(!result){
-      return res.status(500).send({message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
+    }else{
+      return res.send(result);
     }
-    return res.send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    res.send({status: 500, message: "an error occurred", error: err})
   });
 }
 
@@ -131,9 +135,9 @@ exports.removeHorse = function (req,res){
     if(result.deletedCount === ids.length){
       return res.sendStatus(200);
     }else{
-      return res.sendStatus(400).json({message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
     }
   }).catch(err=> {
-    res.sendStatus(500).json(err); //todo " Cannot set headers after they are sent to the client"
+    res.send({status: 500, message: "an error occurred", error: err}) //todo " Cannot set headers after they are sent to the client"
   });
 }
