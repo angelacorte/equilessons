@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../_services/auth.service";
-import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ClubService} from "../_services/club.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -34,7 +33,7 @@ export class SignupComponent implements OnInit {
   hide = true;
   passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
-  constructor(private authService: AuthService, private _snackBar: MatSnackBar, private http: HttpClient, private clubService: ClubService, private tokenStorage: TokenStorageService) {
+  constructor(private authService: AuthService, private _snackBar: MatSnackBar, private clubService: ClubService, private tokenStorage: TokenStorageService) {
   }
 
   ngOnInit(): void {
