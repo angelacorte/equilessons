@@ -112,7 +112,7 @@ exports.token = function (req,res){
       return res.json({"accessToken":accessToken});
     })
   }).catch(err => {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 
@@ -134,7 +134,7 @@ exports.logout = function (req,res) {
       res.send({status: 200});
     }
   }).catch(err => {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 
@@ -151,7 +151,7 @@ exports.getAllClubs = function (req,res) {
       return res.send({status: 200, clubs: result})
     }
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 
@@ -163,7 +163,6 @@ exports.getAllClubs = function (req,res) {
  */
 exports.getClubByName = function (club, req,res){
   let clubN;
-  console.log("club ", club)
   if(req !== undefined){
     clubN = req.params.clubName;
   }else if(club){
@@ -175,7 +174,7 @@ exports.getClubByName = function (club, req,res){
     }
     return res.send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 
@@ -191,7 +190,8 @@ exports.getClubById = function (req,res){
     }
     return res.send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
+
   });
 }
 
@@ -207,7 +207,7 @@ exports.getClubArenas = function (req,res) { //TODO maybe it's a duplicate, the 
     }
     return res.send(result);
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 

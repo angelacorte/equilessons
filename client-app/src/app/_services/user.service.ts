@@ -43,7 +43,6 @@ export class UserService {
   }
 
   updateUser(data: UserInfos): Promise<any>{
-    console.log("data is ", data)
     return this.http.post(baseURL + '/user/updateUser', data).toPromise();
   }
 

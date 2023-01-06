@@ -76,8 +76,6 @@ export class PersonalInfosComponent implements OnInit {
   onSubmit() {
     let updateUser = this.form
     updateUser._id = this.infos._id
-    console.log("update user ", updateUser)
-
     this.userService.updateUser(updateUser).then(r => {
       switch (r.status) {
         case 200:

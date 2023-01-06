@@ -32,7 +32,8 @@ exports.login = function (req,res) {
           res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, user: userRes});
         }
       })/*.catch(err => {
-        console.log("Error: ", err.message);
+            return res.send({status: 500, message: "an error occurred", error: err});
+
       });*/
     }
 
@@ -82,7 +83,7 @@ exports.token = function (req,res){
       return res.json({"accessToken":accessToken});
     })
   }).catch(err => {
-    console.log("Error 1: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 

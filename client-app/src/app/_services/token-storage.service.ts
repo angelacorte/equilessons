@@ -57,7 +57,6 @@ export class TokenStorageService {
   public isCoach(): boolean{
     let user = this.getUser()
     if(user){
-      console.log("user roles ", user.roles)
       return user.roles.some((key: string) => key === 'coach')
     }else return false
   }

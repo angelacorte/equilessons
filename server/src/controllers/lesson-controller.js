@@ -31,7 +31,7 @@ exports.deleteLesson = function (req,res){     //TODO might send a notification 
       return res.send({status: 400, message: "bad request"});
     }
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 };
 
@@ -92,7 +92,7 @@ exports.getLessonByClubID = function (req,res){
       return res.send({status: 200, lesson: result});
     }
   }).catch(err=> {
-    console.log("Error: ", err.message);
+    return res.send({status: 500, message: "an error occurred", error: err});
   });
 }
 

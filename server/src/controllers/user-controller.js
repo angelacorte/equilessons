@@ -107,7 +107,6 @@ exports.updateUser = function (req,res){ //todo
   }
   //TODO add check on email already in use
   User.updateOne({_id:req.body._id}, update).then(result=>{
-    console.log("update user ", result)
     if(result.modifiedCount > 0){
       return res.send({status: 200, user: update});
     }else{

@@ -38,10 +38,9 @@ export class NotificationsComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
     let userId = this.tokenStorage.getInfos(this.isClub)._id
 
-    if(this.isLoggedIn){ 
+    if(this.isLoggedIn){
       //call the service to retrieve user's notifications
       this.notifications = await this.notificationService.getNotifications(userId)
-      console.log(JSON.stringify(this.notifications))
       this.setDataSource(this.notifications)
     }
   }

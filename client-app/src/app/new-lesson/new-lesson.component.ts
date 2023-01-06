@@ -76,12 +76,11 @@ export class NewLessonComponent implements OnInit {
         this.form.clubId = this.infos['clubId'];
       }
 
-      if (this.isClub) { //check on user's login
+      if (this.isClub || this.tokenStorage.isCoach()) { //check on user's login
         this.coaches = await this.getClubCoaches(this.form.clubId);
         this.arenas = await this.getClubArenas(this.form.clubId);
         this.riders = await this.getClubAthletes(this.form.clubId);
         this.horses = await this.getScholasticHorses(this.form.clubId);
-      //   this.coaches =
       } else {
         window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
       }

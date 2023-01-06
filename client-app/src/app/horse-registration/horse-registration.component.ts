@@ -92,7 +92,6 @@ export class HorseRegistrationComponent implements OnInit {
     }
 
     this.horseService.horseRegistration(form).then((response)=>{
-      console.log("response ", response)
       if(response.status == 200){
         if(!tmpRole.some(r => r == Roles.HORSE_OWNER) && !this.isClub){
           this.userService.addRole(Roles.HORSE_OWNER, form.ownerId).then(res => {
@@ -144,7 +143,6 @@ export class HorseRegistrationComponent implements OnInit {
             riderSurname: value['surname']
           }
           this.riders.push(newRider);
-          console.log("riders ", this.riders);
         }
       });
     }
