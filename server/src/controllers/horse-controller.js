@@ -47,7 +47,7 @@ exports.getHorseInfos = function (req,res){
     if(!result){
       return res.send({status: 400, message: "Bad request"});
     }else{
-      return res.send({status: 200, result: result});
+      return res.send({status: 200, horse: result[0]});
     }
   }).catch(err=> {
     res.send({status: 500, message: "an error occurred", error: err})

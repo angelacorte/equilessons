@@ -12,12 +12,11 @@
         <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
         <mat-cell *matCellDef="let h">               <!--<td  *ngFor="let les of lesson">-->
           <input
-            *ngIf="isClub"
             type="checkbox"
             class="form-check-input"
             value="true"
             checked
-            [disabled]="!h.scholastic"
+            [disabled]="!isOwner(h.horseOwner.ownerId)"
             (click)="isHorseUnchecked($event, h._id)"
           >
         </mat-cell>

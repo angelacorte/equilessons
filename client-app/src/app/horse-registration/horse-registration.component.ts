@@ -34,7 +34,7 @@ export class HorseRegistrationComponent implements OnInit {
   isClub: boolean = false;
   isOwnRider: boolean = false;
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private clubService: ClubService,  private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
+  constructor(private _snackBar: MatSnackBar, private clubService: ClubService,  private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();

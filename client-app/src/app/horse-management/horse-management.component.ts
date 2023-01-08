@@ -52,7 +52,7 @@ export class HorseManagementComponent implements OnInit {
 
     }else if(this.isLoggedIn && !this.isClub) {
       this.infos = this.tokenStorage.getInfos(this.isClub);
-      this.displayedColumns = ['cavallo', 'scuola'];
+      this.displayedColumns = ['checkbox','cavallo', 'scuola'];
       this.horses = await this.getPrivateHorses(this.infos['_id']);
       await this.matchPrivateHorse();
       this.setDataSource(this.horses);
@@ -83,17 +83,18 @@ export class HorseManagementComponent implements OnInit {
 
   async showHorseInfos(horseId: string) {
     await this.horseService.getHorse(horseId).then(async (response: any) => {
-      this.dialog.open(DialogHorseViewComponent, {
-        width: '600px',
-        data: response[0]
-      });
+      if(response.status == 200){
+        this.dialog.open(DialogHorseViewComponent, {
+          width: '600px',
+          data: response.horse
+       })
+      }
     });
   }
 
   update() {
     this.horseService.removeHorses(this.toRemove).then((res) => {
-    }, (msg) => { //todo brutta roba ma non so fare altrimenti
-      if(msg.status == 200){
+      if(res.status == 200){
         this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH);
       }else{
         this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
@@ -154,5 +155,9 @@ export class HorseManagementComponent implements OnInit {
         };
       }
     })
+  }
+
+  isOwner(ownerId: string) {
+    return this.infos._id == ownerId
   }
 }
