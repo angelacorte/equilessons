@@ -42,8 +42,8 @@ export class ProfileComponent implements OnInit {
     this.asyncTabs = new Observable((observer: Observer<ProfileTab[]>) => {
       setTimeout(() => {
         observer.next([
-          {label: 'Informazioni Personali'},
-          {label: 'Gestione Cavalli'}
+          {label: 'Gestione Cavalli'},
+          {label: 'Informazioni Personali'}
         ]);
       }, 1000);
     });

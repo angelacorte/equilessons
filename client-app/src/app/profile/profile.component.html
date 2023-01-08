@@ -9,8 +9,8 @@
       <mat-tab *ngFor="let tab of asyncTabs | async">
         <ng-template mat-tab-label>{{tab.label}}</ng-template>
         <ng-container [ngSwitch]="tab.label">
-          <app-personal-infos *ngSwitchCase="'Informazioni Personali'"></app-personal-infos>
           <app-horse-management *ngSwitchCase="'Gestione Cavalli'"></app-horse-management>
+          <app-personal-infos *ngSwitchCase="'Informazioni Personali'"></app-personal-infos>
         </ng-container>
       </mat-tab>
     </mat-tab-group>
