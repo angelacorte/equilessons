@@ -20,15 +20,15 @@ export class DialogHorseViewComponent implements OnInit {
               public dialogRef: MatDialogRef<DialogHorseViewComponent>,
               private _snackBar: MatSnackBar,
               public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: HorseInfos) { }
+               @Inject(MAT_DIALOG_DATA) public data: HorseInfos) { }
 
   ngOnInit(): void {
     this.horse = this.data;
     let date = new Date(this.horse.horseBirthday)
     this.horse.horseBirthday = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
     if(this.horse.riders.length > 0) {
-      this.horse.riders.forEach((rider) => {
-        this.userService.getUserById(rider.riderId).then((res) => {
+      this.horse.riders.forEach((riderId) => {
+        this.userService.getUserById(riderId).then((res) => {
           if(res.status == 200){
             this.riders.push(res.user)
           }else{
