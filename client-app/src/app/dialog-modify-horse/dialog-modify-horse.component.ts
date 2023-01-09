@@ -5,8 +5,10 @@ import {ClubService} from "../_services/club.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {HorseService} from "../_services/horse.service";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {HorseInfos} from "../_utils/Horse";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
+import {DialogHorseViewComponent} from "../dialog-horse-view/dialog-horse-view.component";
 
 @Component({
   selector: 'app-dialog-modify-horse',
@@ -32,7 +34,14 @@ export class DialogModifyHorseComponent implements OnInit {
   isClub: boolean = false;
   isOwnRider: boolean = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: HorseInfos, private _snackBar: MatSnackBar, private clubService: ClubService,  private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: HorseInfos,
+              private _snackBar: MatSnackBar,
+              private clubService: ClubService,
+              private tokenStorage: TokenStorageService,
+              private userService: UserService,
+              private horseService: HorseService,
+              public dialogRef: MatDialogRef<DialogHorseViewComponent>,
+              public dialog: MatDialog) { }
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorage.getToken();
 
@@ -61,6 +70,22 @@ export class DialogModifyHorseComponent implements OnInit {
         this.users.splice(index, 1);
       }
     });
+    if(this.data.riders.length > 0){
+      this.data.riders.forEach((riderId) => {
+        this.userService.getUserById(riderId).then((res) => {
+          if(res.status == 200){
+            let rider: RiderInfo = {
+              riderId: res.user._id,
+              riderName: res.user.name,
+              riderSurname: res.user.surname
+            }
+            this.riders.push(rider)
+          }else{
+            this.openSnackbar(SnackBarMessages.NOT_POSSIBLE, SnackBarActions.RELOAD)
+          }
+        })
+      })
+    }
   }
 
   private async getUsers(clubId: any): Promise<any>{
@@ -68,9 +93,21 @@ export class DialogModifyHorseComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("form ", this.form)
-    this.form.riders = this.riders
-    return false;
+    let updateHorse = this.form
+    updateHorse.horseBirthday = new Date(this.form.horseBirthday)
+    this.horseService.updateHorse(updateHorse).then(res => {
+      switch (res.status){
+        case 200:
+          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH, updateHorse);
+          break;
+        case 400:
+          this.openSnackbar(SnackBarMessages.NOT_POSSIBLE, SnackBarActions.RETRY);
+          break;
+        case 500:
+          this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD);
+          break;
+      }
+    })
   }
 
   addRiderToList(riderId: string) {
@@ -81,6 +118,7 @@ export class DialogModifyHorseComponent implements OnInit {
         riderSurname: this.infos['surname']
       }
       this.riders.push(newRider);
+      this.form.riders.push(riderId)
     }else{
       this.users.forEach((value) => {
         if(value['_id'] === riderId && !this.riders.some(obj=>obj['riderId'] === riderId)){
@@ -90,6 +128,7 @@ export class DialogModifyHorseComponent implements OnInit {
             riderSurname: value['surname']
           }
           this.riders.push(newRider);
+          this.form.riders.push(riderId)
         }
       });
     }
@@ -114,5 +153,24 @@ export class DialogModifyHorseComponent implements OnInit {
         this.riders.splice(index, 1);
       }
     });
+  }
+
+  private openSnackbar(message: string, option: SnackBarActions, data?: HorseInfos) {
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=> {
+      switch (option) {
+        case SnackBarActions.REFRESH:
+          this.onClose();
+          break;
+        case SnackBarActions.RELOAD || SnackBarActions.RETRY:
+          window.location.reload();
+      }
+    })
+  }
+
+  onClose(){
+    this.dialogRef.close();
   }
 }

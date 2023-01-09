@@ -102,8 +102,9 @@
     </div>
 
     <div class="input-group flex-column p-2">
-      <div class="row" *ngIf="!isClub">
+      <div class="row">
         <mat-checkbox
+          [checked] = "form.scholastic"
           (change)="isScholasticChecked()"
           id="isScholastic">
           Cavallo adibito a lezioni della scuola
@@ -112,8 +113,11 @@
     </div>
 
 
-    <div class="form-group mt-4">
+    <div class="form-group mt-8">
       <button class="btn col-md-4">Aggiorna</button>
+      <button class="btn col-md-4" (click)="onClose()">Chiudi</button>
+
     </div>
+
   </form>
 </div>

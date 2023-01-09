@@ -40,4 +40,8 @@ export class HorseService {
   removeHorses(horseIds: string[]): Promise<any>{
     return this.http.delete(baseURL + '/removeHorses', {body: horseIds}).toPromise();
   }
+
+  updateHorse(horseData: HorseInfos): Promise<any>{
+    return this.http.post(baseURL + '/updateHorse', horseData).toPromise();
+  }
 }

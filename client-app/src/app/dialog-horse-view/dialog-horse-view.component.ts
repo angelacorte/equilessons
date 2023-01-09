@@ -44,9 +44,8 @@ export class DialogHorseViewComponent implements OnInit {
   }
 
   onModify() {
-    console.log("TO IMPLEMENT");
-    //todo
     this.onClose();
+    console.log("horse ", this.horse)
     this.dialog.open(DialogModifyHorseComponent, {
       width: '650px',
       data: this.horse
