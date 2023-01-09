@@ -1,4 +1,5 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import { SocketIoService } from './_services/socket-io.service';
 import {TokenStorageService} from "./_services/token-storage.service";
 import {ClubInfos, UserInfos} from "./_utils/Person";
 import {Router} from "@angular/router";
@@ -16,10 +17,11 @@ export class AppComponent implements OnInit {
   isClub = false;
   infos !: ClubInfos | UserInfos
   isCoach!: boolean;
-  constructor(private tokenStorage: TokenStorageService, private router: Router) {
-  }
+  perm=""
 
-  ngOnInit() {
+  constructor(private tokenStorage: TokenStorageService, private router: Router, private socketIoService: SocketIoService) { }
+
+  async ngOnInit(): Promise<void> {
     if (this.isLoggedIn) {
       this.isClub = this.tokenStorage.isClub();
       this.infos = this.tokenStorage.getInfos(this.isClub);
@@ -34,7 +36,18 @@ export class AppComponent implements OnInit {
         }
       })
     }
+
+    this.perm = await Notification.requestPermission()
+    if(this.perm === "granted"){
+      console.log("notification permission granted")
+      this.socketIoService.eventObservable('notify-client').subscribe((data)=>{
+        new Notification(`Hai una nuova notifica di tipo ${data.data.notificationType}`)
+      })
+    } else {
+      console.log("permission not granted")
+    }
   }
+
   logout(): void {
     this.tokenStorage.logout();
     window.location.replace("/");
