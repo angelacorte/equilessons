@@ -4,6 +4,7 @@ import {LessonService} from "../_services/lesson.service"
 import {LessonState} from "../_utils/Lesson";
 import {DialogModifyLessonViewComponent} from "../dialog-modify-lesson-view/dialog-modify-lesson-view.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {TokenStorageService} from "../_services/token-storage.service";
 @Component({
   selector: 'app-dialog-lesson-view',
   templateUrl: './dialog-lesson-view.component.html',
@@ -14,17 +15,18 @@ export class DialogLessonViewComponent implements OnInit {
   lesson !: LessonState;
   isClub !: any;
   userId !: any;
+  isCoach !: Boolean;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogLessonViewComponent>,private _snackBar: MatSnackBar, public dialog: MatDialog, private lessonService: LessonService,
+    public dialogRef: MatDialogRef<DialogLessonViewComponent>,private _snackBar: MatSnackBar, public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {}
 
 
   ngOnInit(): void {
     this.lesson = this.data.lesson;
-
     this.isClub = this.data.isClub;
     this.userId = this.data.userId;
+    this.isCoach = this.data.isCoach
   }
 
   onClose():void{
