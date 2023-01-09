@@ -214,7 +214,7 @@ export class CalendarComponent implements OnInit {
       id = this.infos._id
     }
     if(this.isClub || this.isCoach){
-      await this.lessonService.getLessonsByClubId(id).then((res: any) => {
+      await this.lessonService.getLessonsByClubId(id).then(res => {
         if (res.status == 200) {
           this.lessons = res.lessons
           this.appService.getEvents(this.lessons, this.actions)
@@ -235,7 +235,7 @@ export class CalendarComponent implements OnInit {
   private showLessonInfo(lesson: LessonState) {
     let data = {
       lesson: lesson,
-      icClub: this.isClub,
+      isClub: this.isClub,
       userId: this.infos['_id'],
       isCoach: this.isCoach
     };
@@ -244,20 +244,5 @@ export class CalendarComponent implements OnInit {
       data: data
     });
   }
-  /*
-    ngOnInit(): void {
-      this.isLoggedIn = !!this.tokenStorage.getToken();
-
-      if(this.isLoggedIn) {
-        this.infos = this.tokenStorage.getUser();
-        this.fetchData();
-        /!*this.lessonService.getEvents(this.actions)
-          .then((events: CalendarSchedulerEvent[]) => this.events = events);*!/
-      }
-
-
-      //this.actions
-      //.then((events: CalendarSchedulerEvent[]) => this.events = events);
-    }*/
 }
 

@@ -13,9 +13,9 @@ import {TokenStorageService} from "../_services/token-storage.service";
 export class DialogLessonViewComponent implements OnInit {
 
   lesson !: LessonState;
-  isClub !: any;
-  userId !: any;
-  isCoach !: Boolean;
+  isClub !: boolean;
+  userId !: string;
+  isCoach !: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<DialogLessonViewComponent>,private _snackBar: MatSnackBar, public dialog: MatDialog,
@@ -42,9 +42,14 @@ export class DialogLessonViewComponent implements OnInit {
       });
     } else if( today <= lessonDay){
       this.onClose();
+      let data = {
+        lesson: this.lesson,
+        isCoach: this.isCoach,
+        isClub: this.isClub
+      }
       this.dialog.open(DialogModifyLessonViewComponent, {
         width: '650px',
-        data: this.lesson
+        data: data
       });
     }
   }

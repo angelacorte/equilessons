@@ -28,6 +28,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
   @ViewChild(MatAccordion) accordion!: MatAccordion;
   @ViewChild(MatTable, {static:false}) table!: MatTable<any>;
+  isCoach: Boolean = false;
   @ViewChild(MatSort, {static:false})
   set sort(value: MatSort) {
     if (this.form.pairs){
@@ -84,9 +85,10 @@ export class DialogModifyLessonViewComponent implements OnInit {
   @Inject(MAT_DIALOG_DATA) public data: any, private notificationService: NotificationService){ }
 
   async ngOnInit(): Promise<void> {
-    this.isClub = this.tokenStorage.isClub();
+    this.isClub = this.data.isClub
+    this.isCoach = this.data.isCoach
 
-    if (this.isClub) { //check on user's login
+    if (this.isClub || this.isCoach) { //check on user's login
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub()); //get the infos saved in the session
 
       this.form.clubId = this.infos['_id'];
@@ -94,7 +96,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
       this.riders = await this.getClubAthletes(this.infos['_id']);
       this.horses = await this.getScholasticHorses(this.infos['_id']);
       this.coaches = await this.getClubCoaches(this.infos['_id']);
-      this.updateLesson = this.data;
+      this.updateLesson = this.data.lesson;
       await this.modifyLesson();
       this.dataSource.data = this.form.pairs;
     } else {
