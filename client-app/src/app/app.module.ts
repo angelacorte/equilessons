@@ -65,6 +65,7 @@ import { LessonHistoryComponent } from './lesson-history/lesson-history.componen
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { NotificationsComponent } from './notifications/notifications.component';
 import { DialogModifyHorseComponent } from './dialog-modify-horse/dialog-modify-horse.component';
+import {MatToolbarModule} from "@angular/material/toolbar";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -129,7 +130,8 @@ registerLocaleData(localeIt);
         MatCheckboxModule,
         MatTabsModule,
         MatProgressBarModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatToolbarModule
     ],
   providers: [
     MatDatepickerModule,
