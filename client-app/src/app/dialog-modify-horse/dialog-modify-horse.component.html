@@ -88,9 +88,8 @@
         <mat-label>Cavalieri selezionati:</mat-label>
         <mat-list-item *ngFor="let rider of riders">
           <mat-checkbox
-            [checked]="isInList(rider['riderId'])"
-            (change)="isRiderUnchecked(rider)"
-            id="isRider">
+            [checked]="true"
+            (change)="isRiderUnchecked(rider.riderId)">
             {{rider['riderName']}} {{rider['riderSurname']}}
           </mat-checkbox>
         </mat-list-item>

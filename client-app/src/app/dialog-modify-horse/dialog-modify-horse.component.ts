@@ -138,21 +138,13 @@ export class DialogModifyHorseComponent implements OnInit {
     return this.riders.some(obj=>obj['riderId'] === id);
   }
 
-  isRiderUnchecked(rider: any) {
-    if(rider._id === this.infos._id) this.isOwnRider = false;
-    this.removeDoc(rider);
+  isRiderUnchecked(riderId: string) {
+    this.riders = this.riders.filter(r => r.riderId !== riderId)
+    this.form.riders = this.form.riders.filter((r: string) => r !== riderId)
   }
 
   isScholasticChecked(){
     this.form.scholastic = !this.form.scholastic;
-  }
-
-  private removeDoc(doc: any){
-    this.riders.forEach((item,index)=>{
-      if(item['riderId'] === doc['_id']){
-        this.riders.splice(index, 1);
-      }
-    });
   }
 
   private openSnackbar(message: string, option: SnackBarActions, data?: HorseInfos) {
