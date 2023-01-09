@@ -7,7 +7,7 @@
   <div class="mt-2"> <!--[style.display]="'true'"-->
     <h5 *ngIf="isClub" class="text-secondary">Per rimuovere un cavallo del circolo ippico dalla lista, basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
     <h5 *ngIf="!isClub" class="text-secondary">Per modificare le informazioni di un cavallo basta cliccare sul nome</h5>
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-mdc-table">
       <ng-container matColumnDef="checkbox">
         <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
         <mat-cell *matCellDef="let h">               <!--<td  *ngFor="let les of lesson">-->
@@ -22,7 +22,7 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="cavallo">
+      <ng-container matColumnDef="cavallo" sticky>
         <mat-header-cell *matHeaderCellDef> Cavallo </mat-header-cell>
         <mat-cell *matCellDef="let h">
           <button
@@ -31,7 +31,6 @@
             #tooltip="matTooltip"
             matTooltip="Visualizza informazioni"
             matTooltipHideDelay="100"> {{h['horseName']}}</button>
-
         </mat-cell>
       </ng-container>
 
@@ -52,10 +51,10 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
     <mat-paginator
-      [pageSize]="5"
+      [pageSize]="10"
       [pageSizeOptions]="[5, 10, 20]"
       [length]="horses.length"
-      showFirstLastButtons
+      [showFirstLastButtons] = true
       aria-label="Seleziona pagina">
     </mat-paginator>
     <button class="btn col-md-4" (click)="update()">Aggiorna</button>

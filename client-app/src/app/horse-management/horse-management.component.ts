@@ -30,7 +30,6 @@ export class HorseManagementComponent implements OnInit {
 
   horses:HorseInfos[] = [];
   displayedColumns = ['checkbox', 'cavallo', 'proprietario', 'scuola'];
-
   dataSource = new MatTableDataSource(this.horses);
   toRemove:string[] = [];
   isClub: boolean = false;
@@ -40,28 +39,27 @@ export class HorseManagementComponent implements OnInit {
   constructor(private userService:UserService, public dialog: MatDialog, private _snackBar: MatSnackBar, private horseService: HorseService, private tokenStorage: TokenStorageService) { }
 
   async ngOnInit(): Promise<void> {
-    this.isClub = this.tokenStorage.isClub();
     this.isLoggedIn = !!this.tokenStorage.getToken();
-
-    if (this.isLoggedIn && this.isClub) { //check on user's login
-      this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
-
-      this.horses = await this.getAllHorses(this.infos['_id']);
-      await this.matchOwner();
-      this.setDataSource(this.horses);
-
-    }else if(this.isLoggedIn && !this.isClub) {
-      this.infos = this.tokenStorage.getInfos(this.isClub);
-      this.displayedColumns = ['checkbox','cavallo', 'scuola'];
-      this.horses = await this.getPrivateHorses(this.infos['_id']);
-      await this.matchPrivateHorse();
-      this.setDataSource(this.horses);
-    } else {
+    if(this.isLoggedIn){
+      this.isClub = this.tokenStorage.isClub();
+      if(this.isClub){
+        this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
+        this.horses = await this.getAllHorses(this.infos['_id']);
+        await this.matchOwner();
+        this.setDataSource(this.horses);
+      }else{
+        this.infos = this.tokenStorage.getInfos(this.isClub);
+        this.displayedColumns = ['checkbox','cavallo', 'scuola'];
+        this.horses = await this.getPrivateHorses(this.infos['_id']);
+        await this.matchPrivateHorse();
+        this.setDataSource(this.horses);
+      }
+    }else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
-  private async getAllHorses(clubId:any):Promise<any>{
+  private async getAllHorses(clubId:string):Promise<any>{
     return await this.horseService.getAllHorses(clubId);
   }
 
