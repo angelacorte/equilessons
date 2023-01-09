@@ -72,6 +72,9 @@ module.exports = function (app){
   app.route('/privateHorses/:ownerId')
     .get(horseController.getPrivateHorses);
 
+  app.route('/updateHorse')
+    .post(horseController.updateHorse)
+
   //---------------------------------LESSON---------------------------------
   app.route('/lesson')
     .post(lessonController.createLesson);
@@ -87,7 +90,6 @@ module.exports = function (app){
 
   app.route('/lesson/update')
     .post(lessonController.updateLesson);
-  //---------------------------------ROLE---------------------------------
 
   //---------------------------------USER---------------------------------
   app.route('/login')

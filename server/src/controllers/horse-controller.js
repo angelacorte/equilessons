@@ -141,3 +141,26 @@ exports.removeHorse = function (req,res){
     res.send({status: 500, message: "an error occurred", error: err}) //todo " Cannot set headers after they are sent to the client"
   });
 }
+
+exports.updateHorse = function (req,res){
+  let update = {
+    horseName: req.body.horseName,
+    horseMicrochip: req.body.horseMicrochip,
+    ownerId: req.body.ownerId,
+    clubId: req.body.clubId,
+    horseFise: req.body.horseFise,
+    horseBirthday: req.body.horseBirthday,
+    riders: req.body.riders,
+    scholastic: req.body.scholastic
+  }
+
+  Horse.updateOne({_id: req.body._id}, update).then(result => {
+    if(result.modifiedCount > 0){
+      return res.send({status: 200, horse: update});
+    }else{
+      return res.sendStatus(400)
+    }
+  }).catch(err => {
+    return res.send({status: 500, message: "an error occurred", error: err});
+  })
+}
