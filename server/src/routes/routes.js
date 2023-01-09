@@ -78,10 +78,10 @@ module.exports = function (app){
   //---------------------------------LESSON---------------------------------
   app.route('/lesson')
     .post(lessonController.createLesson);
-/*
-  app.route('/lesson/:clubId')
-    .get(lessonController.getLessonByClubID);
-*/
+
+  app.route('/lesson/coach/:coachId')
+    .get(lessonController.getLessonByCoachID);
+
   app.route('/removelesson/:clubId')
     .delete(lessonController.deleteLesson);
 

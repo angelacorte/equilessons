@@ -130,25 +130,64 @@ exports.getLessonByArenaID = function (req,res){
   //TODO
 }
 
-/*exports.getLessonByClubID = function (req,res){
-  Lesson.find({"clubId": req.params.clubId}).sort({beginDate:1}).then(result=>{
-    if(!result){
-      return res.send({status: 400, message: "Bad request"});
-    }else{
-      return res.send({status: 200, lesson: result});
-    }
-  }).catch(err=> {
-    return res.send({status: 500, message: "an error occurred", error: err});
-  });
-}*/ //todo probably unused
-
 /**
  * Get all lessons assigned to a coach by its ID
  * @param req
  * @param res
  */
 exports.getLessonByCoachID = function (req,res){
-  //TODO
+  let pipeline = [
+    {
+      $match: {
+        'coachId': new ObjectId(req.params.coachId)
+      }
+    }, {
+      $lookup: {
+        'from': 'arenas',
+        'localField': 'arenaId',
+        'foreignField': '_id',
+        'as': 'arena'
+      }
+    }, {
+      $lookup: {
+        'from': 'horses',
+        'localField': 'pairs.horseId',
+        'foreignField': '_id',
+        'as': 'horses_in_lesson'
+      }
+    }, {
+      $lookup: {
+        'from': 'users',
+        'localField': 'pairs.riderId',
+        'foreignField': '_id',
+        'as': 'riders_in_lesson'
+      }
+    }, {
+      $project: {
+        'riders_in_lesson._id': 1,
+        'riders_in_lesson.name': 1,
+        'riders_in_lesson.surname': 1,
+        'horses_in_lesson.horseName': 1,
+        'horses_in_lesson._id': 1,
+        'arena.arenaName': 1,
+        'arena._id': 1,
+        'beginDate': 1,
+        'endDate': 1,
+        'pairs': 1,
+        'notes': 1
+      }
+    }
+  ]
+  Lesson.aggregate(pipeline).then(result => {
+    if(result){
+      let lessons = matchNoCoach(result)
+      return res.send({status: 200, lessons: lessons});
+    }else{
+      return res.send({status: 400, message: "Bad request"});
+    }
+  }).catch(err=> {
+    return res.send({status: 500, error: err});
+  });
 }
 
 /**
@@ -214,9 +253,9 @@ exports.getLessonsInfos = function (req,res) {
 
   Lesson.aggregate(pipeline).then(async result => {
     if (!result) {
-      return res.send({status: 400, message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
     }else{
-      let lessons = await matchPairs(result)
+      let lessons = matchAll(result)
       return res.send({status: 200, lessons: lessons});
     }
   }).catch(err=> {
@@ -224,13 +263,25 @@ exports.getLessonsInfos = function (req,res) {
   });
 }
 
-async function matchPairs(lessons) {
+function matchNoCoach(lessons){
   let newLessons = []
   lessons.forEach(l => {
-    let pairs = l['pairs'];
-    let riders_in_lesson = l['riders_in_lesson'];
-    let horses_in_lesson = l['horses_in_lesson'];
-
+    let lessonRefactored = {
+      lessonId: l._id,
+      beginDate: l.beginDate,
+      endDate: l.endDate,
+      arena: l.arena[0], //could be arena[0]
+      pairs: [],
+      notes: l.notes
+    };
+    lessonRefactored.pairs = matchPairs(l['pairs'], l['riders_in_lesson'], l['horses_in_lesson'])
+    newLessons.push(lessonRefactored)
+  })
+  return newLessons;
+}
+function matchAll(lessons){
+  let newLessons = []
+  lessons.forEach(l => {
     let lessonRefactored = {
       lessonId: l._id,
       beginDate: l.beginDate,
@@ -244,33 +295,36 @@ async function matchPairs(lessons) {
       pairs: [],
       notes: l.notes
     };
-
-    pairs.forEach((value)=>{
-      riders_in_lesson.forEach(rider =>{
-        if(rider._id.toString() === value.riderId.toString()){
-          let riderInfo = {
-            riderId: rider._id,
-            riderName:rider.name,
-            riderSurname:rider.surname
-          }
-          horses_in_lesson.forEach(horse =>{
-            if(horse._id.toString() === value.horseId.toString()){
-              let horseInfo = {
-                horseId: horse._id,
-                horseName: horse.horseName
-              }
-              let couple = {
-                riderInfo: riderInfo,
-                horseInfo: horseInfo
-              }
-              lessonRefactored.pairs.push(couple);
-            }
-          })
-        }
-      })
-    })
+    lessonRefactored.pairs = matchPairs(l['pairs'], l['riders_in_lesson'], l['horses_in_lesson'])
     newLessons.push(lessonRefactored)
   })
-
   return newLessons;
+}
+function matchPairs(pairs, riders, horses) {
+  let couples = []
+  pairs.forEach((value)=>{
+    riders.forEach(rider =>{
+      if(rider._id.toString() === value.riderId.toString()){
+        let riderInfo = {
+          riderId: rider._id,
+          riderName:rider.name,
+          riderSurname:rider.surname
+        }
+        horses.forEach(horse =>{
+          if(horse._id.toString() === value.horseId.toString()){
+            let horseInfo = {
+              horseId: horse._id,
+              horseName: horse.horseName
+            }
+            let couple = {
+              riderInfo: riderInfo,
+              horseInfo: horseInfo
+            }
+            couples.push(couple);
+          }
+        })
+      }
+    })
+  })
+  return couples
 }

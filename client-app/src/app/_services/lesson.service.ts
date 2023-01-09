@@ -22,11 +22,11 @@ export class LessonService {
     return this.http.post(baseURL + '/lesson', data, httpOptions).toPromise();
   }
 
-  getLessonsByClubId(clubId: string): Promise<Object>{
+  getLessonsByClubId(clubId: string): Promise<any>{
     return this.http.get(baseURL + '/lesson/getInfo/' + clubId).toPromise();
   }
 
-  deleteLesson(lessonId: string): Promise<Object>{
+  deleteLesson(lessonId: string): Promise<any>{
     return this.http.delete(baseURL + '/removelesson/' + lessonId, {responseType: 'json'}).toPromise();
   }
 
@@ -36,5 +36,9 @@ export class LessonService {
 
   getUserLessons(userId: string): Promise<any>{
     return this.http.get(baseURL + '/lesson/user/' + userId, {responseType: 'json'}).toPromise()
+  }
+
+  getCoachLesson(coachId: string): Promise<any>{
+    return this.http.get(baseURL + '/lesson/coach/' + coachId, {responseType: 'json'}).toPromise();
   }
 }
