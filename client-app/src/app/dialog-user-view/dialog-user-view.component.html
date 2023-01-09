@@ -1,6 +1,5 @@
-<h1 mat-dialog-title>Informazioni personali</h1>
-<div mat-dialog-content>
-
+<mat-dialog-content>
+  <h1 mat-dialog-title>Informazioni personali</h1>
   <h3>{{user.name}} {{user.surname}}</h3>
   <div *ngIf="user.email">
     <h5 class="text-secondary">Email:</h5>
@@ -33,8 +32,8 @@
       </button>
     </mat-action-list>
   </div>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions>
   <button mat-button (click)="onClose()">Chiudi</button>
-</div>
+</mat-dialog-actions>
 

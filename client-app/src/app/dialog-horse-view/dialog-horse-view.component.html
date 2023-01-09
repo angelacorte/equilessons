@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Informazioni del cavallo</h1>
-<div mat-dialog-content>
+<mat-dialog-content>
 
   <h3>{{horse.horseName}}</h3>
 
@@ -18,15 +18,13 @@
   <div *ngIf="riders.length > 0">
     <h5 class="text-secondary">Cavalieri collegati:</h5>
     <mat-action-list role="list">
-      <button mat-list-item *ngFor="let r of riders" role="listitem" [disabled]>{{r.name}} {{r.surname}}
-      </button>
+      <p mat-list-item *ngFor="let r of riders" role="listitem" >{{r.name}} {{r.surname}}
+      </p>
     </mat-action-list>
   </div>
-</div>
-<div mat-dialog-actions>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
   <button mat-button (click)="onClose()">Chiudi</button>
-</div>
-<div mat-dialog-actions>
   <button mat-button (click)="onModify()">Modifica</button>
-</div>
+</mat-dialog-actions>
 

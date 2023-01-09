@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Informazioni sulla lezione</h1>
-<div mat-dialog-content>
+<mat-dialog-content>
   <h5 class="text-secondary">Istruttore:</h5>
   <p>{{lesson.coach['name']}} {{lesson.coach['surname']}}</p>
   <h5 class="text-secondary">Giorno</h5>
@@ -22,13 +22,8 @@
       </mat-list-item>
     </mat-action-list>
   </div>
-
-  <div class="d-flex justify-content-between">
-    <div mat-dialog-actions>
-      <button mat-button (click)="onClose()">Chiudi</button>
-    </div>
-    <div mat-dialog-actions>
-      <button mat-button (click)="onModify()">Modifica</button>
-    </div>
-  </div>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+  <button mat-button (click)="onClose()">Chiudi</button>
+  <button mat-button (click)="onModify()">Modifica</button>
+</mat-dialog-actions>

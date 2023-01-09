@@ -1,4 +1,5 @@
-<div class="container mt-5">
+<mat-dialog-content>
+<!--<div class="container mt-5">-->
   <form
     name="form"
     (ngSubmit)="f.form.valid && onSubmit()"
@@ -6,7 +7,6 @@
     novalidate
   >
     <h2 class="title">Registra il tuo cavallo!</h2>
-
     <div class="input-group flex-column p-2">
       <div class="row">
         <mat-form-field class="col" appearance="fill">
@@ -32,7 +32,6 @@
         </mat-form-field>
       </div>
     </div>
-
     <div class="input-group flex-column p-2">
       <div class="row">
         <mat-form-field class="col" appearance="fill">
@@ -49,7 +48,7 @@
           <mat-datepicker-toggle matSuffix [for]="horseBirthday"></mat-datepicker-toggle>
           <mat-datepicker
             #horseBirthday
-            disabled="false"></mat-datepicker>
+          disabled="false"></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="col" appearance="fill">
           <mat-label>Numero FISE</mat-label>
@@ -61,10 +60,8 @@
             placeholder="Numero FISE (opzionale)"
             [(ngModel)]="form.horseFise">
         </mat-form-field>
-
       </div>
     </div>
-
     <div class="input-group flex-column p-2">
       <div class="d-flex row">
         <mat-form-field class="col" appearance="fill">
@@ -86,7 +83,6 @@
         </a>
       </div>
     </div>
-
     <div class="flex-column p-2" *ngIf="riders.length != 0">
       <mat-list class="row">
         <mat-label>Cavalieri selezionati:</mat-label>
@@ -100,7 +96,6 @@
         </mat-list-item>
       </mat-list>
     </div>
-
     <div class="input-group flex-column p-2">
       <div class="row">
         <mat-checkbox
@@ -111,13 +106,10 @@
         </mat-checkbox>
       </div>
     </div>
-
-
-    <div class="form-group mt-8">
-      <button class="btn col-md-4">Aggiorna</button>
-      <button class="btn col-md-4" (click)="onClose()">Chiudi</button>
-
-    </div>
-
   </form>
-</div>
+
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+  <button mat-button (click)="onClose()">Chiudi</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="onSubmit()">Aggiorna</button>
+</mat-dialog-actions>

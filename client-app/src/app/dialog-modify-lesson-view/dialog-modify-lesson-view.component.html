@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Informazioni sulla lezione</h1>
-<div mat-dialog-content>
+<mat-dialog-content>
   <mat-label class="text-secondary">Istruttore</mat-label>
   <mat-accordion>
     <mat-expansion-panel>
@@ -154,15 +154,9 @@
     </mat-form-field>
   </div>
 
-  <div class="d-flex justify-content-between">
-    <div mat-dialog-actions>
-      <button mat-button (click)="onClose()">Annulla modifiche</button>
-    </div>
-    <div mat-dialog-actions>
-      <button mat-button (click)="onDelete()">Cancella lezione</button>
-    </div>
-    <div mat-dialog-actions>
-      <button mat-button (click)="onSave()">Salva</button>
-    </div>
-  </div>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+  <button mat-button (click)="onClose()">Annulla modifiche</button>
+  <button mat-button (click)="onSave()">Salva</button>
+  <button mat-button (click)="onDelete()">Rimuovi lezione</button>
+</mat-dialog-actions>
