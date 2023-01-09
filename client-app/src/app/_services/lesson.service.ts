@@ -10,6 +10,7 @@ const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,5 +32,9 @@ export class LessonService {
 
   updateLesson(lesson:any):Promise<any>{
     return this.http.post(baseURL + '/lesson/update', lesson, {responseType: 'json'}).toPromise();
+  }
+
+  getUserLessons(userId: string): Promise<any>{
+    return this.http.get(baseURL + '/lesson/user/' + userId, {responseType: 'json'}).toPromise()
   }
 }

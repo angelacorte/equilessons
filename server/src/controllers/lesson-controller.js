@@ -67,7 +67,58 @@ exports.updateLesson = function (req,res){
  * @param res
  */
 exports.getLessonByUserID = function (req,res){
-  //TODO
+  let pipeline = [{
+    $match: {
+      'pairs.riderId': new ObjectId(req.params.userId)}
+    },{
+    $lookup: {
+      from: 'arenas',
+      localField: 'arenaId',
+      foreignField: '_id',
+      as: 'arena'
+    }
+    }, {
+    $lookup: {
+      from: 'users',
+      localField: 'coachId',
+      foreignField: '_id',
+      as: 'coach'}
+    }, {
+    $project: {
+      'arena.arenaName': 1,
+      'arena._id': 1,
+      'coach._id': 1,
+      'coach.name': 1,
+      'coach.surname': 1,
+      'beginDate': 1,
+      'endDate': 1,
+      'notes': 1}
+  }]
+  Lesson.aggregate(pipeline).then(lessons => {
+    if(lessons){
+      let lessonsRefactored = []
+      lessons.forEach(l => {
+        let lr = {
+          lessonId: l._id,
+          beginDate: l.beginDate,
+          endDate: l.endDate,
+          arena: l.arena[0], //could be arena[0]
+          coach: {
+            _id: l.coach[0]['_id'],  //could be coach[0]
+            name: l.coach[0]['name'], //could be coach[0]
+            surname: l.coach[0]['surname']  //could be coach[0]
+          },
+          notes: l.notes
+        };
+        lessonsRefactored.push(lr)
+      })
+      res.send({status:200, lesson: lessonsRefactored})
+    }else{
+      return res.send({status: 400, message: "Bad request"});
+    }
+  }).catch(err=> {
+    return res.send({status: 500, message: "an error occurred", error: err});
+  });
 }
 
 /**
@@ -79,22 +130,17 @@ exports.getLessonByArenaID = function (req,res){
   //TODO
 }
 
-/**
- * Get all lessons of a club
- * @param req
- * @param res
- */
-exports.getLessonByClubID = function (req,res){
+/*exports.getLessonByClubID = function (req,res){
   Lesson.find({"clubId": req.params.clubId}).sort({beginDate:1}).then(result=>{
     if(!result){
-      return res.send({status: 400, message: "an error occurred"});
+      return res.send({status: 400, message: "Bad request"});
     }else{
       return res.send({status: 200, lesson: result});
     }
   }).catch(err=> {
     return res.send({status: 500, message: "an error occurred", error: err});
   });
-}
+}*/ //todo probably unused
 
 /**
  * Get all lessons assigned to a coach by its ID
@@ -228,4 +274,3 @@ async function matchPairs(lessons) {
 
   return newLessons;
 }
-

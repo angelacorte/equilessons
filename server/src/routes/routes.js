@@ -78,10 +78,10 @@ module.exports = function (app){
   //---------------------------------LESSON---------------------------------
   app.route('/lesson')
     .post(lessonController.createLesson);
-
+/*
   app.route('/lesson/:clubId')
     .get(lessonController.getLessonByClubID);
-
+*/
   app.route('/removelesson/:clubId')
     .delete(lessonController.deleteLesson);
 
@@ -90,6 +90,9 @@ module.exports = function (app){
 
   app.route('/lesson/update')
     .post(lessonController.updateLesson);
+
+  app.route('/lesson/user/:userId')
+    .get(lessonController.getLessonByUserID)
 
   //---------------------------------USER---------------------------------
   app.route('/login')

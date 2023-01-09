@@ -129,6 +129,8 @@ export class CalendarComponent implements OnInit {
       this.infos = await this.tokenStorage.getInfos(this.isClub);
       if (!this.isClub) this.isCoach = this.tokenStorage.isCoach()
       await this.fetchData();
+    }else{
+      window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
   }
 
@@ -204,27 +206,40 @@ export class CalendarComponent implements OnInit {
     if (this.isClub) {
       this.title += this.infos.clubName
       id = this.infos._id
-    } else {
+    } else if(this.isCoach) {
       id = this.infos.clubId
       this.title += this.infos.name
+    }else {
+      this.title += this.infos.name
+      id = this.infos._id
     }
-
-    await this.lessonService.getLessonsByClubId(id).then((res: any) => {
-      if (res.status == 200) {
-        this.lessons = res.lessons
-        this.appService.getEvents(this.lessons, this.actions)
-          .then((events: CalendarSchedulerEvent[]) => this.events = events);
-      }
-    })
+    if(this.isClub || this.isCoach){
+      await this.lessonService.getLessonsByClubId(id).then((res: any) => {
+        if (res.status == 200) {
+          this.lessons = res.lessons
+          this.appService.getEvents(this.lessons, this.actions)
+            .then((events: CalendarSchedulerEvent[]) => this.events = events);
+        }
+      })
+    }else{
+      await this.lessonService.getUserLessons(id).then(res => {
+        if(res.status == 200){
+          this.lessons = res.lesson
+          this.appService.getEvents(this.lessons, this.actions)
+            .then((events: CalendarSchedulerEvent[]) => this.events = events);
+        }
+      })
+    }
   }
 
   private showLessonInfo(lesson: LessonState) {
     let data = {
       lesson: lesson,
       icClub: this.isClub,
-      userId: this.infos['_id']
+      userId: this.infos['_id'],
+      isCoach: this.isCoach
     };
-    let dialogRef = this.dialog.open(DialogLessonViewComponent, {
+    this.dialog.open(DialogLessonViewComponent, {
       width: '650px',
       data: data
     });
