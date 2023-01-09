@@ -141,7 +141,7 @@ export class HorseManagementComponent implements OnInit {
     })
   }
 
-  private async matchPrivateHorse() { //TODO add way to remove horse
+  private async matchPrivateHorse() {
     this.horses.forEach((h:HorseInfos, index) => {
       if(!this.isClub){
         this.horses[index]['horseOwner'] = {

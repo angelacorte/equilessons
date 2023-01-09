@@ -19,7 +19,7 @@ export class UserService {
 
   //This provides methods to access public and protected resources
 
-  addRole(role:Roles, id:string): Promise<any>{ //todo add "coach" to user when adding a coach by club
+  addRole(role:Roles, id:string): Promise<any>{
     return this.http.post(baseURL + '/user/roles', {role, id}).toPromise();
   }
   removeRole(role: Roles, id: string): Promise<any>{

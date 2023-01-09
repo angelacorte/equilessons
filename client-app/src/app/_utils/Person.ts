@@ -5,7 +5,7 @@ export interface UserInfos{
   phoneNumber: number,
   email: string,
   clubId: string,
-  birthday?: dateFns, //todo change
+  birthday?: dateFns,
   taxcode?: string,
   city?: string,
   address?: string,

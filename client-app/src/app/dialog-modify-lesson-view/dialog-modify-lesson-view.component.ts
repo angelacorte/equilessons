@@ -108,7 +108,6 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
     let lessonBeginDate = new Date(this.updateLesson.beginDate);
     let lessonEndDate = new Date(this.updateLesson.endDate);
-    //todo check why doesn't show the date
 
     //convert the date in a format supported by html
     this.form.lessonDate = lessonBeginDate //.getFullYear() + '-' + (lessonBeginDate.getMonth() + 1) + '-' + lessonBeginDate.getDate();
