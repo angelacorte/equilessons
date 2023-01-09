@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
           {label: 'Gestione Cavalli'},
           {label: 'Gestione Istruttori'},
           {label: 'Gestione Utenti'},
-          {label: 'Informazioni Personali'},
+          // {label: 'Informazioni Personali'},
         ]);
       }, 1000);
     });
@@ -76,12 +76,4 @@ export class ProfileComponent implements OnInit {
       }
     })
   }
-
-  /*private updateInfos(){
-    //console.log("clubid before", this.infos.user['clubId']);
-    this.infos = this.tokenStorage.getUser();
-    //this.infos.user['clubId'] = this.infos.clubId;
-    console.log("clubid updateinfos after tokenstorage get user", this.infos.user['clubId']);
-  }*/
-
 }
