@@ -53,4 +53,16 @@ export class UserService {
   getUserHorses(userId:string): Promise<any>{
     return this.http.get(baseURL + '/userhorse/' + userId, httpOptions).toPromise();
   }
+
+  addUserHorse(id: string, horseId: string): Promise<any>{
+    return this.http.post(baseURL + '/user/add-horse', {id, horseId}).toPromise();
+  }
+
+  removeUserHorse(id: string, horseId: string): Promise<any>{
+    let options = {
+      options: httpOptions,
+      body: {id, horseId}
+    }
+    return this.http.delete(baseURL + '/user/remove-horse', options).toPromise();
+  }
 }

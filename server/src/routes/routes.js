@@ -126,6 +126,12 @@ module.exports = function (app){
   app.route('/userhorse/:userId')
     .get(userController.getUserHorses);
 
+  app.route('/user/add-horse')
+    .post(userController.addHorse)
+
+  app.route('/user/remove-horse')
+    .delete(userController.removeHorse)
+
   //---------------------------NOTIFICATION---------------------------------
 
   app.route('/notification')

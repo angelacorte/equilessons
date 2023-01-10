@@ -32,7 +32,8 @@ export class DialogModifyHorseComponent implements OnInit {
   riders: RiderInfo[] = [];
   riderId!: string;
   isClub: boolean = false;
-  isOwnRider: boolean = false;
+  updateUser: string[] = []
+  removeUser: string[] = []
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: HorseInfos,
               private _snackBar: MatSnackBar,
@@ -96,6 +97,24 @@ export class DialogModifyHorseComponent implements OnInit {
     let updateHorse = this.form
     updateHorse.horseBirthday = new Date(this.form.horseBirthday)
     this.horseService.updateHorse(updateHorse).then(res => {
+      if(this.updateUser.length > 0){
+        this.updateUser.forEach(async userId => {
+          await this.userService.addUserHorse(userId, updateHorse._id).then(r => {
+            if(r.status != 200){
+              this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD);
+            }
+          })
+        })
+      }
+      if(this.removeUser.length > 0){
+        this.removeUser.forEach(async userId => {
+          await this.userService.removeUserHorse(userId, updateHorse._id).then(r => {
+            if(r.status != 200){
+              this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD);
+            }
+          })
+        })
+      }
       switch (res.status){
         case 200:
           this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH, updateHorse);
@@ -119,6 +138,7 @@ export class DialogModifyHorseComponent implements OnInit {
       }
       this.riders.push(newRider);
       this.form.riders.push(riderId)
+      this.updateUser.push(riderId)
     }else{
       this.users.forEach((value) => {
         if(value['_id'] === riderId && !this.riders.some(obj=>obj['riderId'] === riderId)){
@@ -129,6 +149,7 @@ export class DialogModifyHorseComponent implements OnInit {
           }
           this.riders.push(newRider);
           this.form.riders.push(riderId)
+          this.updateUser.push(riderId)
         }
       });
     }
@@ -141,6 +162,7 @@ export class DialogModifyHorseComponent implements OnInit {
   isRiderUnchecked(riderId: string) {
     this.riders = this.riders.filter(r => r.riderId !== riderId)
     this.form.riders = this.form.riders.filter((r: string) => r !== riderId)
+    this.removeUser.push(riderId)
   }
 
   isScholasticChecked(){

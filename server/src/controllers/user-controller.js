@@ -56,6 +56,30 @@ exports.getUserRoles = function (req,res) {
   });
 }
 
+exports.addHorse = function (req,res){
+  User.updateOne({_id:new ObjectId(req.body.id)},{$push:{horse: new ObjectId(req.body.horseId)}}).then(result=>{
+    if(result.modifiedCount > 0 ){
+      return res.send({status: 200})
+    }else{
+      return res.send({status: 400, message: "Bad request"});
+    }
+  }).catch(err=> {
+    return res.send({status: 500, message: "an error occurred", error: err});
+  });
+}
+
+exports.removeHorse = function (req,res){
+  User.updateOne({_id:new ObjectId(req.body.id)}, {$pull:{horse: new ObjectId(req.body.horseId)}}).then(result => {
+    if(result.modifiedCount > 0 ){
+      return res.send({status: 200})
+    }else{
+      return res.send({status: 400, message: "Bad request"});
+    }
+  }).catch(err=> {
+    return res.send({status: 500, message: "an error occurred", error: err});
+  })
+}
+
 /**
  * Add a role to a specific user
  * @param req
@@ -105,7 +129,6 @@ exports.updateUser = function (req,res){ //todo
     nrFise: req.body.nrFise,
     clubId: req.body.clubId,
   }
-  //TODO add check on email already in use
   User.updateOne({_id:req.body._id}, update).then(result=>{
     if(result.modifiedCount > 0){
       return res.send({status: 200, user: update});
