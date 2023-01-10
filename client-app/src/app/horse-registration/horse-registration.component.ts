@@ -33,6 +33,8 @@ export class HorseRegistrationComponent implements OnInit {
   riderId!: string;
   isClub: boolean = false;
   isOwnRider: boolean = false;
+  updateUser: string[] = []
+
 
   constructor(private _snackBar: MatSnackBar, private clubService: ClubService,  private tokenStorage: TokenStorageService, private userService: UserService, private horseService: HorseService) { }
 
@@ -70,17 +72,13 @@ export class HorseRegistrationComponent implements OnInit {
   }
 
   onSubmit(): void{
-
-    let tmpRole: Roles[] = [];
-    if(!this.isClub) tmpRole = this.infos['roles'];
-
     const form = {
       horseName:this.form.horseName,
       horseMicrochip: this.form.horseMicrochip,
       ownerId: this.form.ownerId,
       clubId: '',
       horseBirthday: this.form.horseBirthday,
-      riders: this.riders,
+      riders: this.form.riders,
       scholastic: this.form.scholastic
     }
     if(!this.isClub){
@@ -90,20 +88,18 @@ export class HorseRegistrationComponent implements OnInit {
       form.ownerId = this.infos._id;
       form.scholastic = true;
     }
-
     this.horseService.horseRegistration(form).then((response)=>{
       if(response.status == 200){
-        if(!tmpRole.some(r => r == Roles.HORSE_OWNER) && !this.isClub){
-          this.userService.addRole(Roles.HORSE_OWNER, form.ownerId).then(res => {
-            if(res.status == 200){
-              this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
-            }else{
-              this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.DO_NOTHING);
-            }
+        if(this.updateUser.length > 0){
+          this.updateUser.forEach(async userId => {
+            await this.userService.addUserHorse(userId, response.horse._id).then(r => {
+              if(r.status != 200){
+                this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD);
+              }
+            })
           })
-        }else{
-          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
         }
+        this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN);
       }else{
         this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.DO_NOTHING);
       }
@@ -117,12 +113,7 @@ export class HorseRegistrationComponent implements OnInit {
     if(this.isOwnRider){
       this.addRiderToList(this.infos['_id']);
     }else {
-      let val = {
-        _id: this.infos['_id'],
-        name: this.infos['name'],
-        surname: this.infos['surname']
-      }
-      this.removeDoc(val);
+      this.removeRider(this.infos['_id']);
     }
   }
 
@@ -134,6 +125,7 @@ export class HorseRegistrationComponent implements OnInit {
         riderSurname: this.infos['surname']
       }
       this.riders.push(newRider);
+
     }else{
       this.users.forEach((value) => {
         if(value['_id'] === riderId && !this.riders.some(obj=>obj['riderId'] === riderId)){
@@ -146,23 +138,19 @@ export class HorseRegistrationComponent implements OnInit {
         }
       });
     }
-  }
-
-  isRiderUnchecked(rider: any) {
-    if(rider._id === this.infos._id) this.isOwnRider = false;
-    this.removeDoc(rider);
+    this.form.riders.push(riderId)
+    this.updateUser.push(riderId)
   }
 
   isScholasticChecked(){
     this.form.scholastic = !this.form.scholastic;
   }
 
-  private removeDoc(doc: any){
-    this.riders.forEach((item,index)=>{
-      if(item['riderId'] === doc['_id']){
-        this.riders.splice(index, 1);
-      }
-    });
+  removeRider(id: string){
+    if(id === this.infos._id) this.isOwnRider = false
+    this.riders = this.riders.filter(r => r.riderId !== id)
+    this.form.riders = this.form.riders.filter((r: string) => r !== id)
+    this.updateUser = this.updateUser.filter(r => r !== id)
   }
 
   isInList(id: string):boolean {
