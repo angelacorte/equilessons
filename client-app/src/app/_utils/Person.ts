@@ -43,7 +43,5 @@ export interface Login{
 }
 
 export enum Roles{
-  COACH = 'coach',
-  HORSE_OWNER = 'horse-owner',
-
+  COACH = 'coach'
 }
