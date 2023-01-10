@@ -66,7 +66,6 @@
       <div class="d-flex row">
         <mat-form-field class="col" appearance="fill">
           <mat-label>Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</mat-label>
-          <mat-hint>Gli utenti temporanei non possono essere selezionati</mat-hint>
           <mat-select
             name="riderId"
             id="riderId"
@@ -78,9 +77,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <a mat-fab class=" btn" (click)="addRiderToList(riderId)">
-          <mat-icon>add</mat-icon>
-        </a>
+        <a mat-fab class="btn float-right" (click)="addRiderToList(riderId)"><mat-icon>add</mat-icon></a>
       </div>
     </div>
     <div class="flex-column p-2" *ngIf="riders.length != 0">
@@ -109,6 +106,6 @@
 
 </mat-dialog-content>
 <mat-dialog-actions class="d-flex justify-content-between">
-  <button mat-button (click)="onClose()">Chiudi</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="onSubmit()">Aggiorna</button>
+  <button mat-button class="btn" (click)="onClose()">Annulla</button>
+  <button mat-button class="btn" [mat-dialog-close]="true" cdkFocusInitial (click)="onSubmit()">Aggiorna</button>
 </mat-dialog-actions>

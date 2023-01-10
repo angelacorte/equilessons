@@ -26,8 +26,4 @@ export class DialogUserViewComponent implements OnInit{
     if(this.data.horse.length > 0) this.horses = this.data.horse;
 
   }
-
-  horseInfo(horseId: any) {
-    console.log("TO IMPLEMENT");
-  }
 }

@@ -28,8 +28,7 @@
   <div *ngIf="horses">
     <h5 class="text-secondary">Cavalli collegati:</h5>
     <mat-action-list role="list">
-      <button mat-list-item *ngFor="let h of horses" role="listitem" (click)="horseInfo(h._id)">{{h.horseName}}
-      </button>
+      <mat-list-item *ngFor="let h of horses" role="listitem">{{h.horseName}}</mat-list-item>
     </mat-action-list>
   </div>
 </mat-dialog-content>

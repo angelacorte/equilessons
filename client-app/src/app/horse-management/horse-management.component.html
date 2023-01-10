@@ -24,14 +24,7 @@
 
       <ng-container matColumnDef="cavallo" sticky>
         <mat-header-cell *matHeaderCellDef> Cavallo </mat-header-cell>
-        <mat-cell *matCellDef="let h">
-          <button
-            mat-button
-            (click)="showHorseInfos(h._id)"
-            #tooltip="matTooltip"
-            matTooltip="Visualizza informazioni"
-            matTooltipHideDelay="100"> {{h['horseName']}}</button>
-        </mat-cell>
+        <mat-cell *matCellDef="let h">{{h['horseName']}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="proprietario" >
@@ -48,7 +41,7 @@
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <mat-row (click)="showHorseInfos(row._id)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
     <mat-paginator
       [pageSize]="10"

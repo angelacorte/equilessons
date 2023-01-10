@@ -75,10 +75,7 @@
 
       <ng-container matColumnDef="user">
         <mat-header-cell *matHeaderCellDef> Utente </mat-header-cell>
-        <mat-cell *matCellDef="let u">
-          <button mat-button (click)="showInfos(u._id)"> {{u['name']}} {{u['surname']}}</button>
-
-        </mat-cell>
+        <mat-cell *matCellDef="let u">{{u['name']}} {{u['surname']}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="telephone_number">
@@ -94,7 +91,7 @@
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <mat-row (click)="showInfos(row._id)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
     <mat-paginator
       [pageSize]="5"

@@ -16,14 +16,14 @@
   <div *ngIf="lesson && (isClub || isCoach)">
     <mat-action-list role="list">
       <mat-list-item *ngFor="let p of lesson.pairs" role="listitem">
-        <a mat-list-item class="plain">{{p.riderInfo['riderName']}} {{p.riderInfo['riderSurname']}}</a>
+        {{p.riderInfo['riderName']}} {{p.riderInfo['riderSurname']}}
         <mat-icon>arrow_right_alt</mat-icon>
-        <a mat-list-item class="plain">{{p.horseInfo['horseName']}}</a>
+        {{p.horseInfo['horseName']}}
       </mat-list-item>
     </mat-action-list>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions class="d-flex justify-content-between">
-  <button mat-button (click)="onClose()">Chiudi</button>
-  <button mat-button *ngIf="isClub || isCoach" (click)="onModify()">Modifica</button>
+  <button mat-button class="btn" (click)="onClose()">Chiudi</button>
+  <button mat-button class="btn" *ngIf="isClub || isCoach" (click)="onModify()">Modifica</button>
 </mat-dialog-actions>
