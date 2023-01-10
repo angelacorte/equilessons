@@ -140,18 +140,28 @@ export class HorseManagementComponent implements OnInit {
     })
   }
 
-  private async matchPrivateHorse() { //todo maybe useless
-    this.horses.forEach((h:HorseInfos, index) => {
+  private async matchPrivateHorse() {
+    for (const h of this.horses) {
+      const index = this.horses.indexOf(h);
       if(!this.isClub){
-        this.horses[index]['owner'] = {
-          // @ts-ignore
-          name: this.infos['name'],
-          // @ts-ignore
-          surname: this.infos['surname'],
-          _id: this.infos['_id']
-        };
+        if( this.horses[index]['ownerId'] === this.infos._id){
+          this.horses[index]['owner'] = {
+            // @ts-ignore
+            name: this.infos['name'],
+            // @ts-ignore
+            surname: this.infos['surname'],
+            _id: this.infos['_id']
+          };
+        }else{
+          await this.horseService.getHorseOwner(this.horses[index]['_id']).then(r => {
+            console.log("r", r)
+            if(r.status == 200){
+              this.horses[index]['owner'] = r.horseOwner
+            }
+          })
+        }
       }
-    })
+    }
   }
 
   isOwner(ownerId: string) {

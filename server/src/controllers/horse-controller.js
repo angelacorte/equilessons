@@ -40,6 +40,39 @@ exports.getScholasticHorses = function (req,res) {
   });
 }
 
+exports.getHorseOwner = function (req,res){
+  let pipeline = [
+    {
+      $match: {
+        _id: new ObjectId(req.params.horseId)
+      }
+    }, {
+      $lookup:{
+        'from': 'users',
+        'localField': 'ownerId',
+        'foreignField': '_id',
+        'as': 'owner'
+      }
+    }, {
+      '$project': {
+        'owner._id': 1,
+        'owner.name': 1,
+        'owner.surname': 1,
+        '_id':0
+      }
+    }
+  ]
+  Horse.aggregate(pipeline).then(result => {
+    if(!result){
+      return res.send({status: 400, message: "Bad request"});
+    }else{
+      return res.send({status: 200, horseOwner: result[0].owner[0]})
+    }
+  }).catch(err=> {
+    res.send({status: 500, message: "an error occurred", error: err})
+  });
+}
+
 /**
  * Get all the infos of a horse by its ID
  * @param req
@@ -112,12 +145,16 @@ exports.getHorses = function (req,res){
   });
 }
 
-exports.getPrivateHorses = function (req,res){ //todo must check also on riders, not only on the owner (or make another query?)
+exports.getPrivateHorses = function (req,res){
   const sort = {
     horseName: 1
   }
+  const filter = {$or: [
+    {'ownerId': new ObjectId(req.params.ownerId)},
+    {'riders': new ObjectId(req.params.ownerId)}
+  ]}
 
-  Horse.find({ownerId:req.params.ownerId}).sort(sort).then(result => {
+  Horse.find(filter).sort(sort).then(result => {
     if(!result){
       return res.send({status: 400, message: "Bad request"});
     }else{
