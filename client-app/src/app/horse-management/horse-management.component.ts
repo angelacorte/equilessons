@@ -49,7 +49,6 @@ export class HorseManagementComponent implements OnInit {
         await this.matchOwner();
         this.setDataSource(this.horses);
       }else{
-        this.displayedColumns = ['checkbox','cavallo', 'scuola'];
         this.horses = await this.getPrivateHorses(this.infos['_id']);
         await this.matchPrivateHorse();
         this.setDataSource(this.horses);
@@ -154,7 +153,6 @@ export class HorseManagementComponent implements OnInit {
           };
         }else{
           await this.horseService.getHorseOwner(this.horses[index]['_id']).then(r => {
-            console.log("r", r)
             if(r.status == 200){
               this.horses[index]['owner'] = r.horseOwner
             }
