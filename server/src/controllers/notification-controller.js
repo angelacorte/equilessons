@@ -26,8 +26,8 @@ exports.getUserNotifications = async (req, res) => {
 
 exports.deleteNotification = async (req, res) => {
     try {
-        await Notification.remove({_id: req.params.notificationId})
-        res.sendStatus(200)
+        await Notification.deleteOne({_id: req.params.notificationId})
+        res.status(200)
     } catch(err) {
         res.status(404).send(err)
     }

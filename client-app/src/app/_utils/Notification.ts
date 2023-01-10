@@ -13,18 +13,19 @@ export interface NotificationMessage{
   lessonDate?: Date,
   notificationType: NotificationType,
   notificationDate: Date,
-  message?: string
+  message?: string,
+  checked: boolean
 }
 
 export function Notification(
   senderId: string, 
   recipientId: string, 
   notificationType: NotificationType, 
-  notificationDate: Date, 
+  notificationDate: Date,
   lessonId?: string, 
   lessonDate?: Date, 
   message?: string,
-  notificationId?: string, ): NotificationMessage {
+  notificationId?: string,): NotificationMessage {
     return { 
       notificationId: notificationId, 
       senderId: senderId, 
@@ -33,5 +34,7 @@ export function Notification(
       lessonDate: lessonDate, 
       notificationType: notificationType, 
       notificationDate: notificationDate, 
-      message: message }
+      message: message,
+      checked: false 
+    }
   }

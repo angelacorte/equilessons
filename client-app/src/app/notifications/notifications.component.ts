@@ -33,6 +33,8 @@ export class NotificationsComponent implements OnInit {
   isClub: boolean = false;
   isLoggedIn: boolean = false;
   userId: string = ""
+  notificationsToDelete: any[] = []
+
   constructor(
     private notificationService: NotificationService,
     public dialog: MatDialog,  
@@ -73,15 +75,37 @@ export class NotificationsComponent implements OnInit {
     }
   }
 
-  checkNotification(n: NotificationMessage) {
-    console.log(n.senderId)
+  async checkNotification(n: NotificationMessage) {
+    if(!n.checked){
+      n.checked = true
+      this.notificationsToDelete.push(n)
+    } else {
+      n.checked = false
+      this.notificationsToDelete = this.notificationsToDelete.filter(n1 => n1 != n)
+    }
   }
 
   goToLesson(lessonId: string) {
     console.log("id is " + lessonId)
   }
 
-  update() {
-    this.setDataSource(this.notifications)
+  async update() {
+    console.log(this.notificationsToDelete)
+    await this.deleteNotifications()
+    await this.refreshNotifications(this.userId)
+  }
+
+  private async deleteNotifications(): Promise<void> {
+    this.notificationsToDelete.forEach(async (n) => {
+      try {
+        const id = n._id
+        if(id) {
+          console.log(`deleting notification ${id}`)
+          await this.notificationService.deleteNotification(id)
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    });
   }
 }
