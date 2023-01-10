@@ -24,7 +24,16 @@ exports.getUserNotifications = async (req, res) => {
     }
 }
 
-const pushNotificationToClientSocket = (id, notification) => {
+exports.deleteNotification = async (req, res) => {
+    try {
+        await Notification.remove({_id: req.params.notificationId})
+        res.sendStatus(200)
+    } catch(err) {
+        res.status(404).send(err)
+    }
+}
+
+function pushNotificationToClientSocket(id, notification){
     const socket = sockets.get(""+id);
     socket.emit('notify-client', { data: notification });
 };

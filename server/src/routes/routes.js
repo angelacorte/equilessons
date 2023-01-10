@@ -133,4 +133,7 @@ module.exports = function (app){
 
   app.route('/notification/:recipientId')
     .get(notificationController.getUserNotifications)
+
+  app.route('/notification/delete/:notificationId')
+    .get(notificationController.deleteNotification)
 }
