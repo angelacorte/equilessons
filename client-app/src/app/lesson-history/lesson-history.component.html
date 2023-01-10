@@ -3,12 +3,15 @@
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-mdc-table">
     <ng-container matColumnDef="data">
       <mat-header-cell *matHeaderCellDef>Data</mat-header-cell>
-      <mat-cell *matCellDef="let l">{{l.beginDate | date :'EEEE, MMMM d, y' : '' :'it' }}</mat-cell>
+      <mat-cell *matCellDef="let l">
+          {{l.beginDate | date :'EEEE, MMMM d, y' : '' :'it' }}
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="ora">
       <mat-header-cell *matHeaderCellDef>Ora</mat-header-cell>
       <mat-cell *matCellDef="let l">{{l.beginDate | date :'h:mm a' : '' :'it' }}</mat-cell>
+
     </ng-container>
 
     <ng-container matColumnDef="campo">
@@ -21,7 +24,11 @@
       <mat-cell *matCellDef="let l">{{l.coach.name}} {{l.coach.surname}}</mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-row (click)="showLessonInfos(row)"
+             #tooltip="matTooltip"
+             matTooltip="Visualizza informazioni"
+             matTooltipHideDelay="100"
+             *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
   </mat-table>
   <mat-paginator

@@ -6,6 +6,8 @@ import {ClubInfos, UserInfos} from "../_utils/Person";
 import {LessonService} from "../_services/lesson.service";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-lesson-history',
@@ -29,7 +31,7 @@ export class LessonHistoryComponent implements OnInit {
   isCoach: boolean = false;
   infos!: ClubInfos | UserInfos;
   displayedColumns = ['data', 'ora', 'campo', 'istruttore']
-  constructor(private tokenStorage: TokenStorageService, private lessonService: LessonService) { }
+  constructor(private tokenStorage: TokenStorageService, public dialog: MatDialog, private lessonService: LessonService) { }
 
   async ngOnInit() {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -51,7 +53,6 @@ export class LessonHistoryComponent implements OnInit {
   private async getLessons(clubId: string): Promise<any>{
     return await this.lessonService.getLessonsByClubId(clubId).then(r => {
       if(r.status == 200){
-        console.log("r ", r)
         return r.lessons
       }else{
         //todo
@@ -70,7 +71,6 @@ export class LessonHistoryComponent implements OnInit {
   private async getUserLessons(userId: string) {
     return await this.lessonService.getUserLessons(userId).then(r => {
       if(r.status == 200){
-        console.log("r ", r)
         return r.lessons
       }else{
         //todo
@@ -83,5 +83,18 @@ export class LessonHistoryComponent implements OnInit {
     this.dataSource.data = data;
     this.dataSource.sort
     this.dataSource.paginator = this.paginator;
+  }
+
+  showLessonInfos(l: LessonState) {
+    let data = {
+      lesson: l,
+      isClub: this.isClub,
+      userId: this.infos['_id'],
+      isCoach: this.isCoach
+    };
+    this.dialog.open(DialogLessonViewComponent, {
+      width: '650px',
+      data: data
+    });
   }
 }
