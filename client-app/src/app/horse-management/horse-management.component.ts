@@ -32,6 +32,7 @@ export class HorseManagementComponent implements OnInit {
   displayedColumns = ['checkbox', 'cavallo', 'proprietario', 'scuola'];
   dataSource = new MatTableDataSource(this.horses);
   toRemove:string[] = [];
+  updateUsers: { id: string, horseId: string }[] = [];
   isClub: boolean = false;
   infos!: ClubInfos | UserInfos;
   isLoggedIn:boolean = false;
@@ -42,13 +43,12 @@ export class HorseManagementComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
     if(this.isLoggedIn){
       this.isClub = this.tokenStorage.isClub();
+      this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
       if(this.isClub){
-        this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
         this.horses = await this.getAllHorses(this.infos['_id']);
         await this.matchOwner();
         this.setDataSource(this.horses);
       }else{
-        this.infos = this.tokenStorage.getInfos(this.isClub);
         this.displayedColumns = ['checkbox','cavallo', 'scuola'];
         this.horses = await this.getPrivateHorses(this.infos['_id']);
         await this.matchPrivateHorse();
@@ -67,12 +67,13 @@ export class HorseManagementComponent implements OnInit {
     return await this.horseService.getPrivateHorses(userId);
   }
 
-  isHorseUnchecked(e: any, horseId: any) {
+  isHorseUnchecked(e: any, horseId: string) {
     if(!e.target.checked){
       this.horses.some((value:any,index:number) => {
-        if(value._id === horseId && value.scholastic){
+        if(value._id === horseId && value.owner._id === this.infos._id){
           this.horses.splice(index,1);
           this.toRemove.push(horseId);
+          value.riders.forEach((id: string) => this.updateUsers.push({id,horseId}))
           this.setDataSource(this.horses);
         }
       })
@@ -93,6 +94,15 @@ export class HorseManagementComponent implements OnInit {
   update() {
     this.horseService.removeHorses(this.toRemove).then((res) => {
       if(res.status == 200){
+        if(this.updateUsers.length > 0){
+          this.updateUsers.forEach(async (match) => {
+            await this.userService.removeUserHorse(match.id, match.horseId).then(r => {
+              if(r.status != 200){
+                this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD);
+              }
+            })
+          })
+        }
         this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH);
       }else{
         this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY);
@@ -122,34 +132,23 @@ export class HorseManagementComponent implements OnInit {
 
   private async matchOwner(){
     this.horses.forEach((value:any, index) =>{
-      let val = value['horseOwner'][0];
-      if(value['horseOwner'].length > 0){
-        this.horses[index]['horseOwner'] = {
-          ownerId: val['_id'],
-          ownerName: val['name'],
-          ownerSurname: val['surname']
-        };
-      }
-      if(value['clubOwner'].length > 0){
-        val = value['clubOwner'][0];
-        this.horses[index]['horseOwner'] = {
-          ownerId: val['_id'],
-          ownerName: val['clubName'],
-          ownerSurname: ''
-        };
+      if(value.clubOwner.length > 0){
+        this.horses[index]["owner"] = {_id: value.clubOwner[0]._id, name: value.clubOwner[0].clubName}
+      }else if(value.horseOwner.length > 0){
+        this.horses[index]["owner"] = {_id: value.horseOwner[0]._id, name: value.horseOwner[0].name, surname: value.horseOwner[0].surname}
       }
     })
   }
 
-  private async matchPrivateHorse() {
+  private async matchPrivateHorse() { //todo maybe useless
     this.horses.forEach((h:HorseInfos, index) => {
       if(!this.isClub){
-        this.horses[index]['horseOwner'] = {
-        // @ts-ignore
-          ownerName: this.infos['name'],
-        // @ts-ignore
-          ownerSurname: this.infos['surname'],
-          ownerId: this.infos['_id']
+        this.horses[index]['owner'] = {
+          // @ts-ignore
+          name: this.infos['name'],
+          // @ts-ignore
+          surname: this.infos['surname'],
+          _id: this.infos['_id']
         };
       }
     })

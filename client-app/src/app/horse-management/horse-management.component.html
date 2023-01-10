@@ -16,7 +16,7 @@
             class="form-check-input"
             value="true"
             checked
-            [disabled]="!isOwner(h.horseOwner.ownerId)"
+            [disabled]="!isOwner(h.owner._id)"
             (click)="isHorseUnchecked($event, h._id)"
           >
         </mat-cell>
@@ -29,7 +29,7 @@
 
       <ng-container matColumnDef="proprietario" >
         <mat-header-cell *matHeaderCellDef> Proprietario </mat-header-cell>
-        <mat-cell *matCellDef="let h"> {{h.horseOwner['ownerName']}} {{h.horseOwner['ownerSurname']}}</mat-cell>
+        <mat-cell *matCellDef="let h"> {{h.owner['name']}} {{h.owner['surname']}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="scuola">

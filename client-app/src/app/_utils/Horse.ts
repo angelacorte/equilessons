@@ -5,7 +5,7 @@ export interface HorseInfos {
   horseName: string,
   horseMicrochip: number,
   horseFise?: string,
-  horseOwner: HorseOwner,
+  owner: HorseOwner,
   clubId: string,
   horseBirthday: Date | string,
   riders: Array<string>,
@@ -13,7 +13,7 @@ export interface HorseInfos {
 }
 
 export interface HorseOwner {
-  ownerId: string,
-  ownerName: string,
-  ownerSurname: string
+  _id: string,
+  name: string,
+  surname?: string
 }

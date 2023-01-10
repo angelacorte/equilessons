@@ -91,6 +91,7 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
 
   private async getUserHorses(userId:string){
     return this.userService.getUserHorses(userId).then((res) => {
+      console.log("get horses ", res)
       if(res.status == 200){
         return res.horses[0].horses_infos
       }else{

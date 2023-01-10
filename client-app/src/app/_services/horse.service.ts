@@ -25,7 +25,7 @@ export class HorseService {
     return this.http.get(baseURL + '/getSchoolHorses/' + clubId, httpOptions).toPromise();
   }
 
-  getAllHorses(clubId: any) {
+  getAllHorses(clubId: string): Promise<any> {
     return this.http.get(baseURL + '/horses/' + clubId, httpOptions).toPromise();
   }
 

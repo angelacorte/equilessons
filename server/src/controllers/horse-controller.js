@@ -136,7 +136,7 @@ exports.removeHorse = function (req,res){
   let query = { _id: { $in: ids}};
   Horse.deleteMany(query).then((result) => {
     if(result.deletedCount === ids.length){
-      return res.sendStatus(200);
+      return res.send({status: 200});
     }else{
       return res.send({status: 400, message: "Bad request"});
     }
