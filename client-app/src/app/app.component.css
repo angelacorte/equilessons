@@ -8,7 +8,7 @@ body {
 
 .navbar{
   position: sticky;
-  display: block;
+  /*display: block;*/
   background: #001635; /*007f6f*/
   color: #FFFFFF;
   text-decoration: none;
