@@ -6,7 +6,7 @@ const routes = require('./routes/routes');
 const db = require("./models/index")
 
 let corsOptions = {
-  origin: "*",
+  origin: "http://localhost:4200",
 };
 
 const express = require('express');
