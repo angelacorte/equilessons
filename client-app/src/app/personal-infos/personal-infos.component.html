@@ -115,6 +115,7 @@
           <mat-select
             name="clubId"
             id="clubId"
+            [disabled]="true"
             [(ngModel)]="form.clubId"
             required>
             <mat-option *ngFor="let club of clubs"

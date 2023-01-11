@@ -13,13 +13,16 @@
     </mat-progress-spinner>
 
     <div class="calendar-container" *ngIf="events">
-      <div class="row mt-4">
-        <div class="col-md-4 text-left justify-content-between">
+      <div class="row">
+        <div class="d-flex justify-content-between">
           <a class="btn" *ngIf="isClub || isCoach" href="/newLesson">NUOVA LEZIONE</a>
           <a class="btn ml-3" href="/lessonHistory">STORICO LEZIONI</a>
         </div>
+      </div>
+      <div class="row mt-4 d-flex justify-content-between">
+
         <div class="col-md-4 text-center">
-          <h3 class="mt-0">{{ viewDate | calendarSchedulerDate:(view + 'ViewTitle'):locale:weekStartsOn:excludeDays:viewDays:startsWithToday }}</h3>
+          <h2 class="mt-0">{{ viewDate | calendarSchedulerDate:(view + 'ViewTitle'):locale:weekStartsOn:excludeDays:viewDays:startsWithToday }}</h2>
           <select #viewDayOptionSelect1 class="form-control d-none d-md-block d-xl-none" [ngModel]="viewDays" (change)="viewDaysOptionChanged(viewDayOptionSelect1.value)">
             <option [value]="1">Un giorno</option>
             <option [value]="3">Tre giorni</option>
