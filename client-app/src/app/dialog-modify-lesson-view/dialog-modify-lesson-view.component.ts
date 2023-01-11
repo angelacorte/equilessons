@@ -90,12 +90,19 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
     if (this.isClub || this.isCoach) { //check on user's login
       this.infos = this.tokenStorage.getInfos(this.tokenStorage.isClub()); //get the infos saved in the session
-
-      this.form.clubId = this.infos['_id'];
-      this.arenas = await this.getClubArenas(this.infos['_id']);
-      this.riders = await this.getClubAthletes(this.infos['_id']);
-      this.horses = await this.getScholasticHorses(this.infos['_id']);
-      this.coaches = await this.getClubCoaches(this.infos['_id']);
+      if(this.isClub){
+        this.form.clubId = this.infos['_id'];
+        this.arenas = await this.getClubArenas(this.form.clubId);
+        this.riders = await this.getClubAthletes(this.form.clubId);
+        this.horses = await this.getScholasticHorses(this.form.clubId);
+        this.coaches = await this.getClubCoaches(this.form.clubId);
+      } else if (this.isCoach) { // @ts-ignore
+        this.form.clubId = this.infos['clubId']
+        this.arenas = await this.getClubArenas(this.form.clubId);
+        this.riders = await this.getClubAthletes(this.form.clubId);
+        this.horses = await this.getScholasticHorses(this.form.clubId);
+        this.coaches = await this.getClubCoaches(this.form.clubId);
+      }
       this.updateLesson = this.data.lesson;
       await this.modifyLesson();
       this.dataSource.data = this.form.pairs;
@@ -184,8 +191,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
       lessonId: this.updateLesson.lessonId,
       beginDate: beginDate,
       endDate: endDate,
-      arenaId: this.form.arena['_id'],
-      coachId: this.form.coach['_id'],
+      arenaId: this.form.arena['arenaId'],
+      coachId: this.form.coach['coachId'],
       clubId: clubId,
       pairs: pairs,
       notes: this.form.notes
@@ -218,8 +225,10 @@ export class DialogModifyLessonViewComponent implements OnInit {
   }
 
   updateCoach() {
+    console.log("coaches ", this.form.coach['coachId'])
     this.coaches.some((obj:any)=>{
       if(obj._id === this.form.coach['coachId']){
+        console.log("obj", obj)
         this.form.coach['name'] = obj.name
         this.form.coach['surname'] = obj.surname
       }
