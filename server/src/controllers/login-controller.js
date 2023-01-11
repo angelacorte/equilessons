@@ -53,16 +53,10 @@ exports.login = function (req,res) {
 
 exports.authenticate = function authenticateToken(req,res,next) {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1] //takes the token if exists
 
-  if(token == null || typeof token === undefined){
-    return res.sendStatus(401);
-  }
-
-  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, {},(err,user)=>{
+  jwt.verify(authHeader, `${process.env.ACCESS_TOKEN_SECRET}`, {},(err,user)=>{
     if(err){ return res.sendStatus(403); }
-
-    User.findById(user.userId, function (err,user){
+    User.findById(user.id, (err,user) => {
       if(err){ return res.sendStatus(500); }
       if(!user){ return res.sendStatus(404); }
       req.user = user;
