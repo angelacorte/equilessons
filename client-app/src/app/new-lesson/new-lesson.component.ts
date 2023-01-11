@@ -67,7 +67,7 @@ export class NewLessonComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorage.getToken();
     this.isClub = this.tokenStorage.isClub();
 
-    if(this.isLoggedIn) { //todo add check on roles
+    if(this.isLoggedIn) {
       this.infos = this.tokenStorage.getInfos(this.isClub); //get the infos saved in the session
       if(this.isClub && this.infos) {
         this.form.clubId = this.infos['_id'];

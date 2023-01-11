@@ -21,7 +21,6 @@ export class ProfileComponent implements OnInit {
   asyncTabsClub: Observable<ProfileTab[]>;
   asyncTabs: Observable<ProfileTab[]>;
 
-  roles: string[] = [];
   isLoggedIn = false;
   infos!: UserInfos | ClubInfos;
   isClub: boolean = false;
@@ -55,25 +54,8 @@ export class ProfileComponent implements OnInit {
     if (this.isLoggedIn) {
       this.isClub = this.tokenStorage.isClub();
       this.infos = this.tokenStorage.getInfos(this.isClub);
-      if(this.infos){
-        if (!this.isClub) {
-          this.roles = await this.getRoles()
-        }
-      }
-
-      //this.updateInfos();
     } else {
       window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
     }
-  }
-
-  private async getRoles(){
-    return await this.userService.getUserRoles(this.infos._id).then(res => {
-      if(res == 200){
-        return res.roles
-      }else{
-        //todo snackbar
-      }
-    })
   }
 }

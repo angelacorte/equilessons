@@ -20,26 +20,6 @@ exports.getUserById = function (req,res){
 };
 
 /**
- * Get all users subscribed to a club by its id
- * @param req
- * @param res
- */
-exports.getUsersByClub = function (req,res) { //todo maybe useless
-  const sort = {
-    surname:1,
-    name:1
-  }
-  User.find({clubId:req.params.clubId}, {name:1,surname:1}).sort(sort).then(result=>{
-    if(!result){
-      return res.status(400)
-    }
-    return res.send({status: 200, result});
-  }).catch(err=> {
-    return res.send({status: 500, message: "Error ", error: err});
-  });
-}
-
-/**
  * Get the roles of a specific user
  * @param req
  * @param res
@@ -115,7 +95,7 @@ exports.removeRole = function (req, res){
  * @param req
  * @param res
  */
-exports.updateUser = function (req,res){ //todo
+exports.updateUser = function (req,res){
   let update = {
     name: req.body.name,
     surname: req.body.surname,

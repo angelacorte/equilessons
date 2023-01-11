@@ -23,7 +23,7 @@ exports.createLesson = function (req,res){
  * @param req
  * @param res
  */
-exports.deleteLesson = function (req,res){     //TODO might send a notification to the participants who were listed into
+exports.deleteLesson = function (req,res){
   Lesson.deleteOne({_id: req.params.clubId}).then(result=>{
     if(result.deletedCount > 0){
       return res.send({status: 200, message:"OK"});

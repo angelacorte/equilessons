@@ -196,22 +196,6 @@ exports.getClubById = function (req,res){
 }
 
 /**
- * Get all arenas of a club
- * @param req
- * @param res
- */
-exports.getClubArenas = function (req,res) { //TODO maybe it's a duplicate, the other one is in arena-controller
-  Club.aggregate([{$match:{"_id": req.params.id}},{$lookup:{from:"arenas",localField:"_id",foreignField:"clubId",as:"arenasInClub"}}]).then(result=>{
-    if(!result){
-      return res.status(500).send({message: "an error occurred"});
-    }
-    return res.send(result);
-  }).catch(err=> {
-    return res.send({status: 500, message: "an error occurred", error: err});
-  });
-}
-
-/**
  * Add new club to the database
  * @param req
  * @param res

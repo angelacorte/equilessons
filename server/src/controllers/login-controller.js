@@ -59,7 +59,7 @@ exports.authenticate = function authenticateToken(req,res,next) {
     return res.sendStatus(401);
   }
 
-  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, {},(err,user)=>{ //todo options
+  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, {},(err,user)=>{
     if(err){ return res.sendStatus(403); }
 
     User.findById(user.userId, function (err,user){

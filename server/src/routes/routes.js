@@ -37,9 +37,6 @@ module.exports = function (app){
   app.route('/clubName/:clubName')
     .get(clubController.getClubByName); //returns club's info
 
-  app.route('/clubArenas')
-    .get(clubController.getClubArenas); //return all the arenas in a club
-
   app.route('/club/updateCoach')
     .post(clubController.updateCoach);
 
@@ -116,9 +113,6 @@ module.exports = function (app){
 
   app.route('/user/updateUser')
     .post(userController.updateUser);
-
-  app.route('/user/:clubId')
-    .get(userController.getUsersByClub);
 
   app.route('/user')
     .delete(userController.removeUser);

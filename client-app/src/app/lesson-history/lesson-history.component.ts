@@ -8,6 +8,9 @@ import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {DialogLessonViewComponent} from "../dialog-lesson-view/dialog-lesson-view.component";
 import {MatDialog} from "@angular/material/dialog";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
+import {HorseInfos} from "../_utils/Horse";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-lesson-history',
@@ -31,7 +34,7 @@ export class LessonHistoryComponent implements OnInit {
   isCoach: boolean = false;
   infos!: ClubInfos | UserInfos;
   displayedColumns = ['data', 'ora', 'campo', 'istruttore']
-  constructor(private tokenStorage: TokenStorageService, public dialog: MatDialog, private lessonService: LessonService) { }
+  constructor(private _snackBar: MatSnackBar, private tokenStorage: TokenStorageService, public dialog: MatDialog, private lessonService: LessonService) { }
 
   async ngOnInit() {
     this.isLoggedIn = !!this.tokenStorage.getToken();
@@ -55,7 +58,7 @@ export class LessonHistoryComponent implements OnInit {
       if(r.status == 200){
         return r.lessons
       }else{
-        //todo
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD)
       }
     });
   }
@@ -64,7 +67,7 @@ export class LessonHistoryComponent implements OnInit {
       if(r.status == 200){
         return  r.lessons
       }else{
-        //todo
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD)
       }
     })
   }
@@ -73,7 +76,7 @@ export class LessonHistoryComponent implements OnInit {
       if(r.status == 200){
         return r.lessons
       }else{
-        //todo
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD)
       }
     })
   }
@@ -96,5 +99,17 @@ export class LessonHistoryComponent implements OnInit {
       width: '650px',
       data: data
     });
+  }
+
+  private openSnackbar(message: string, option: SnackBarActions, data?: HorseInfos) {
+    let snackBarRef = this._snackBar.open(message, "Ok", {
+      duration: 3000
+    });
+    snackBarRef.afterDismissed().subscribe(()=> {
+      switch (option) {
+        case SnackBarActions.RELOAD || SnackBarActions.RETRY:
+          window.location.reload();
+      }
+    })
   }
 }

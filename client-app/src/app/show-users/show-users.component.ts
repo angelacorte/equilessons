@@ -63,7 +63,6 @@ export class ShowUsersComponent implements OnInit/*, AfterViewInit*/ {
     return this.clubService.getClubAthletes(clubId);
   }
 
-//TODO SORT USERS
   private async fetchUsers(clubId:string): Promise<UserInfos[]>{
     return this.getAthletes(clubId).then((response: any) => {
       response.forEach((value: UserInfos) => {

@@ -187,7 +187,7 @@ exports.removeHorse = function (req,res){
       return res.send({status: 400, message: "Bad request"});
     }
   }).catch(err=> {
-    res.send({status: 500, message: "an error occurred", error: err}) //todo " Cannot set headers after they are sent to the client"
+    res.send({status: 500, message: "an error occurred", error: err})
   });
 }
 

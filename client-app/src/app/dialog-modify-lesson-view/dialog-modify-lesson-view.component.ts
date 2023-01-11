@@ -125,12 +125,12 @@ export class DialogModifyLessonViewComponent implements OnInit {
     return x < 10 ? '0' + x : x.toString()
   }
 
-  private async getClubArenas(id:any):Promise<any>{
+  private async getClubArenas(id:string):Promise<any>{
     return await this.arenaService.getClubArenas(id).then(res =>{
       if(res.status == 200){
         return res.arenas
       }else{
-        //todo
+        this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD)
       }
     });
   }
@@ -149,11 +149,6 @@ export class DialogModifyLessonViewComponent implements OnInit {
         return res.coaches
       }
     });
-    /*coaches.forEach((item:any,index:any)=>{
-      if(item['_id'] === this.infos['_id']){
-        this.coaches.splice(index, 1);
-      }
-    });*/
   }
 
   private async matchArena(arenaName:any):Promise<any>{
