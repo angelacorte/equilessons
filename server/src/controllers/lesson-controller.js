@@ -60,6 +60,17 @@ exports.updateLesson = function (req,res){
   })
 };
 
+exports.getLesson = async (req, res) => {
+  try {
+    console.log(req.params.lessonId)
+    const lesson = await Lesson.findById(req.params.lessonId)
+    res.status(200).json(lesson)
+  } catch(err) {
+    res.sendStatus(404)
+    console.log(err)
+  }
+}
+
 
 /**
  * Get all the lessons where a specific user is signed to
@@ -102,11 +113,11 @@ exports.getLessonByUserID = function (req,res){
           lessonId: l._id,
           beginDate: l.beginDate,
           endDate: l.endDate,
-          arena: l.arena[0], //could be arena[0]
+          arena: l.arena[0],
           coach: {
-            _id: l.coach[0]['_id'],  //could be coach[0]
-            name: l.coach[0]['name'], //could be coach[0]
-            surname: l.coach[0]['surname']  //could be coach[0]
+            _id: l.coach[0]['_id'],
+            name: l.coach[0]['name'],
+            surname: l.coach[0]['surname']
           },
           notes: l.notes
         };
@@ -119,15 +130,6 @@ exports.getLessonByUserID = function (req,res){
   }).catch(err=> {
     return res.send({status: 500, message: "an error occurred", error: err});
   });
-}
-
-/**
- * Get all lessons signed to a specific arena
- * @param req
- * @param res
- */
-exports.getLessonByArenaID = function (req,res){
-  //TODO
 }
 
 /**
@@ -195,7 +197,7 @@ exports.getLessonByCoachID = function (req,res){
  * @param req
  * @param res
  */
-exports.getLessonsInfos = function (req,res) {
+exports.getLessonsByClubID = function (req,res) {
 
   let pipeline = [
     {

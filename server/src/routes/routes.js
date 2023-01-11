@@ -77,6 +77,9 @@ module.exports = function (app){
   app.route('/lesson')
     .post(lessonController.createLesson);
 
+  app.route('/lesson/:lessonId')
+    .get(lessonController.getLesson)
+
   app.route('/lesson/coach/:coachId')
     .get(lessonController.getLessonByCoachID);
 
@@ -84,7 +87,7 @@ module.exports = function (app){
     .delete(lessonController.deleteLesson);
 
   app.route('/lesson/getInfo/:clubId')
-    .get(lessonController.getLessonsInfos);
+    .get(lessonController.getLessonsByClubID);
 
   app.route('/lesson/update')
     .post(lessonController.updateLesson);
