@@ -43,22 +43,31 @@ exports.getScholasticHorses = function (req,res) {
 exports.getHorseOwner = function (req,res){
   let pipeline = [
     {
-      $match: {
-        _id: new ObjectId(req.params.horseId)
+      '$match': {
+        '_id': new ObjectId(req.params.horseId)
       }
     }, {
-      $lookup:{
+      '$lookup': {
         'from': 'users',
         'localField': 'ownerId',
         'foreignField': '_id',
         'as': 'owner'
       }
     }, {
+      '$lookup': {
+        'from': 'clubs',
+        'localField': 'ownerId',
+        'foreignField': '_id',
+        'as': 'club'
+      }
+    }, {
       '$project': {
-        'owner._id': 1,
         'owner.name': 1,
         'owner.surname': 1,
-        '_id':0
+        'owner._id': 1,
+        'club.clubName': 1,
+        'club._id': 1,
+        '_id': 0
       }
     }
   ]
@@ -66,7 +75,7 @@ exports.getHorseOwner = function (req,res){
     if(!result){
       return res.send({status: 400, message: "Bad request"});
     }else{
-      return res.send({status: 200, horseOwner: result[0].owner[0]})
+      return res.send({status: 200, horseOwner: result[0]})
     }
   }).catch(err=> {
     res.send({status: 500, message: "an error occurred", error: err})

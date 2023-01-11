@@ -15,6 +15,6 @@ export interface HorseInfos {
 
 export interface HorseOwner {
   _id: string,
-  name: string,
+  name?: string,
   surname?: string
 }

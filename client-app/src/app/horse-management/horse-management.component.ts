@@ -142,22 +142,26 @@ export class HorseManagementComponent implements OnInit {
   private async matchPrivateHorse() {
     for (const h of this.horses) {
       const index = this.horses.indexOf(h);
-      if(!this.isClub){
-        if( this.horses[index]['ownerId'] === this.infos._id){
-          this.horses[index]['owner'] = {
-            // @ts-ignore
-            name: this.infos['name'],
-            // @ts-ignore
-            surname: this.infos['surname'],
-            _id: this.infos['_id']
-          };
-        }else{
-          await this.horseService.getHorseOwner(this.horses[index]['_id']).then(r => {
-            if(r.status == 200){
-              this.horses[index]['owner'] = r.horseOwner
-            }
-          })
-        }
+      if( this.horses[index]['ownerId'] === this.infos._id){
+        this.horses[index]['owner'] = {
+          // @ts-ignore
+          name: this.infos['name'],
+          // @ts-ignore
+          surname: this.infos['surname'],
+          _id: this.infos['_id']
+        };
+      }else{
+        await this.horseService.getHorseOwner(this.horses[index]['_id']).then(r => {
+          if(r.status == 200){
+            if(r.horseOwner.club.length > 0 ) {
+              this.horses[index]['owner'] = {
+                _id: r.horseOwner.club[0]._id,
+                name: r.horseOwner.club[0].clubName
+              }
+            }else if(r.horseOwner.owner.length > 0 ) this.horses[index]['owner'] = r.horseOwner.owner[0]
+            // if(r.horseOwner.clubName !== undefined) this.horses[index]['owner'].name = r.horseOwner.clubName
+          }
+        })
       }
     }
   }
