@@ -14,7 +14,7 @@
   <mat-menu #menu="matMenu">
     <button mat-menu-item routerLink="/">Home</button>
     <button mat-menu-item *ngIf="isClub || isCoach" routerLink="/newLesson">Aggiungi lezione</button>
-    <button mat-menu-item routerLink="/horseRegistration">Registra cavallo</button>
+    <button mat-menu-item *ngIf="isClub" routerLink="/horseRegistration">Registra cavallo</button>
     <button mat-menu-item routerLink="/notifications">Notifiche</button>
     <button mat-menu-item routerLink="/profile">Profilo</button>
     <button mat-menu-item (click)="logout()">LOGOUT</button>
@@ -32,7 +32,7 @@
 
   <div class="d-flex flex-row justify-content-end navbar-nav hide-on-phone" aria-label="hide-on-phone" *ngIf="isLoggedIn">
     <a class="nav-link px-2" *ngIf="isClub || isCoach" routerLink="/newLesson">Aggiungi lezione</a>
-    <a class="nav-link px-2" routerLink="horseRegistration">Registra cavallo</a>
+    <a class="nav-link px-2" *ngIf="isClub" routerLink="horseRegistration">Registra cavallo</a>
     <a class="nav-link px-2" routerLink="/notifications">Notifiche</a>
     <a class="nav-link px-2" routerLink="profile">Profilo</a>
     <a class="nav-link px-2" (click)="logout()">LOGOUT</a>
