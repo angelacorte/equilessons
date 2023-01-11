@@ -65,7 +65,9 @@ export class LessonHistoryComponent implements OnInit {
   private async getCoachLessons(coachId: string): Promise<any>{
     return await this.lessonService.getCoachLesson(coachId).then(r => {
       if(r.status == 200){
-        return  r.lessons
+        // @ts-ignore
+        r.lessons.forEach(l => l.coach = {name: this.infos.name, surname: this.infos.surname})
+        return r.lessons
       }else{
         this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RELOAD)
       }
