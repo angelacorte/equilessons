@@ -6,19 +6,35 @@ const loginController = require("../controllers/login-controller");
 const signupController = require("../controllers/signup-controller");
 const userController = require("../controllers/user-controller");
 const notificationController = require("../controllers/notification-controller")
-//const { verifySignup } = require("../middleware")
 
 module.exports = function (app){
 
+  // Authorized POST requests for logging in and signing up
+  app.route('/club/login')
+    .post(clubController.clubLogin);
+
+  app.route('/login')
+    .post(loginController.login);
+
+  app.route('/signup')
+    .post(signupController.signup);
+
+  app.route('/addTemporary')
+    .post(signupController.signupTemporary);
+
+  // Filter out unauthorized POST and DELETE requests
+  app.route('/*').post(loginController.authenticate,)
+  app.route('/*').delete(loginController.authenticate,)
+
   //---------------------------------ARENA---------------------------------
   app.route('/arenaName/:arenaName')
-    .get(arenaController.getArenaByName); //returns arena's info
+    .get(arenaController.getArenaByName);
 
   app.route('/arena/:clubId')
     .get(arenaController.getArenasByClubId);
 
   app.route('/arena')
-    .post(/*loginController.authenticate,*/ arenaController.addArena);
+    .post(arenaController.addArena);
 
   app.route('/arena')
     .delete(arenaController.removeArena);
@@ -26,16 +42,16 @@ module.exports = function (app){
   //---------------------------------CLUB---------------------------------
   app.route('/club')
     .get(clubController.getAllClubs)
-    .post(clubController.registerClub);
-
-  app.route('/club/login')
-    .post(clubController.clubLogin);
+    .post(clubController.registerClub)
 
   app.route('/clubId/:id')
     .get(clubController.getClubById);
 
   app.route('/clubName/:clubName')
-    .get(clubController.getClubByName); //returns club's info
+    .get(clubController.getClubByName);
+
+  app.route('/clubArenas')
+    .get(clubController.getClubArenas);
 
   app.route('/club/updateCoach')
     .post(clubController.updateCoach);
@@ -45,8 +61,6 @@ module.exports = function (app){
 
   app.route('/club/athletes/:clubId')
     .get(clubController.getClubAthletes);
-
-  //---------------------------------GROUP---------------------------------
 
   //---------------------------------HORSE---------------------------------
   app.route('/horse')
@@ -96,15 +110,6 @@ module.exports = function (app){
     .get(lessonController.getLessonByUserID)
 
   //---------------------------------USER---------------------------------
-  app.route('/login')
-    .post(loginController.login);
-
-  app.route('/signup')
-    .post(signupController.signup);
-
-  app.route('/addTemporary')
-    .post(signupController.signupTemporary);
-
   app.route('/user/roles/:id')
     .get(userController.getUserRoles)
 
@@ -133,7 +138,6 @@ module.exports = function (app){
     .delete(userController.removeHorse)
 
   //---------------------------NOTIFICATION---------------------------------
-
   app.route('/notification')
     .post(notificationController.addNotification)
 
