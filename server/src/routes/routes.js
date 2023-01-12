@@ -50,9 +50,6 @@ module.exports = function (app){
   app.route('/clubName/:clubName')
     .get(clubController.getClubByName);
 
-  app.route('/clubArenas')
-    .get(clubController.getClubArenas);
-
   app.route('/club/updateCoach')
     .post(clubController.updateCoach);
 
