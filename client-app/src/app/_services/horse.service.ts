@@ -19,46 +19,71 @@ export class HorseService {
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
 
   horseRegistration(data:any): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.post(baseURL + '/horse', data, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.post(baseURL + '/horse', data, header).toPromise();
   }
 
   getScholasticHorses(clubId: any): Promise<Object>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/getSchoolHorses/' + clubId, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(baseURL + '/getSchoolHorses/' + clubId, header).toPromise();
   }
 
   getAllHorses(clubId: string): Promise<any> {
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/horses/' + clubId, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(baseURL + '/horses/' + clubId, header).toPromise();
   }
 
   getPrivateHorses(ownerId: string){
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/privateHorses/' + ownerId, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(baseURL + '/privateHorses/' + ownerId, header).toPromise();
   }
 
   getHorse(horseId: string): Promise<Object>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/horse/' + horseId, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(baseURL + '/horse/' + horseId, header).toPromise();
   }
 
   getHorseOwner(horseId: string):Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/horse/getOwner/' + horseId, {responseType: 'json'}).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+        .set('responseType', 'json')
+    }
+    return this.http.get(baseURL + '/horse/getOwner/' + horseId, header).toPromise();
   }
 
   removeHorses(horseIds: string[]): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
     let options = {
-      httpOptions: httpOptions,
+      httpOptions: header,
       body: horseIds
     }
     return this.http.delete(baseURL + '/removeHorses', options).toPromise();
   }
 
   updateHorse(horseData: HorseInfos): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.post(baseURL + '/updateHorse', horseData, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.post(baseURL + '/updateHorse', horseData, header).toPromise();
   }
 }

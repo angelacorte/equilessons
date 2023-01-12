@@ -26,22 +26,35 @@ export class ClubService {
   }
 
   getAllClubs(): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(baseURL, header).toPromise();
   }
 
   updateCoach(coaches:string[], clubId:string): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.post(baseURL + '/updateCoach', {coaches, clubId}, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.post(baseURL + '/updateCoach', {coaches, clubId}, header).toPromise();
   }
 
   getClubAthletes(clubId: string): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/athletes/' + clubId, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(baseURL + '/athletes/' + clubId, header).toPromise();
   }
 
   getClubCoaches(clubId: string): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/coaches/' + clubId, {responseType: 'json'}).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+        .set('responseType', 'json')
+    }
+    return this.http.get(baseURL + '/coaches/' + clubId, header).toPromise();
   }
 }

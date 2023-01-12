@@ -30,7 +30,10 @@ export class AuthService {
   }
 
   signTemporary(data: {name: string, surname: string, telephoneNumber: number}): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.post(baseURL + '/addTemporary', data, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.post(baseURL + '/addTemporary', data, header).toPromise();
   }
 }

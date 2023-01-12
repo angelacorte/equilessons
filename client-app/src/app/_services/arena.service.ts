@@ -19,19 +19,28 @@ export class ArenaService {
 
 
   addArena(newArenas: ArenaInfo): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.post(baseURL, {newArenas}, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.post(baseURL, {newArenas}, header).toPromise();
   }
 
   getClubArenas(clubId: string): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
-    return this.http.get(baseURL + '/' + clubId, httpOptions).toPromise();
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(baseURL + '/' + clubId, header).toPromise();
   }
 
   removeArena(arenasId: string[]): Promise<any>{
-    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
     let options = {
-      options: httpOptions,
+      httpOptions: header,
       body: arenasId
     }
     return this.http.delete(baseURL, options).toPromise();
