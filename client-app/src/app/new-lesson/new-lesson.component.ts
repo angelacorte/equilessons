@@ -13,7 +13,7 @@ import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 import {HorseInfos} from "../_utils/Horse";
 import {NotificationService} from '../_services/notification.service';
 import {Notification, NotificationType} from '../_utils/Notification';
-import {LessonState} from '../_utils/Lesson';
+import {Lesson, LessonState} from '../_utils/Lesson';
 import {ArenaInfo} from "../_utils/Arena";
 import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
@@ -114,7 +114,7 @@ export class NewLessonComponent implements OnInit {
     }
 
     try {
-      let d: LessonState = await this.lessonService.createLesson(lesson).then(res =>{
+      let d = await this.lessonService.createLesson(lesson).then(res =>{
         if(res.status == 200){
           this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.ASSIGN)
           return res.lesson
@@ -122,14 +122,16 @@ export class NewLessonComponent implements OnInit {
           this.openSnackbar(SnackBarMessages.PROBLEM, SnackBarActions.RETRY)
         }
       })
+
+      let my_lesson: LessonState = Lesson(d._id, d.beginDate, d.endDate, d.arena, d.Coach, d.pairs, d.notes, d.clubId)
       const notification = Notification(
         this.tokenStorage.getInfos(this.isClub)._id,
         pairs.pop()?.riderId,
         NotificationType.ADD,
         new Date(),
-        d.lessonId,
-        d.beginDate,
-        d.notes
+        my_lesson.lessonId,
+        my_lesson.beginDate,
+        my_lesson.notes
       )
       await this.notificationService.createNotification(notification)
     } catch(err){

@@ -1,3 +1,4 @@
+const { ObjectID } = require("mongodb");
 const db = require("../models");
 let Lesson = db.lesson;
 let ObjectId = require('mongodb').ObjectID;
@@ -62,8 +63,63 @@ exports.updateLesson = function (req,res){
 
 exports.getLesson = async (req, res) => {
   try {
-    console.log(req.params.lessonId)
-    const lesson = await Lesson.findById(req.params.lessonId)
+  
+    let pipeline = [
+      {
+        $match: {
+          '_id': new ObjectId(req.params.lessonId)
+        }
+      }, {
+        $lookup: {
+          from: 'users', 
+          localField: 'coachId', 
+          foreignField: '_id', 
+          as: 'coach'
+        }
+      }, {
+        $lookup: {
+          from: 'arenas', 
+          localField: 'arenaId', 
+          foreignField: '_id', 
+          as: 'arena'
+        }
+      }, {
+        $lookup: {
+          from: 'users', 
+          localField: 'pairs.riderId', 
+          foreignField: '_id', 
+          as: 'riders'
+        }
+      }, {
+        $lookup: {
+          from: 'horses', 
+          localField: 'pairs.horseId', 
+          foreignField: '_id', 
+          as: 'horses'
+        }
+      }, {
+        $project: {
+          'coach.name': 1, 
+          'coach.surname': 1, 
+          'coach._id': 1, 
+          'notes': 1, 
+          'endDate': 1, 
+          'beginDate': 1, 
+          'arena._id': 1, 
+          'arena.arenaName': 1, 
+          'pairs': 1, 
+          'riders._id': 1, 
+          'riders.name': 1, 
+          'riders.surname': 1, 
+          'horses._id': 1, 
+          'horses.horseName': 1
+        }
+      }
+    ]
+
+    const lessons = await Lesson.aggregate(pipeline)
+    const matchedLessons = matchAll(lessons)
+    const lesson = matchedLessons[0]
     res.status(200).json(lesson)
   } catch(err) {
     res.sendStatus(404)
@@ -198,7 +254,6 @@ exports.getLessonByCoachID = function (req,res){
  * @param res
  */
 exports.getLessonsByClubID = function (req,res) {
-
   let pipeline = [
     {
       $match: {
@@ -281,6 +336,7 @@ function matchNoCoach(lessons){
   })
   return newLessons;
 }
+
 function matchAll(lessons){
   let newLessons = []
   lessons.forEach(l => {
@@ -302,6 +358,7 @@ function matchAll(lessons){
   })
   return newLessons;
 }
+
 function matchPairs(pairs, riders, horses) {
   let couples = []
   pairs.forEach((value)=>{

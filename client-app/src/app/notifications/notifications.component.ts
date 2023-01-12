@@ -2,14 +2,13 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {UserService} from "../_services/user.service";
-import {MatDialog} from "@angular/material/dialog";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {HorseService} from "../_services/horse.service";
 import {TokenStorageService} from "../_services/token-storage.service";
-import {NotificationMessage, NotificationType} from "../_utils/Notification";
+import {NotificationMessage} from "../_utils/Notification";
 import { NotificationService } from '../_services/notification.service';
 import { SocketIoService } from 'app/_services/socket-io.service';
+import { LessonService } from 'app/_services/lesson.service';
+import { LessonState } from 'app/_utils/Lesson';
+import { LessonDialogService } from 'app/_services/lesson-dialog.service';
 
 @Component({
   selector: 'app-notifications',
@@ -36,10 +35,11 @@ export class NotificationsComponent implements OnInit {
   notificationsToDelete: any[] = []
 
   constructor(
-    private notificationService: NotificationService,
-    public dialog: MatDialog,  
+    private notificationService: NotificationService,  
     private tokenStorage: TokenStorageService,
-    private socketIoService: SocketIoService) { 
+    private socketIoService: SocketIoService,
+    private lessonService: LessonService,
+    private lessonDialogService: LessonDialogService) { 
       this.isClub = this.tokenStorage.isClub();
       this.isLoggedIn = !!this.tokenStorage.getToken();
       this.userId = this.tokenStorage.getInfos(this.isClub)._id
@@ -85,12 +85,24 @@ export class NotificationsComponent implements OnInit {
     }
   }
 
-  goToLesson(lessonId: string) {
-    console.log("id is " + lessonId)
+  async goToLesson(lessonId: string) {
+    try {
+      const lesson: LessonState = await this.lessonService.getLesson(lessonId)
+      console.log(lesson)
+      if(lesson != null) {
+        this.lessonDialogService.showLessonInfo(
+          lesson, 
+          this.isClub, 
+          this.tokenStorage.getInfos(this.isClub)['_id'], 
+          this.tokenStorage.isCoach()
+          )
+      }
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async update() {
-    console.log(this.notificationsToDelete)
     await this.deleteNotifications()
     await this.refreshNotifications(this.userId)
   }
