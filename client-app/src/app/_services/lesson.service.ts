@@ -22,6 +22,10 @@ export class LessonService {
     return this.http.post(baseURL + '/lesson', data, httpOptions).toPromise();
   }
 
+  getLesson(lessonId: string): Promise<any> {
+    return this.http.get(baseURL + '/lesson/' + lessonId).toPromise()
+  }
+
   getLessonsByClubId(clubId: string): Promise<any>{
     return this.http.get(baseURL + '/lesson/getInfo/' + clubId).toPromise();
   }

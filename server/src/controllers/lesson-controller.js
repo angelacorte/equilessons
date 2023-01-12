@@ -1,3 +1,4 @@
+const { ObjectID } = require("mongodb");
 const db = require("../models");
 let Lesson = db.lesson;
 let ObjectId = require('mongodb').ObjectID;
@@ -60,6 +61,75 @@ exports.updateLesson = function (req,res){
   })
 };
 
+exports.getLesson = async (req, res) => {
+  let pipeline = [
+    {
+      $match: {
+        '_id': new ObjectId(req.params.lessonId)
+      }
+    }, {
+      $lookup: {
+        from: 'users',
+        localField: 'coachId',
+        foreignField: '_id',
+        as: 'coach'
+      }
+    }, {
+      $lookup: {
+        from: 'arenas',
+        localField: 'arenaId',
+        foreignField: '_id',
+        as: 'arena'
+      }
+    }, {
+      $lookup: {
+        from: 'users',
+        localField: 'pairs.riderId',
+        foreignField: '_id',
+        as: 'riders_in_lesson'
+      }
+    }, {
+      $lookup: {
+        from: 'horses',
+        localField: 'pairs.horseId',
+        foreignField: '_id',
+        as: 'horses_in_lesson'
+      }
+    }, {
+      $project: {
+        'coach.name': 1,
+        'coach.surname': 1,
+        'coach._id': 1,
+        'notes': 1,
+        'endDate': 1,
+        'beginDate': 1,
+        'arena._id': 1,
+        'arena.arenaName': 1,
+        'pairs': 1,
+        'riders_in_lesson._id': 1,
+        'riders_in_lesson.name': 1,
+        'riders_in_lesson.surname': 1,
+        'horses_in_lesson._id': 1,
+        'horses_in_lesson.horseName': 1
+      }
+    }
+  ]
+  Lesson.aggregate(pipeline).then(r => {
+    if (!r){
+      res.send({status:400})
+    }else{
+      let lesson = matchAll(r)
+      res.status(200).send(lesson[0])
+    }
+  }).catch(err=> {
+    return res.send({status: 500, message: "an error occurred", error: err});
+  });
+  /*const lessons = await Lesson.aggregate(pipeline)
+  const matchedLessons = matchAll(lessons)
+  const lesson = matchedLessons[0]
+  res.status(200).json(lesson)*/
+}
+
 
 /**
  * Get all the lessons where a specific user is signed to
@@ -102,11 +172,11 @@ exports.getLessonByUserID = function (req,res){
           lessonId: l._id,
           beginDate: l.beginDate,
           endDate: l.endDate,
-          arena: l.arena[0], //could be arena[0]
+          arena: l.arena[0],
           coach: {
-            _id: l.coach[0]['_id'],  //could be coach[0]
-            name: l.coach[0]['name'], //could be coach[0]
-            surname: l.coach[0]['surname']  //could be coach[0]
+            _id: l.coach[0]['_id'],
+            name: l.coach[0]['name'],
+            surname: l.coach[0]['surname']
           },
           notes: l.notes
         };
@@ -119,15 +189,6 @@ exports.getLessonByUserID = function (req,res){
   }).catch(err=> {
     return res.send({status: 500, message: "an error occurred", error: err});
   });
-}
-
-/**
- * Get all lessons signed to a specific arena
- * @param req
- * @param res
- */
-exports.getLessonByArenaID = function (req,res){
-  //TODO
 }
 
 /**
@@ -195,8 +256,7 @@ exports.getLessonByCoachID = function (req,res){
  * @param req
  * @param res
  */
-exports.getLessonsInfos = function (req,res) {
-
+exports.getLessonsByClubID = function (req,res) {
   let pipeline = [
     {
       $match: {
@@ -279,6 +339,7 @@ function matchNoCoach(lessons){
   })
   return newLessons;
 }
+
 function matchAll(lessons){
   let newLessons = []
   lessons.forEach(l => {
@@ -300,6 +361,7 @@ function matchAll(lessons){
   })
   return newLessons;
 }
+
 function matchPairs(pairs, riders, horses) {
   let couples = []
   pairs.forEach((value)=>{
