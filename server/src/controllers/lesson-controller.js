@@ -62,69 +62,72 @@ exports.updateLesson = function (req,res){
 };
 
 exports.getLesson = async (req, res) => {
-  try {
-  
-    let pipeline = [
-      {
-        $match: {
-          '_id': new ObjectId(req.params.lessonId)
-        }
-      }, {
-        $lookup: {
-          from: 'users', 
-          localField: 'coachId', 
-          foreignField: '_id', 
-          as: 'coach'
-        }
-      }, {
-        $lookup: {
-          from: 'arenas', 
-          localField: 'arenaId', 
-          foreignField: '_id', 
-          as: 'arena'
-        }
-      }, {
-        $lookup: {
-          from: 'users', 
-          localField: 'pairs.riderId', 
-          foreignField: '_id', 
-          as: 'riders'
-        }
-      }, {
-        $lookup: {
-          from: 'horses', 
-          localField: 'pairs.horseId', 
-          foreignField: '_id', 
-          as: 'horses'
-        }
-      }, {
-        $project: {
-          'coach.name': 1, 
-          'coach.surname': 1, 
-          'coach._id': 1, 
-          'notes': 1, 
-          'endDate': 1, 
-          'beginDate': 1, 
-          'arena._id': 1, 
-          'arena.arenaName': 1, 
-          'pairs': 1, 
-          'riders._id': 1, 
-          'riders.name': 1, 
-          'riders.surname': 1, 
-          'horses._id': 1, 
-          'horses.horseName': 1
-        }
+  let pipeline = [
+    {
+      $match: {
+        '_id': new ObjectId(req.params.lessonId)
       }
-    ]
-
-    const lessons = await Lesson.aggregate(pipeline)
-    const matchedLessons = matchAll(lessons)
-    const lesson = matchedLessons[0]
-    res.status(200).json(lesson)
-  } catch(err) {
-    res.sendStatus(404)
-    console.log(err)
-  }
+    }, {
+      $lookup: {
+        from: 'users',
+        localField: 'coachId',
+        foreignField: '_id',
+        as: 'coach'
+      }
+    }, {
+      $lookup: {
+        from: 'arenas',
+        localField: 'arenaId',
+        foreignField: '_id',
+        as: 'arena'
+      }
+    }, {
+      $lookup: {
+        from: 'users',
+        localField: 'pairs.riderId',
+        foreignField: '_id',
+        as: 'riders_in_lesson'
+      }
+    }, {
+      $lookup: {
+        from: 'horses',
+        localField: 'pairs.horseId',
+        foreignField: '_id',
+        as: 'horses_in_lesson'
+      }
+    }, {
+      $project: {
+        'coach.name': 1,
+        'coach.surname': 1,
+        'coach._id': 1,
+        'notes': 1,
+        'endDate': 1,
+        'beginDate': 1,
+        'arena._id': 1,
+        'arena.arenaName': 1,
+        'pairs': 1,
+        'riders_in_lesson._id': 1,
+        'riders_in_lesson.name': 1,
+        'riders_in_lesson.surname': 1,
+        'horses_in_lesson._id': 1,
+        'horses_in_lesson.horseName': 1
+      }
+    }
+  ]
+  Lesson.aggregate(pipeline).then(r => {
+    if (!r){
+      res.send({status:400})
+    }else{
+      let lesson = matchAll(r)
+      res.status(200).send(lesson[0])
+    }
+  }).catch(err=> {
+    return res.send({status: 500, message: "an error occurred", error: err});
+  });
+  /*const lessons = await Lesson.aggregate(pipeline)
+  const matchedLessons = matchAll(lessons)
+  const lesson = matchedLessons[0]
+  res.status(200).json(lesson)*/
 }
 
 
