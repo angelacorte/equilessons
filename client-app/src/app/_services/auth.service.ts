@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Login, UserInfos} from "../_utils/Person";
+import {UserInfos} from "../_utils/Person";
+import {TokenStorageService} from "./token-storage.service";
 
 const baseURL = 'http://localhost:5050';
 
@@ -14,7 +14,7 @@ const httpOptions = {
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
 
   //this sends POST requests to back-end
 
@@ -30,6 +30,7 @@ export class AuthService {
   }
 
   signTemporary(data: {name: string, surname: string, telephoneNumber: number}): Promise<any>{
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
     return this.http.post(baseURL + '/addTemporary', data, httpOptions).toPromise();
   }
 }

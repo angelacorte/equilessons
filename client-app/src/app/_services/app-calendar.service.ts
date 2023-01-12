@@ -1,26 +1,22 @@
 import { Injectable } from '@angular/core';
 import {
   CalendarSchedulerEvent,
-  CalendarSchedulerEventStatus,
   CalendarSchedulerEventAction
 } from 'angular-calendar-scheduler';
 
-import {HttpClient} from "@angular/common/http";
-import {LessonService} from "./lesson.service";
 import {LessonState} from "../_utils/Lesson";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppCalendarService {
-  constructor(private http: HttpClient, private lessonService:LessonService) { }
+  constructor() { }
 
   getEvents(lesson: LessonState[], actions: CalendarSchedulerEventAction[]): Promise<CalendarSchedulerEvent[]> {
     let lessons = lesson;
 
     const data: CalendarSchedulerEvent[] | PromiseLike<CalendarSchedulerEvent[]> = [];
     lessons.forEach((l: LessonState)=>{
-      // let lessonRefactored = this.lessonService.matchPairs(value);
       let contentString: string = 'Clicca per ulteriori informazioni';
 
       let event = <CalendarSchedulerEvent>{

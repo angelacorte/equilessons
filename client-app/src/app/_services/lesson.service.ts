@@ -3,6 +3,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {CalendarSchedulerEventAction} from "angular-calendar-scheduler";
 import {LessonState} from "../_utils/Lesson";
+import {TokenStorageService} from "./token-storage.service";
+import {ht} from "date-fns/locale";
 
 const baseURL = 'http://localhost:5050';
 
@@ -16,33 +18,40 @@ const httpOptions = {
 })
 export class LessonService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
 
   createLesson(data:any): Promise<any>{
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
     return this.http.post(baseURL + '/lesson', data, httpOptions).toPromise();
   }
 
   getLesson(lessonId: string): Promise<any> {
-    return this.http.get(baseURL + '/lesson/' + lessonId).toPromise()
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    return this.http.get(baseURL + '/lesson/' + lessonId, httpOptions).toPromise()
   }
 
   getLessonsByClubId(clubId: string): Promise<any>{
-    return this.http.get(baseURL + '/lesson/getInfo/' + clubId).toPromise();
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    return this.http.get(baseURL + '/lesson/getInfo/' + clubId, httpOptions).toPromise();
   }
 
   deleteLesson(lessonId: string): Promise<any>{
-    return this.http.delete(baseURL + '/removelesson/' + lessonId, {responseType: 'json'}).toPromise();
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    return this.http.delete(baseURL + '/removelesson/' + lessonId, httpOptions).toPromise();
   }
 
   updateLesson(lesson:any):Promise<any>{
-    return this.http.post(baseURL + '/lesson/update', lesson, {responseType: 'json'}).toPromise();
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    return this.http.post(baseURL + '/lesson/update', lesson, httpOptions).toPromise();
   }
 
   getUserLessons(userId: string): Promise<any>{
-    return this.http.get(baseURL + '/lesson/user/' + userId, {responseType: 'json'}).toPromise()
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    return this.http.get(baseURL + '/lesson/user/' + userId, httpOptions).toPromise()
   }
 
   getCoachLesson(coachId: string): Promise<any>{
-    return this.http.get(baseURL + '/lesson/coach/' + coachId, {responseType: 'json'}).toPromise();
+    httpOptions.headers.append('Authorization', this.tokenStorage.getToken() + '')
+    return this.http.get(baseURL + '/lesson/coach/' + coachId, httpOptions).toPromise();
   }
 }

@@ -44,8 +44,4 @@ export class SocketIoService {
       })
     })
   }
-
-  sendMessage(message: string): void {
-    this.socket.emit('new message', message);
-  }
 }

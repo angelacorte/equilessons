@@ -10,7 +10,7 @@ const CLUB_KEY = 'auth-club';
   providedIn: 'root'
 })
 export class TokenStorageService {
-  constructor(private lessonService:LessonService) { }
+  constructor() { }
 
   logout(): void{
     localStorage.clear();
