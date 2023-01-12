@@ -1,5 +1,6 @@
 User = require("../models/user-model"); //password already with salt
 let jwt = require("jsonwebtoken");
+const { club } = require("../models");
 const {generateAccessToken} = require("../utils/controller-utils");
 require('dotenv').config();
 
@@ -51,17 +52,23 @@ exports.login = function (req,res) {
   });
 }
 
-exports.authenticate = function authenticateToken(req,res,next) {
+exports.authenticate = async function authenticateToken(req,res,next) {
   const authHeader = req.headers['authorization'];
 
-  jwt.verify(authHeader, `${process.env.ACCESS_TOKEN_SECRET}`, {},(err,user)=>{
+  jwt.verify(authHeader, `${process.env.ACCESS_TOKEN_SECRET}`, {}, async (err,user)=>{
     if(err){ return res.sendStatus(403); }
-    User.findById(user.id, (err,user) => {
-      if(err){ return res.sendStatus(500); }
-      if(!user){ return res.sendStatus(404); }
-      req.user = user;
-      next();
-    })
+    let u, c
+    u = await User.findById(user.id)
+    if(!u) {
+      c = await club.findById(user.id)
+      if(!c) {
+        res.sendStatus(404)
+      }
+      req.user = c
+      next()
+    }
+    req.user = u
+    next()
   })
 }
 
