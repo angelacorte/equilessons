@@ -1,0 +1,137 @@
+<div class="container mt-5">
+
+  <ng-form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+
+    <h2 class="title">Modifica Informazioni personali</h2>
+
+    <div class="input-group flex-column">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Nome</mat-label>
+          <input matInput name="name" id="name" [(ngModel)]="form.name" required>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Cognome</mat-label>
+          <input
+            matInput
+            name="surname"
+            id="surname"
+            [(ngModel)]="form.surname"
+            required>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="input-group flex-column">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            name="email"
+            id="email"
+            [(ngModel)]="form.email"
+            disabled = true>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Data di nascita</mat-label>
+          <input
+            matInput
+            [matDatepicker]="birthday"
+            [(ngModel)]="form.birthday"
+            name="birthday"
+            id="birthday"
+            disabled
+            required>
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
+          <mat-datepicker
+            #birthday
+            disabled="false"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="input-group flex-column">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Numero di telefono</mat-label>
+          <input
+            matInput
+            type="tel"
+            name="phoneNumber"
+            id="phoneNumber"
+            [(ngModel)]="form.phoneNumber"
+            required>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Codice fiscale</mat-label>
+          <input
+            matInput
+            name="taxcode"
+            id="taxcode"
+            [(ngModel)]="form.taxcode"
+            required>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="input-group flex-column">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Città di residenza</mat-label>
+          <input
+            matInput
+            name="city"
+            id="city"
+            [(ngModel)]="form.city"
+            required>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Indirizzo</mat-label>
+          <input
+            matInput
+            name="address"
+            id="address"
+            [(ngModel)]="form.address"
+            required>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="input-group flex-column">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Numero fise</mat-label>
+          <input
+            matInput
+            name="nrFise"
+            id="nrFise"
+            [(ngModel)]="form.nrFise">
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Circolo di appartenenza</mat-label>
+          <mat-select
+            name="clubId"
+            id="clubId"
+            [disabled]="true"
+            [(ngModel)]="form.clubId"
+            required>
+            <mat-option *ngFor="let club of clubs"
+                        [value]="club['_id']">
+              {{club['clubName']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="input-group flex-column p-2">
+      <button class="btn col-md-4" (click)="onSubmit()">Modifica</button>
+    </div>
+  </ng-form>
+
+
+
+</div>

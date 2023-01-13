@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <a class="navbar-brand" href="/">
+    <img src="../assets/logo.png" alt="EQUILESSONS logo">
+  </a>
+
+  <button mat-icon-button *ngIf="isLoggedIn" [matMenuTriggerFor]="menu" class="navbar-toggler menu-icon float-right toggle-navigation" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-label="toggle-navigation">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <button mat-icon-button *ngIf="!isLoggedIn" [matMenuTriggerFor]="menuNotLogged" class="navbar-toggler menu-icon float-right toggle-navigation" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-label="toggle-navigation">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/">Home</button>
+    <button mat-menu-item *ngIf="isClub || isCoach" routerLink="/newLesson">Aggiungi lezione</button>
+    <button mat-menu-item *ngIf="isClub" routerLink="/horseRegistration">Registra cavallo</button>
+    <button mat-menu-item routerLink="/notifications">Notifiche</button>
+    <button mat-menu-item routerLink="/profile">Profilo</button>
+    <button mat-menu-item (click)="logout()">LOGOUT</button>
+  </mat-menu>
+
+  <mat-menu #menuNotLogged="matMenu">
+    <button mat-menu-item routerLink="/login">Login utente</button>
+    <button mat-menu-item routerLink="clubLogin">Login circolo ippico</button>
+  </mat-menu>
+
+  <div class="d-flex navbar-nav ml-auto justify-content-end hide-on-phone" aria-label="hide-on-phone" *ngIf="!isLoggedIn">
+    <a class="nav-link mr-5" routerLink="login">Login utente</a>
+    <a class="nav-link ml-5 mr-3" routerLink="clubLogin">Login circolo ippico</a>
+  </div>
+
+  <div class="d-flex flex-row justify-content-end navbar-nav hide-on-phone" aria-label="hide-on-phone" *ngIf="isLoggedIn">
+    <a class="nav-link px-2" *ngIf="isClub || isCoach" routerLink="/newLesson">Aggiungi lezione</a>
+    <a class="nav-link px-2" *ngIf="isClub" routerLink="horseRegistration">Registra cavallo</a>
+    <a class="nav-link px-2" routerLink="/notifications">Notifiche</a>
+    <a class="nav-link px-2" routerLink="profile">Profilo</a>
+    <a class="nav-link px-2" (click)="logout()">LOGOUT</a>
+  </div>
+</nav>
+<router-outlet></router-outlet>
+<footer class="mb-4 pb-4"> </footer>

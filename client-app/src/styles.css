@@ -1,0 +1,33 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/@fullcalendar/common/main.css";
+
+.btn{
+  background: #001635;
+  color: #FFFFFF;
+  border-color: #001635;
+}
+
+.btn:hover{
+  color: #FFFFFF;
+  background: #397367;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.plain{
+  text-decoration: none;
+}
+
+.btn-danger{
+  background: darkred;
+}
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+  opacity: 0.03 !important;
+  background-color: #001635!important;
+}
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-background,.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #001635;
+}

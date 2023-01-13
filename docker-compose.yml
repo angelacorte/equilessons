@@ -1,0 +1,26 @@
+version: '3'
+services:
+  server:
+    container_name: equilessons-server
+    restart: always
+    build: ./server
+    ports:
+      - '5050:5050'
+    environment:
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - MDB_PASS=${MDB_PASS}
+      - MDB_NICK=${MDB_NICK}
+
+  db:
+    container_name: db
+    image: mongo
+    ports:
+      - '27017:27017'
+
+  client-1:
+    container_name: equilessons-client-one
+    restart: always
+    build: ./client-app
+    ports:
+      - '4200:4200'

@@ -1,0 +1,38 @@
+<mat-dialog-content>
+  <h1 mat-dialog-title>Informazioni personali</h1>
+  <h3>{{user.name}} {{user.surname}}</h3>
+  <div *ngIf="user.email">
+    <h5 class="text-secondary">Email:</h5>
+    <p>{{user.email}}</p>
+  </div>
+  <div *ngIf="user.phoneNumber ">
+    <h5 class="text-secondary">Numero di telefono:</h5>
+    <p>{{user.phoneNumber}}</p>
+  </div>
+  <div *ngIf="user.taxcode ">
+    <h5 class="text-secondary">Codice fiscale:</h5>
+    <p>{{user.taxcode}}</p>
+  </div>
+  <div *ngIf="user.nrFise">
+    <h5 class="text-secondary">Numero FISE:</h5>
+    <p>{{user.nrFise}}</p>
+  </div>
+  <div *ngIf="user.birthday ">
+    <h5 class="text-secondary">Compleanno:</h5>
+    <p>{{user.birthday}}</p>
+  </div>
+  <div *ngIf="user.address">
+    <h5 class="text-secondary">Indirizzo:</h5>
+    <p>{{user.address}}, {{user.city}}</p>
+  </div>
+  <div *ngIf="horses">
+    <h5 class="text-secondary">Cavalli collegati:</h5>
+    <mat-action-list role="list">
+      <mat-list-item *ngFor="let h of horses" role="listitem">{{h.horseName}}</mat-list-item>
+    </mat-action-list>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onClose()">Chiudi</button>
+</mat-dialog-actions>
+

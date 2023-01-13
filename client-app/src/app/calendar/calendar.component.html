@@ -1,0 +1,116 @@
+<div class="container mt-3 align-self-auto">
+  <div class='demo-app'>
+
+    <div class='demo-app-sidebar'>
+      <h1 *ngIf="isLoggedIn ">{{title}}</h1>
+    </div>
+
+    <mat-progress-spinner
+      *ngIf="!events"
+      color="primary"
+      mode="indeterminate"
+      class="mx-auto mt-5">
+    </mat-progress-spinner>
+
+    <div class="calendar-container" *ngIf="events">
+      <div class="row">
+        <div class="d-flex justify-content-between">
+          <a class="btn" *ngIf="isClub || isCoach" href="/newLesson">NUOVA LEZIONE</a>
+          <a class="btn ml-3" href="/lessonHistory">STORICO LEZIONI</a>
+        </div>
+      </div>
+      <div class="row mt-4 d-flex justify-content-between">
+
+        <div class="col-md-4 text-center">
+          <h2 class="mt-0">{{ viewDate | calendarSchedulerDate:(view + 'ViewTitle'):locale:weekStartsOn:excludeDays:viewDays:startsWithToday }}</h2>
+          <select #viewDayOptionSelect1 class="form-control d-none d-md-block d-xl-none" [ngModel]="viewDays" (change)="viewDaysOptionChanged(viewDayOptionSelect1.value)">
+            <option [value]="1">Un giorno</option>
+            <option [value]="3">Tre giorni</option>
+            <option [value]="7">Una settimana</option>
+          </select>
+        </div>
+        <div class="col-md-4 text-right">
+          <div class="row">
+            <div class="col-6 d-md-none d-xl-flex col-xl-6 valign-center text-right">
+              <select #viewDayOptionSelect2 class="form-control m-1" [ngModel]="viewDays" (change)="viewDaysOptionChanged(viewDayOptionSelect2.value)">
+                <option [value]="1">Un giorno</option>
+                <option [value]="3">Tre giorni</option>
+                <option [value]="7">Una settimana</option>
+              </select>
+            </div>
+            <div class="col-6 col-md-12 col-xl-6">
+              <div class="btn-group m-1" role="group">
+                <button type="button" class="btn btn-primary"
+                        mwlCalendarPreviousView
+                        [view]="view"
+                        [(viewDate)]="viewDate"
+                        [daysInWeek]="viewDays"
+                        [excludeDays]="excludeDays"
+                        [disabled]="prevBtnDisabled"
+                        (viewDateChange)="dateOrViewChanged()">
+                            <span class="valign-center">
+                                <i title="Precedente"
+                                   class="material-icons md-18">keyboard_arrow_left</i>
+                            </span>
+                </button>
+                <button type="button" class="btn btn-light"
+                        mwlCalendarToday
+                        [(viewDate)]="viewDate"
+                        (viewDateChange)="dateOrViewChanged()">
+                            <span class="valign-center">
+                                <i title="Oggi"
+                                   class="material-icons md-18">today</i>
+                            </span>
+                </button>
+                <button type="button" class="btn btn-primary"
+                        mwlCalendarNextView
+                        [view]="view"
+                        [(viewDate)]="viewDate"
+                        [daysInWeek]="viewDays"
+                        [excludeDays]="excludeDays"
+                        [disabled]="nextBtnDisabled"
+                        (viewDateChange)="dateOrViewChanged()">
+                            <span class="valign-center">
+                                <i title="Successivo"
+                                   class="material-icons md-18">keyboard_arrow_right</i>
+                            </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div [ngSwitch]="view">
+        <calendar-scheduler-view *ngSwitchCase="CalendarView.Week"
+                                 [viewDays]="viewDays"
+                                 [viewDate]="viewDate"
+                                 [events]="events"
+                                 [locale]="locale"
+                                 [responsive]="false"
+                                 [weekStartsOn]="weekStartsOn"
+                                 [excludeDays]="excludeDays"
+                                 [startsWithToday]="startsWithToday"
+                                 [hourSegments]="hourSegments"
+                                 [dayStartHour]="dayStartHour"
+                                 [dayEndHour]="dayEndHour"
+                                 [dayModifier]="dayModifier"
+                                 [hourModifier]="hourModifier"
+                                 [segmentModifier]="segmentModifier"
+                                 [eventModifier]="eventModifier"
+                                 [showEventActions]="true"
+                                 [showSegmentHour]="true"
+                                 [zoomEventOnHover]="true"
+                                 (viewDaysChanged)="viewDaysChanged($event)"
+                                 (dayHeaderClicked)="dayHeaderClicked($event.day)"
+                                 (hourClicked)="hourClicked($event.hour)"
+                                 (segmentClicked)="segmentClicked('Clicked', $event.segment)"
+                                 (eventClicked)="eventClicked('Clicked', $event.event)"
+                                 (eventTimesChanged)="eventTimesChanged($event)"
+                                 [refresh]="refresh">
+        </calendar-scheduler-view>
+      </div>
+    </div>
+
+  </div>
+</div>

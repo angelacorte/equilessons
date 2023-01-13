@@ -1,0 +1,105 @@
+<div class="container mt-3">
+
+  <h1>Gestione utenti</h1>
+
+  <mat-accordion>
+    <mat-expansion-panel
+      (closed)="true"> <!--(opened)="panelOpenState = true"-->
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Aggiungi un utente temporaneo
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="input-group flex-column p-2">
+        <div class="d-flex row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Nome</mat-label>
+            <input
+              matInput
+              type="text"
+              class="form-control"
+              name="name"
+              id="name"
+              [(ngModel)]="form.name"
+              required/>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Cognome</mat-label>
+            <input
+              matInput
+              type="text"
+              class="form-control"
+              name="surname"
+              id="surname"
+              [(ngModel)]="form.surname"
+              required
+            />
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Numero di telefono</mat-label>
+            <input
+              matInput
+              type="tel"
+              class="form-control"
+              name="phoneNumber"
+              id="phoneNumber"
+              [(ngModel)]="form.phoneNumber"
+              required
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <button mat-fab class="btn" type="reset" (click)="onSubmit()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="mt-2"> <!--[style.display]="'true'"-->
+    <h5 class="text-secondary">Per rimuovere un utente temporaneo dalla lista basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
+
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="checkbox">
+        <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+        <mat-cell *matCellDef="let u">               <!--<td  *ngFor="let les of lesson">-->
+          <input
+            type="checkbox"
+            class="form-check-input"
+            value="true"
+            checked
+            [disabled]="!u.temporary"
+            (click)="isUserUnchecked($event, u._id)"
+          > <!--id="userId"-->
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="user">
+        <mat-header-cell *matHeaderCellDef> Utente </mat-header-cell>
+        <mat-cell *matCellDef="let u">{{u['name']}} {{u['surname']}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="telephone_number">
+        <mat-header-cell *matHeaderCellDef> Numero di telefono </mat-header-cell>
+        <mat-cell *matCellDef="let u"> {{u['phoneNumber']}}  </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="temporary_user">
+        <mat-header-cell *matHeaderCellDef> Utente temporaneo </mat-header-cell>
+        <mat-cell *matCellDef="let u" >
+          <mat-icon *ngIf="u.temporary == true">done</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row (click)="showInfos(row._id)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20]"
+      [length]="users.length"
+                   showFirstLastButtons
+                   aria-label="Seleziona pagina">
+    </mat-paginator>
+    <button class="btn col-md-4" (click)="update()">Aggiorna</button>
+  </div>
+</div>

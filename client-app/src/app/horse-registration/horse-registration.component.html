@@ -1,0 +1,141 @@
+<div class="container mt-5">
+<!--     ngApp="horseRegistration">-->
+  <form
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate
+  >
+    <h2 class="title">Registra il tuo cavallo!</h2>
+
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Nome</mat-label>
+          <input
+             matInput
+             name="horseName"
+             id="horseName"
+             placeholder="Nome"
+             [(ngModel)]="form.horseName"
+             required>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Microchip</mat-label>
+          <mat-hint>Non deve contenere lettere</mat-hint>
+          <input
+            matInput
+            name="horseMicrochip"
+            id="horseMicrochip"
+            placeholder="Microchip"
+            [(ngModel)]="form.horseMicrochip"
+            required>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Data di nascita</mat-label>
+          <input
+            matInput
+            [matDatepicker]="horseBirthday"
+            [(ngModel)]="form.horseBirthday"
+            name="horseBirthday"
+            id="horseBirthday"
+            disabled
+            required>
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="horseBirthday"></mat-datepicker-toggle>
+          <mat-datepicker
+            #horseBirthday
+            disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Numero FISE</mat-label>
+          <mat-hint>Opzionale</mat-hint>
+          <input
+            matInput
+            name="horseFise"
+            id="horseFise"
+            placeholder="Numero FISE (opzionale)"
+            [(ngModel)]="form.horseFise">
+        </mat-form-field>
+
+      </div>
+    </div>
+
+    <div class="input-group flex-column p-2">
+      <div class="row"  *ngIf="!isClub">
+        <mat-checkbox
+          id="isOwnerRider"
+          [checked]=isOwnRider
+          (change)="isOwnerRider()">
+          Sono il suo cavaliere.
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <div class="input-group flex-column p-2">
+      <div class="d-flex row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</mat-label>
+          <mat-hint>Gli utenti temporanei non possono essere selezionati</mat-hint>
+          <mat-select
+            name="riderId"
+            id="riderId"
+            [(ngModel)]="riderId">
+            <mat-option *ngFor="let user of users"
+                    [value]="user['_id']"
+                    [disabled]="isInList(user['_id'])">
+              {{user['name']}} {{user['surname']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <a mat-fab class=" btn" (click)="addRiderToList(riderId)">
+          <mat-icon>add</mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <div class="flex-column p-2" *ngIf="riders.length != 0">
+      <mat-list class="row">
+        <mat-label>Cavalieri selezionati:</mat-label>
+        <mat-list-item *ngFor="let rider of riders">
+          <mat-checkbox
+            [checked]="true"
+            (change)="removeRider(rider.riderId)">
+            {{rider['riderName']}} {{rider['riderSurname']}}
+          </mat-checkbox>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+    <div class="input-group flex-column p-2">
+      <div class="row" *ngIf="!isClub">
+        <mat-checkbox
+          (change)="isScholasticChecked()"
+          id="isScholastic">
+          Cavallo adibito a lezioni della scuola
+        </mat-checkbox>
+      </div>
+    </div>
+
+
+    <div class="form-group mt-4">
+      <button class="btn col-md-4">Iscrivi</button>
+    </div>
+  </form>
+</div>
+<!--
+
+<script>
+  let app = angular.module('horseRegistration', []);
+  app.controller('addRiderController', addRiderController)
+  function addRiderController($scope) {
+
+  }
+
+</script>
+-->

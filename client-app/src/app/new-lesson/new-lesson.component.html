@@ -1,0 +1,191 @@
+<div class="container mt-5">
+  <form
+    *ngIf="!isSuccessful"
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate>
+    <h2 class="title">Nuova lezione</h2>
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Data della lezione</mat-label>
+          <input
+            matInput
+            [matDatepicker]="lessonDate"
+            [(ngModel)]="form.lessonDate"
+            name="lessonDate"
+            id="lessonDate"
+            disabled
+            required>
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="lessonDate"></mat-datepicker-toggle>
+          <mat-datepicker
+          #lessonDate
+            disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+        <mat-label>Orario</mat-label>
+        <input
+          [(ngModel)]="form.lessonHour"
+          class="form-control"
+          id="lessonHour"
+          matInput
+          name="lessonHour"
+          placeholder="Ora"
+          required
+          type="time"
+        />
+        <mat-hint>Formato 24h</mat-hint>
+      </mat-form-field>
+      </div>
+    </div>
+    <div class="flex-column input-group p-2">
+        <mat-label>Durata:</mat-label>
+        <mat-radio-group class="row" name="lessonDuration" [(ngModel)]="form.lessonDuration" aria-label="seleziona durata">
+          <mat-radio-button class="mt-2" name="lessonDuration" [value]="60" [checked]=true  >60 minuti</mat-radio-button>
+          <mat-radio-button class="mt-2" name="lessonDuration" [value]="30"  >30 minuti</mat-radio-button>
+          <mat-radio-button class="mt-2">
+            <input type="tel"
+              matInput
+              name="lessonDuration"
+              aria-label="Durata personalizzata"
+              placeholder="Altro (minuti)"
+              [(ngModel)]="form.lessonDuration">
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+    <div class="flex-column input-group mt-3 p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Campo</mat-label>
+          <mat-select
+            class="custom-select"
+            name="arenaId"
+            id="arenaId"
+            [(ngModel)]="form.arenaId"
+            required>
+            <mat-option *ngFor="let arena of arenas"
+                        [value]="arena['_id']">
+              {{arena['arenaName']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill" *ngIf="isClub || !checked">
+          <mat-label>Istruttore</mat-label>
+          <mat-select
+            class="custom-select"
+            name="coachId"
+            id="otherCoachId"
+            [(ngModel)]="coachId"
+            required>
+            <mat-option  *ngFor="let coach of coaches"
+                         [value]="coach['_id']">
+              {{coach['surname']}} {{coach['name']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex-column input-group p-2" *ngIf="!isClub">
+      <mat-checkbox
+        id="coachId"
+        [checked]=checked
+        (change)="checkCoach()">
+        Sono l'istruttore.
+      </mat-checkbox>
+    </div>
+
+    <div class="flex-column input-group p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Allievo</mat-label>
+          <mat-select
+            class="custom-select"
+            name="riderId"
+            id="riderId"
+            [(ngModel)]="form.riderId">
+            <mat-option *ngFor="let rider of riders"
+                        [value]="rider['_id']"
+                        [disabled]="isRiderInList(rider['_id'])"
+                        (click)="isRider(rider['_id'])">
+              {{rider['surname']}} {{rider['name']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Cavallo</mat-label>
+          <mat-select
+            class="custom-select"
+            name="horseId"
+            id="horseId"
+            [(ngModel)]="form.horseId">
+            <mat-option  *ngFor="let horse of horses"
+                         [value]="horse['_id']"
+                         > <!--[disabled]="isHorseInList(horse['_id'])"-->
+              {{horse['horseName']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="flex-row pl-2">
+        <a mat-fab class="btn" (click)="addRiderToList(form.riderId, form.horseId)" >
+          <mat-icon>add</mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-5 p-2" *ngIf="lesson.length != 0">
+      <h3>Lezione composta da:</h3>
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="checkbox">
+          <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+            <mat-cell *matCellDef="let les">
+            <input
+                type="checkbox"
+                class="form-check-input"
+                value="true"
+                checked
+                (change)="isRiderUnchecked(les)"
+                id="isRider">
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="allievo">
+          <mat-header-cell *matHeaderCellDef> Allievo </mat-header-cell>
+          <mat-cell *matCellDef="let les"> {{les.riderInfo['surname']}} {{les.riderInfo['name']}}   </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="cavallo">
+          <mat-header-cell *matHeaderCellDef> Cavallo assegnato </mat-header-cell>
+          <mat-cell *matCellDef="let les">  {{les.horseInfo['horseName']}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+      </mat-table>
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 20]"
+        [length]="lesson.length"
+        showFirstLastButtons
+        aria-label="Seleziona pagina">
+      </mat-paginator>
+
+      <div class="d-flex row p-2">
+        <mat-form-field appearance="fill">
+          <mat-label>Note aggiuntive sulla lezione</mat-label>
+          <textarea matInput name="notes" [(ngModel)]="form.notes" placeholder="Avvisi"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="d-flex flex-row d-flex justify-content-around">
+        <button mat-button class="btn p-2 col-md-4">Crea</button>
+        <button mat-button class="btn p-2 col-md-4" (click)="onReset()" type="reset">Reset</button>
+      </div>
+    </div>
+  </form>
+</div>

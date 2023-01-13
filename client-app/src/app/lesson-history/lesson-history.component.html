@@ -1,0 +1,41 @@
+<div class="container mt-3">
+  <h1>Storico lezioni</h1>
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mat-mdc-table">
+    <ng-container matColumnDef="data">
+      <mat-header-cell *matHeaderCellDef>Data</mat-header-cell>
+      <mat-cell *matCellDef="let l">
+          {{l.beginDate | date :'EEEE, MMMM d, y' : '' :'it' }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ora">
+      <mat-header-cell *matHeaderCellDef>Ora</mat-header-cell>
+      <mat-cell *matCellDef="let l">{{l.beginDate | date :'h:mm a' : '' :'it' }}</mat-cell>
+
+    </ng-container>
+
+    <ng-container matColumnDef="campo">
+      <mat-header-cell *matHeaderCellDef>Campo</mat-header-cell>
+      <mat-cell *matCellDef="let l">{{l.arena.arenaName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="istruttore">
+      <mat-header-cell *matHeaderCellDef>Istruttore</mat-header-cell>
+      <mat-cell *matCellDef="let l">{{l.coach.name}} {{l.coach.surname}}</mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row (click)="showLessonInfos(row)"
+             #tooltip="matTooltip"
+             matTooltip="Visualizza informazioni"
+             matTooltipHideDelay="100"
+             *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+  <mat-paginator
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 20]"
+    [length]="lessons.length"
+    [showFirstLastButtons] = true
+    aria-label="Seleziona pagina">
+  </mat-paginator>
+</div>

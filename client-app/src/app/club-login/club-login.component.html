@@ -1,0 +1,66 @@
+<div class="container mt-5 align-self-center flex-wrap">
+  <form
+    *ngIf="!isLoggedIn"
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate>
+    <h1 class="title d-flex justify-content-center col-md-4">LOGIN CIRCOLO IPPICO</h1>
+
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col-md-4" appearance="fill">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            name="clubEmail"
+            id="clubEmail"
+            placeholder="Email"
+            [(ngModel)]="form.clubEmail"
+            required
+            #clubEmail="ngModel">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col-md-4" appearance="fill">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            name="clubPassword"
+            type="password"
+            id="clubPassword"
+            name="clubPassword"
+            placeholder="Password"
+            [(ngModel)]="form.clubPassword"
+            required minlength="4"
+            #clubPassword="ngModel"/>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="input-group flex-column pr-3">
+      <button class="btn col-md-4">Entra</button>
+    </div>
+
+    <div class="form-group"> <!--text-center content-center col-md-6 offset-md-3-->
+      <div class="d-flex flex-column justify-content-center col-md-4 align-self-center">
+        <div class="flex-row align-self-center mt-3">
+          <a class="mt-4" href="/newClub">Devi ancora effettuare la registrazione?</a>
+        </div>
+        <div class="flex-row align-self-center mt-3">
+          <p>Oppure</p>
+        </div>
+        <div class="flex-row align-self-center">
+          <a class="mt-4" href="/login">Entra come utente!</a>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
+          Login failed: {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </form>
+  <router-outlet *ngIf="isLoggedIn"></router-outlet>
+</div>

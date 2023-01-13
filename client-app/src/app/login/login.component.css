@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FFFFFF; /*84F2AE*/
+  height: 100vh;
+}
+
+.title{
+  color: #397367;
+}
+
+/*.btn{
+  align-content: center;
+  background: #001690;
+  color: #EAEAEA;
+  border-color: #001635;
+}*/
+
+div.container{
+  align-content: center;
+}
+
+a{
+  color: #001635;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+a:hover{
+  color: #397367;
+}
+
+.btn:hover{
+  text-decoration: none;
+  background: #397367;
+}
+
+/*.btn:hover{
+  color: #EAEAEA;
+  background: #397367;
+}*/
+/*
+#login .container #login-row #login-column #login-box {
+  margin-top: 120px;
+  max-width: 600px;
+  height: 320px;
+  border: 1px solid #9C9C9C;
+  background-color: #EAEAEA;
+}
+#login .container #login-row #login-column #login-box #login-form {
+  padding: 20px;
+}
+#login .container #login-row #login-column #login-box #login-form #register-link {
+  margin-top: -85px;
+}
+*/

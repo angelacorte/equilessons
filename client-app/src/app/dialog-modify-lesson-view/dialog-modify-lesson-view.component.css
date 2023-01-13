@@ -1,0 +1,17 @@
+table{
+  width: 100%;
+}
+
+.title{
+  color: #397367;
+}
+.btn{
+  background: #001635;
+  color: #EAEAEA;
+  border-color: #001635;
+}
+
+.btn:hover{
+  color: #EAEAEA;
+  background: #397367;
+}

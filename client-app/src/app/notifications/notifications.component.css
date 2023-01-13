@@ -1,0 +1,23 @@
+.notifications-table {
+  width: 100%;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.mat-column-checbox{
+  width: 30px;
+}
+
+.mat-column-message{
+  padding-right: 10px;
+  text-align: left;
+  width: 100px;
+}
+
+.mat-column-sender{
+  width: 20px;
+}
+
+.mat-column-date{
+  width: 20px;
+}

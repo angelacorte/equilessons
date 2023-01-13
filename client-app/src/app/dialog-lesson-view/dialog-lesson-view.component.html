@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>Informazioni sulla lezione</h1>
+<mat-dialog-content>
+  <h5 class="text-secondary">Istruttore:</h5>
+  <p>{{lesson.coach['name']}} {{lesson.coach['surname']}}</p>
+  <h5 class="text-secondary">Giorno</h5>
+  <p>{{lesson.beginDate | date :'EEEE, MMMM d, y' : '' :'it' }}</p>
+  <h5 class="text-secondary">Orario di inizio</h5>
+  <p>{{lesson.beginDate | date :'h:mm a' : '' :'it' }}</p>
+  <h5 class="text-secondary">Orario di fine</h5>
+  <p>{{lesson.endDate | date :'h:mm a' : '' :'it' }}</p>
+  <h5 class="text-secondary">Campo prenotato:</h5>
+  <p>{{lesson.arena['arenaName']}}</p>
+  <h5 class="text-secondary">Note sulla lezione:</h5>
+  <p>{{lesson.notes}}</p>
+  <h5 *ngIf="isClub || isCoach" class="text-secondary">Partecipanti:</h5>
+  <div *ngIf="lesson && (isClub || isCoach)">
+    <mat-action-list role="list">
+      <mat-list-item *ngFor="let p of lesson.pairs" role="listitem">
+        {{p.riderInfo['riderName']}} {{p.riderInfo['riderSurname']}}
+        <mat-icon>arrow_right_alt</mat-icon>
+        {{p.horseInfo['horseName']}}
+      </mat-list-item>
+    </mat-action-list>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+  <button mat-button class="btn" (click)="onClose()">Chiudi</button>
+  <button mat-button class="btn" *ngIf="isClub || isCoach" (click)="onModify()">Modifica</button>
+</mat-dialog-actions>

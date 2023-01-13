@@ -1,0 +1,111 @@
+<mat-dialog-content>
+<!--<div class="container mt-5">-->
+  <form
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate
+  >
+    <h2 class="title">Registra il tuo cavallo!</h2>
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Nome</mat-label>
+          <input
+            matInput
+            name="horseName"
+            id="horseName"
+            placeholder="Nome"
+            [(ngModel)]="form.horseName"
+            required>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Microchip</mat-label>
+          <mat-hint>Non deve contenere lettere</mat-hint>
+          <input
+            matInput
+            name="horseMicrochip"
+            id="horseMicrochip"
+            placeholder="Microchip"
+            [(ngModel)]="form.horseMicrochip"
+            required>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Data di nascita</mat-label>
+          <input
+            matInput
+            [matDatepicker]="horseBirthday"
+            [(ngModel)]="form.horseBirthday"
+            name="horseBirthday"
+            id="horseBirthday"
+            disabled
+            required>
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="horseBirthday"></mat-datepicker-toggle>
+          <mat-datepicker
+            #horseBirthday
+          disabled="false"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Numero FISE</mat-label>
+          <mat-hint>Opzionale</mat-hint>
+          <input
+            matInput
+            name="horseFise"
+            id="horseFise"
+            placeholder="Numero FISE (opzionale)"
+            [(ngModel)]="form.horseFise">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="input-group flex-column p-2">
+      <div class="d-flex row">
+        <mat-form-field class="col" appearance="fill">
+          <mat-label>Se necessario aggiungi un cavaliere (fida, mezza-fida, altro...)</mat-label>
+          <mat-select
+            name="riderId"
+            id="riderId"
+            [(ngModel)]="riderId">
+            <mat-option *ngFor="let user of users"
+                        [value]="user['_id']"
+                        [disabled]="isInList(user['_id'])">
+              {{user['name']}} {{user['surname']}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <a mat-fab class="btn float-right" (click)="addRiderToList(riderId)"><mat-icon>add</mat-icon></a>
+      </div>
+    </div>
+    <div class="flex-column p-2" *ngIf="riders.length != 0">
+      <mat-list class="row">
+        <mat-label>Cavalieri selezionati:</mat-label>
+        <mat-list-item *ngFor="let rider of riders">
+          <mat-checkbox
+            [checked]="true"
+            (change)="isRiderUnchecked(rider.riderId)">
+            {{rider['riderName']}} {{rider['riderSurname']}}
+          </mat-checkbox>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <div class="input-group flex-column p-2">
+      <div class="row">
+        <mat-checkbox
+          [checked] = "form.scholastic"
+          (change)="isScholasticChecked()"
+          id="isScholastic">
+          Cavallo adibito a lezioni della scuola
+        </mat-checkbox>
+      </div>
+    </div>
+  </form>
+
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between">
+  <button mat-button class="btn" (click)="onClose()">Annulla</button>
+  <button mat-button class="btn" [mat-dialog-close]="true" cdkFocusInitial (click)="onSubmit()">Aggiorna</button>
+</mat-dialog-actions>

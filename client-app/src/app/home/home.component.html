@@ -1,0 +1,10 @@
+<div *ngIf="!isLoggedIn">
+  <!--
+    <p>{{ content }}</p>
+  -->
+  <app-login></app-login>
+</div>
+
+<ng-container *ngIf="isLoggedIn">
+  <app-calendar></app-calendar>
+</ng-container>

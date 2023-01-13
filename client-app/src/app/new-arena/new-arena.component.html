@@ -1,0 +1,72 @@
+<div class="container mt-3">
+  <h1>Gestione campi</h1>
+  <mat-accordion>
+    <mat-expansion-panel
+      (closed)=true> <!--(opened)="panelOpenState = true"-->
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Aggiungi un campo adibito alle lezioni
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="input-group flex-column p-2">
+        <div class="d-flex row">
+          <mat-form-field class="col col-md-4" appearance="fill">
+            <mat-label>Denominazione</mat-label>
+            <input
+              matInput
+              #arenaName
+              type="text"
+              class="form-control"
+              name="arenaName"
+              id="arenaName"
+              [(ngModel)]="form.arenaName"
+            />
+          </mat-form-field>
+          <button mat-fab class="btn" (click)="addArenaToList(arenaName.value)" type="reset">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+    <div class="mt-5"> <!--[style.display]="'true'"-->
+      <h3>Campi utilizzabili:</h3>
+      <h5 class="text-secondary">Per rimuovere un campo dalla lista basta rimuovere la spunta dall'apposita casella e premere aggiorna</h5>
+
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="checkbox">
+          <mat-header-cell *matHeaderCellDef> Check </mat-header-cell>
+          <mat-cell *matCellDef="let a">               <!--<td  *ngFor="let les of lesson">-->
+            <input
+              type="checkbox"
+              class="form-check-input"
+              value="true"
+              checked
+              (change)="isArenaUnchecked($event, a._id)"
+              id="isCoach">
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="arenaName">
+          <mat-header-cell *matHeaderCellDef> Denominazione </mat-header-cell>
+          <mat-cell *matCellDef="let a"> {{a['arenaName']}}  </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+      </mat-table>
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 20]"
+        [length]="arenas.length"
+        showFirstLastButtons
+        aria-label="Seleziona pagina">
+      </mat-paginator>
+
+      <button class="btn col-md-4" (click)="onSubmit()">Conferma</button>
+
+    </div>
+</div>

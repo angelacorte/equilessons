@@ -1,0 +1,99 @@
+<div class="container mt-5">
+    <form
+      *ngIf="!isSuccessful"
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate>
+
+      <h2 class="title">Registra il tuo circolo!</h2>
+
+      <div class="input-group flex-column">
+        <div class="row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Denominazione</mat-label>
+            <input
+              matInput
+              name="clubName"
+              id="clubName"
+              [(ngModel)]="form.clubName"
+              required>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              name="clubEmail"
+              id="clubEmail"
+              [(ngModel)]="form.clubEmail"
+              required>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="input-group flex-column">
+        <div class="row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Numero di telefono</mat-label>
+            <input
+              matInput
+              type="tel"
+              name="clubTelephone"
+              id="clubTelephone"
+              [(ngModel)]="form.clubTelephone"
+              required>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hide ? 'clubPassword' : 'text'"
+              name="clubPassword"
+              id="clubPassword"
+              [(ngModel)]="form.clubPassword"
+              required
+              minlength="8">
+            <mat-error *ngIf="form.clubPassword.length < 8">Passowrd breve (minimo 8 caratteri)</mat-error>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="input-group flex-column">
+        <div class="row">
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Città</mat-label>
+            <input
+              matInput
+              name="clubCity"
+              id="clubCity"
+              [(ngModel)]="form.clubCity"
+              required>
+          </mat-form-field>
+          <mat-form-field class="col" appearance="fill">
+            <mat-label>Indirizzo</mat-label>
+            <input
+              matInput
+              name="clubAddress"
+              id="clubAddress"
+              [(ngModel)]="form.clubAddress"
+              required>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="input-group flex-column p-2">
+        <button class="btn col-md-4">Registrami</button>
+      </div>
+
+  </form>
+
+
+  <div class="alert alert-success" *ngIf="isSuccessful">
+    Registrazione completata!<br>
+    <a href="/clubLogin">Vai al login</a><br>
+    <a class="btn col-md-4" href="/newArena">Aggiungi i campi adibiti alle lezioni!</a>
+    <a class="btn col-md-4" href="/horseRegistration">Aggiungi i cavalli!</a>
+  </div>
+</div>
