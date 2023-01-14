@@ -57,18 +57,19 @@ exports.authenticate = async function authenticateToken(req,res,next) {
 
   jwt.verify(authHeader, `${process.env.ACCESS_TOKEN_SECRET}`, {}, async (err,user)=>{
     if(err){ return res.sendStatus(403); }
-    let u, c
-    u = await User.findById(user.id)
-    if(!u) {
-      c = await club.findById(user.id)
-      if(!c) {
+    try {
+      let u = await User.findById(user.id)
+      req.user = u;
+      next()
+    } catch(err) {
+      let c = await club.findById(user.id)
+      if(c) {
+        req.user = c
+        next()
+      } else {
         res.sendStatus(404)
       }
-      req.user = c
-      next()
     }
-    req.user = u
-    next()
   })
 }
 
