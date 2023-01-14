@@ -73,22 +73,6 @@ exports.authenticate = function authenticateToken(req,res,next) {
   })
 }
 
-exports.token = function (req,res){
-  const refreshToken = req.body.token;
-  if(refreshToken == null){ return res.sendStatus(401); }
-  User.findOne({"token":refreshToken}, function (err,doc) {
-    if(err){ return res.sendStatus(500); }
-    if(doc == null){ return res.sendStatus(403); }
-    jwt.verify(refreshToken,`${process.env.REFRESH_TOKEN_SECRET}`, {},(err,user)=>{ //todo options
-      if(err){ return res.sendStatus(403); }
-      const accessToken = generateAccessToken({"name": user.name});
-      return res.json({"accessToken":accessToken});
-    })
-  }).catch(err => {
-    return res.send({status: 500, message: "an error occurred", error: err});
-  });
-}
-
 /**
  * User's logout, remove its token
  * @param req
