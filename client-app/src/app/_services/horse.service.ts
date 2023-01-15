@@ -3,9 +3,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {HorseInfos} from "../_utils/Horse";
 import {TokenStorageService} from "./token-storage.service";
+import { BASE_URL } from 'app/_utils/Global';
 
-
-const baseURL = 'http://localhost:5050';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -23,7 +22,7 @@ export class HorseService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/horse', data, header).toPromise();
+    return this.http.post(BASE_URL + '/horse', data, header).toPromise();
   }
 
   getScholasticHorses(clubId: any): Promise<Object>{
@@ -31,7 +30,7 @@ export class HorseService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/getSchoolHorses/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/getSchoolHorses/' + clubId, header).toPromise();
   }
 
   getAllHorses(clubId: string): Promise<any> {
@@ -39,7 +38,7 @@ export class HorseService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/horses/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/horses/' + clubId, header).toPromise();
   }
 
   getPrivateHorses(ownerId: string){
@@ -47,7 +46,7 @@ export class HorseService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/privateHorses/' + ownerId, header).toPromise();
+    return this.http.get(BASE_URL + '/privateHorses/' + ownerId, header).toPromise();
   }
 
   getHorse(horseId: string): Promise<Object>{
@@ -55,7 +54,7 @@ export class HorseService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/horse/' + horseId, header).toPromise();
+    return this.http.get(BASE_URL + '/horse/' + horseId, header).toPromise();
   }
 
   getHorseOwner(horseId: string):Promise<any>{
@@ -64,7 +63,7 @@ export class HorseService {
         .set('Content-Type', 'application/json')
         .set('responseType', 'json')
     }
-    return this.http.get(baseURL + '/horse/getOwner/' + horseId, header).toPromise();
+    return this.http.get(BASE_URL + '/horse/getOwner/' + horseId, header).toPromise();
   }
 
   removeHorses(horseIds: string[]): Promise<any>{
@@ -76,7 +75,7 @@ export class HorseService {
       httpOptions: header,
       body: horseIds
     }
-    return this.http.delete(baseURL + '/removeHorses', options).toPromise();
+    return this.http.delete(BASE_URL + '/removeHorses', options).toPromise();
   }
 
   updateHorse(horseData: HorseInfos): Promise<any>{
@@ -84,6 +83,6 @@ export class HorseService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/updateHorse', horseData, header).toPromise();
+    return this.http.post(BASE_URL + '/updateHorse', horseData, header).toPromise();
   }
 }

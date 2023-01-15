@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable} from "rxjs";
 import {Login} from "../_utils/Person";
 import {TokenStorageService} from "./token-storage.service";
+import { BASE_URL } from 'app/_utils/Global';
 
-const baseURL = 'http://localhost:5050/club';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -18,11 +18,11 @@ export class ClubService {
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
 
   clubLogin(data:Login):Promise<any>{
-    return this.http.post(baseURL + '/login', data, httpOptions).toPromise();
+    return this.http.post(BASE_URL + '/login', data, httpOptions).toPromise();
   }
 
   registration(data:any): Promise<any>{
-    return this.http.post(baseURL, data, httpOptions).toPromise();
+    return this.http.post(BASE_URL, data, httpOptions).toPromise();
   }
 
   getAllClubs(): Promise<any>{
@@ -30,7 +30,7 @@ export class ClubService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL, header).toPromise();
+    return this.http.get(BASE_URL, header).toPromise();
   }
 
   updateCoach(coaches:string[], clubId:string): Promise<any>{
@@ -38,7 +38,7 @@ export class ClubService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/updateCoach', {coaches, clubId}, header).toPromise();
+    return this.http.post(BASE_URL + '/updateCoach', {coaches, clubId}, header).toPromise();
   }
 
   getClubAthletes(clubId: string): Promise<any>{
@@ -46,7 +46,7 @@ export class ClubService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/athletes/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/athletes/' + clubId, header).toPromise();
   }
 
   getClubCoaches(clubId: string): Promise<any>{
@@ -55,6 +55,6 @@ export class ClubService {
         .set('Content-Type', 'application/json')
         .set('responseType', 'json')
     }
-    return this.http.get(baseURL + '/coaches/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/coaches/' + clubId, header).toPromise();
   }
 }

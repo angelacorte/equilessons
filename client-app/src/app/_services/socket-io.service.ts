@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BASE_URL } from 'app/_utils/Global';
 import { Observable } from 'rxjs';
 import { Socket, io } from 'socket.io-client';
 import { TokenStorageService } from './token-storage.service';
@@ -10,7 +11,7 @@ export class SocketIoService {
   socket: Socket;
 
   constructor(private tokenStorage: TokenStorageService) {
-    const DOMAIN = 'http://localhost:5050'
+    const DOMAIN = BASE_URL
 
     this.socket = io(DOMAIN);
 

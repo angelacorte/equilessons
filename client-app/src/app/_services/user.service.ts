@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
 import {Roles, UserInfos} from "../_utils/Person";
 import {TokenStorageService} from "./token-storage.service";
-// import { User } from '../_models/user.model';
-
-const baseURL = 'http://localhost:5050';
-
-const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
+import { BASE_URL } from 'app/_utils/Global';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +18,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/user/roles', {role, id}, header).toPromise();
+    return this.http.post(BASE_URL + '/user/roles', {role, id}, header).toPromise();
   }
   removeRole(role: Roles, id: string): Promise<any>{
     let header = { headers: new HttpHeaders()
@@ -36,7 +29,7 @@ export class UserService {
       options: header,
       body: {role, id}
     }
-    return this.http.delete(baseURL + '/user/removeRole', options).toPromise();
+    return this.http.delete(BASE_URL + '/user/removeRole', options).toPromise();
   }
 
   getUserRoles(id:string): Promise<any>{
@@ -44,7 +37,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/user/roles/' + id, header).toPromise();
+    return this.http.get(BASE_URL + '/user/roles/' + id, header).toPromise();
   }
 
   removeUser(data:any): Promise<any>{
@@ -56,7 +49,7 @@ export class UserService {
       options: header,
       body: data
     }
-    return this.http.delete(baseURL + '/user', options).toPromise();
+    return this.http.delete(BASE_URL + '/user', options).toPromise();
   }
 
   updateUser(data: UserInfos): Promise<any>{
@@ -64,7 +57,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/user/updateUser', data, header).toPromise();
+    return this.http.post(BASE_URL + '/user/updateUser', data, header).toPromise();
   }
 
   getUserById(userId:string): Promise<any>{
@@ -72,7 +65,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/userinfo/' + userId, header).toPromise();
+    return this.http.get(BASE_URL + '/userinfo/' + userId, header).toPromise();
   }
 
   getUserHorses(userId:string): Promise<any>{
@@ -80,7 +73,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/userhorse/' + userId, header).toPromise();
+    return this.http.get(BASE_URL + '/userhorse/' + userId, header).toPromise();
   }
 
   addUserHorse(id: string, horseId: string): Promise<any>{
@@ -88,7 +81,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/user/add-horse', {id, horseId}, header).toPromise();
+    return this.http.post(BASE_URL + '/user/add-horse', {id, horseId}, header).toPromise();
   }
 
   removeUserHorse(id: string, horseId: string): Promise<any>{
@@ -100,6 +93,6 @@ export class UserService {
       options: header,
       body: {id, horseId}
     }
-    return this.http.delete(baseURL + '/user/remove-horse', options).toPromise();
+    return this.http.delete(BASE_URL + '/user/remove-horse', options).toPromise();
   }
 }

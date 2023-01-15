@@ -4,9 +4,6 @@ import { NotificationMessage } from '../_utils/Notification';
 import { BASE_URL } from '../_utils/Global';
 import {TokenStorageService} from "./token-storage.service";
 
-const httpOption = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
 
 @Injectable({
   providedIn: 'root'

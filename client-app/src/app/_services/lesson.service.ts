@@ -1,16 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable, throwError} from "rxjs";
-import {CalendarSchedulerEventAction} from "angular-calendar-scheduler";
-import {LessonState} from "../_utils/Lesson";
 import {TokenStorageService} from "./token-storage.service";
-import {ht} from "date-fns/locale";
-
-const baseURL = 'http://localhost:5050';
-
-let httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
-};
+import { BASE_URL } from 'app/_utils/Global';
 
 
 @Injectable({
@@ -25,7 +16,7 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/lesson', data, header).toPromise()
+    return this.http.post(BASE_URL + '/lesson', data, header).toPromise()
   }
 
   getLesson(lessonId: string): Promise<any> {
@@ -33,7 +24,7 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/lesson/' + lessonId, header).toPromise()
+    return this.http.get(BASE_URL + '/lesson/' + lessonId, header).toPromise()
   }
 
   getLessonsByClubId(clubId: string): Promise<any>{
@@ -41,7 +32,7 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/lesson/getInfo/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/lesson/getInfo/' + clubId, header).toPromise();
   }
 
   deleteLesson(lessonId: string): Promise<any>{
@@ -49,7 +40,7 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.delete(baseURL + '/removelesson/' + lessonId, header).toPromise();
+    return this.http.delete(BASE_URL + '/removelesson/' + lessonId, header).toPromise();
   }
 
   updateLesson(lesson:any):Promise<any>{
@@ -57,7 +48,7 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(baseURL + '/lesson/update', lesson, header).toPromise();
+    return this.http.post(BASE_URL + '/lesson/update', lesson, header).toPromise();
   }
 
   getUserLessons(userId: string): Promise<any>{
@@ -65,7 +56,7 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/lesson/user/' + userId, header).toPromise()
+    return this.http.get(BASE_URL + '/lesson/user/' + userId, header).toPromise()
   }
 
   getCoachLesson(coachId: string): Promise<any>{
@@ -73,6 +64,6 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(baseURL + '/lesson/coach/' + coachId, header).toPromise();
+    return this.http.get(BASE_URL + '/lesson/coach/' + coachId, header).toPromise();
   }
 }
