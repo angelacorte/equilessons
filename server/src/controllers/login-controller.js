@@ -57,35 +57,20 @@ exports.authenticate = async function authenticateToken(req,res,next) {
 
   jwt.verify(authHeader, `${process.env.ACCESS_TOKEN_SECRET}`, {}, async (err,user)=>{
     if(err){ return res.sendStatus(403); }
-    let u, c
-    u = await User.findById(user.id)
-    if(!u) {
-      c = await club.findById(user.id)
-      if(!c) {
+    try {
+      let u = await User.findById(user.id)
+      req.user = u;
+      next()
+    } catch(err) {
+      let c = await club.findById(user.id)
+      if(c) {
+        req.user = c
+        next()
+      } else {
         res.sendStatus(404)
       }
-      req.user = c
-      next()
     }
-    req.user = u
-    next()
   })
-}
-
-exports.token = function (req,res){
-  const refreshToken = req.body.token;
-  if(refreshToken == null){ return res.sendStatus(401); }
-  User.findOne({"token":refreshToken}, function (err,doc) {
-    if(err){ return res.sendStatus(500); }
-    if(doc == null){ return res.sendStatus(403); }
-    jwt.verify(refreshToken,`${process.env.REFRESH_TOKEN_SECRET}`, {},(err,user)=>{ //todo options
-      if(err){ return res.sendStatus(403); }
-      const accessToken = generateAccessToken({"name": user.name});
-      return res.json({"accessToken":accessToken});
-    })
-  }).catch(err => {
-    return res.send({status: 500, message: "an error occurred", error: err});
-  });
 }
 
 /**

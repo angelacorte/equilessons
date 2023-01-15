@@ -54,69 +54,6 @@ exports.clubLogin = function (req,res) {
 }
 
 /**
- * Used for authentication, check if a token is valid
- * @param req
- * @param res
- * @param next
- * @return {*}
- */
-exports.authenticate = function authenticateToken(req,res,next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1] //takes the token if exists
-
-  if(token == null || typeof token === undefined){
-    return res.sendStatus(401);
-  }
-
-  jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`, { },(err,club)=>{
-    if(err){
-      return res.sendStatus(403);
-    }
-
-    Club.findById(club.clubId, function (err,club){
-      if(err){
-        return res.sendStatus(500);
-      }
-      if(!club){
-        return res.sendStatus(404);
-      }
-      req.club = club;
-      next();
-    })
-  })
-}
-
-/**
- * Create new token
- * @param req
- * @param res
- * @return {*}
- */
-exports.token = function (req,res){
-  const refreshToken = req.body.token;
-  if(refreshToken == null){
-    return res.sendStatus(401);
-  }
-  Club.findOne({"token":refreshToken}, function (err,doc) {
-    if(err){
-      return res.sendStatus(500);
-    }
-    if(doc == null){
-      return res.sendStatus(403);
-    }
-    jwt.verify(refreshToken,`${process.env.REFRESH_TOKEN_SECRET}`, {},(err,club)=>{
-      if(err){
-        return res.sendStatus(403);
-      }
-      const accessToken = generateAccessToken({"name": club.clubName});
-      return res.json({"accessToken":accessToken});
-    })
-  }).catch(err => {
-    return res.send({status: 500, message: "an error occurred", error: err});
-  });
-}
-
-/**
  * Club logout, remove access token
  * @param req
  * @param res
