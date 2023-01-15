@@ -55,6 +55,8 @@ export class NewLessonComponent implements OnInit {
   infos!: ClubInfos | UserInfos;
   arenas: ArenaInfo[] = [];
   horses: HorseInfos[] = [];
+  privateHorses: HorseInfos[] = []
+  scholasticHorses: HorseInfos[] = [];
   displayedColumns = ['checkbox', 'allievo', 'cavallo'];
   coaches: Coach[] = [];
   coachId: string = '';
@@ -80,7 +82,8 @@ export class NewLessonComponent implements OnInit {
         this.coaches = await this.getClubCoaches(this.form.clubId);
         this.arenas = await this.getClubArenas(this.form.clubId);
         this.riders = await this.getClubAthletes(this.form.clubId);
-        this.horses = await this.getScholasticHorses(this.form.clubId);
+        this.scholasticHorses = await this.getScholasticHorses(this.form.clubId)
+        this.horses = await this.getPrivateHorses(this.form.clubId)
       } else {
         window.location.assign('/notAllowed'); //if the page is opened without being logged redirect
       }
@@ -147,12 +150,20 @@ export class NewLessonComponent implements OnInit {
     });
   }
 
-  private async getClubAthletes(id:any):Promise<any>{
-    return this.clubService.getClubAthletes(id);
+  private async getAllHorses(clubId: string): Promise<HorseInfos[]>{
+    return this.horseService.getAllHorses(this.form.clubId)
   }
 
-  private async getScholasticHorses(id:any):Promise<any>{
-    return await this.horseService.getScholasticHorses(id);
+  private async getClubAthletes(clubId:string):Promise<any>{
+    return this.clubService.getClubAthletes(clubId);
+  }
+
+  private async getScholasticHorses(clubId:string):Promise<any>{
+    return await this.horseService.getScholasticHorses(clubId);
+  }
+
+  private async getPrivateHorses(ownerId: string): Promise<any>{
+    return this.horseService.getPrivateHorses(ownerId)
   }
 
   private async getClubCoaches(id:string): Promise<Coach[]>{ //remove user's id from coaches list if id is not referred to club
@@ -217,20 +228,20 @@ export class NewLessonComponent implements OnInit {
 
   isRiderInList(id: any): boolean {
     return this.lesson.some((obj)=>obj.riderInfo["riderId"] === id);
-
   }
 
-  isRider(rider: any) {
-    this.riders.some((obj: any)=>{
-      if(obj._id === rider){
-        this.form.riderId = rider;
-        this.lesson.some((o)=> {
-          if (o.horseInfo['horseId'] !== obj.horse[0] && obj.horse.length > 0) {
-            this.form.horseId = obj.horse[0];
-          }
-        })
-      }
-    });
+  async isRider(riderId: string) {
+    this.privateHorses = await this.getPrivateHorses(riderId)
+    if(this.privateHorses.length == 0 && riderId === this.infos._id) this.horses = await this.getAllHorses(this.form.clubId)
+    if(this.privateHorses.length > 0) {
+      this.horses = this.privateHorses
+      this.scholasticHorses.forEach(h => {
+        this.horses = this.horses.filter(elem => elem._id !== h._id)
+        this.horses.push(h)
+      })
+    }else{
+      this.horses = this.scholasticHorses
+    }
   }
 
   onReset() {
