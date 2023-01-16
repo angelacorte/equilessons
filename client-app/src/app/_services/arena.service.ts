@@ -30,7 +30,7 @@ export class ArenaService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(BASE_URL + '/arena' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/arena/' + clubId, header).toPromise();
   }
 
   removeArena(arenasId: string[]): Promise<any>{

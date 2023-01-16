@@ -167,9 +167,7 @@ export class NewLessonComponent implements OnInit {
   }
 
   private async getClubCoaches(clubId:string): Promise<Coach[]>{ //remove user's id from coaches list if id is not referred to club
-    console.log("id ", clubId)
     return this.clubService.getClubCoaches(clubId).then(res =>{
-      console.log("res coach ", res)
       if(res.status == 200){
         res.coaches.forEach((c: Coach) => {
           this.coaches.push(c)
