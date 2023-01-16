@@ -25,14 +25,15 @@
     "@ng-bootstrap/ng-bootstrap": "^14.0.1",
     "angular-calendar": "^0.28.27",
     "angular-calendar-scheduler": "^11.0.7",
-    "angular-in-memory-web-api": "^0.11.0",
+    "angular-in-memory-web-api": "^0.15.0",
     "angularx-flatpickr": "^6.6.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.6.0",
     "date-fns": "^2.23.0",
     "dotenv": "^16.0.3",
     "jquery": "^3.6.0",
-    "rxjs": "~6.6.0",
+    "moment": "^2.29.4",
+    "rxjs": "~7.8.0",
     "socket.io-client": "^4.5.4",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
@@ -49,6 +50,6 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.7.0",
-    "typescript": "~4.9.4"
+    "typescript": "~4.8.0"
   }
 }

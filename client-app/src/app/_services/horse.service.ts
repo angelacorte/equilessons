@@ -25,7 +25,7 @@ export class HorseService {
     return this.http.post(BASE_URL + '/horse', data, header).toPromise();
   }
 
-  getScholasticHorses(clubId: any): Promise<Object>{
+  getScholasticHorses(clubId: any): Promise<any>{
     let header = { headers: new HttpHeaders()
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
@@ -49,7 +49,7 @@ export class HorseService {
     return this.http.get(BASE_URL + '/privateHorses/' + ownerId, header).toPromise();
   }
 
-  getHorse(horseId: string): Promise<Object>{
+  getHorse(horseId: string): Promise<any>{
     let header = { headers: new HttpHeaders()
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')

@@ -197,7 +197,7 @@ export class CalendarComponent implements OnInit {
     const ev: CalendarSchedulerEvent = this.events.find(e => e.id === event.id);
     ev.start = newStart;
     ev.end = newEnd;
-    this.refresh.next();
+    // this.refresh.next(); todo
   }
 
   private async fetchData() {
