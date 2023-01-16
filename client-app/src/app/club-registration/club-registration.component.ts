@@ -21,16 +21,10 @@ export class ClubRegistrationComponent implements OnInit {
     clubPassword: '',
     clubCity: '',
     clubAddress: '',
-    //clubOwnerId: ''
   };
 
   isSuccessful = false;
-  isRegistrationFailed = false;
-  errorMessage = '';
-  submitted = false;
   isLoggedIn = false;
-  //infos: any;
-  isSignUpFailed = true;
   hide = true;
 
   constructor(private http: HttpClient, private _snackBar: MatSnackBar, private clubService: ClubService, private tokenStorage: TokenStorageService, private userService: UserService) { }
