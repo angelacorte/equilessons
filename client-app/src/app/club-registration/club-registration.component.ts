@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ClubService} from "../_services/club.service";
 import {TokenStorageService} from "../_services/token-storage.service";
-import {UserService} from "../_services/user.service";
 import {SignupMessages, SnackBarActions} from "../_utils/Utils";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -27,7 +26,7 @@ export class ClubRegistrationComponent implements OnInit {
   isLoggedIn = false;
   hide = true;
 
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private clubService: ClubService, private tokenStorage: TokenStorageService, private userService: UserService) { }
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar, private clubService: ClubService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
     if (!!this.tokenStorage.getToken()) { //if user is logged in
