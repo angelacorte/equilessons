@@ -1,4 +1,5 @@
 const Notification = require("../models/notification-model")
+const {ObjectId} = require("mongodb");
 
 const sockets = require('../utils/socket').sockets
 
@@ -31,6 +32,48 @@ exports.deleteNotification = async (req, res) => {
     } catch(err) {
         res.status(404).send(err)
     }
+}
+
+exports.getNotificationSender = function (req,res){
+    let pipeline = [
+        {
+            '$match': {
+                'senderId': new ObjectId(req.params.senderId)
+            }
+        }, {
+            '$lookup': {
+                'from': 'users',
+                'localField': 'senderId',
+                'foreignField': '_id',
+                'as': 'user'
+            }
+        }, {
+            '$lookup': {
+                'from': 'clubs',
+                'localField': 'senderId',
+                'foreignField': '_id',
+                'as': 'club'
+            }
+        }, {
+            '$project': {
+                'user.name': 1,
+                'user.surname': 1,
+                'user._id': 1,
+                'senderId': 1,
+                'club.clubName': 1,
+                'club._id': 1
+            }
+        }
+    ]
+    Notification.aggregate(pipeline).then(result => {
+        if(!result){
+            return res.send({status: 400, message: "Bad request"});
+        }else{
+            return res.send({status: 200, sender: result[0]})
+        }
+    }).catch(err =>{
+        return res.status(404).send(err)
+    })
 }
 
 function pushNotificationToClientSocket(id, notification){

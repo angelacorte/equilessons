@@ -28,6 +28,14 @@ export class NotificationService {
     return this.http.get(BASE_URL + '/notification/' + userId, header).toPromise()
   }
 
+  getNotificationSender(userId: string): Promise<any>{
+    let header = { headers: new HttpHeaders()
+        .set('Authorization',  `${this.tokenStorage.getToken()}`)
+        .set('Content-Type', 'application/json')
+    }
+    return this.http.get(BASE_URL + '/notificationSender/' + userId, header).toPromise()
+  }
+
   deleteNotification(notificationId: string): Promise<any> {
     let header = { headers: new HttpHeaders()
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
