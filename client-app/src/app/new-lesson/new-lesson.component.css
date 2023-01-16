@@ -8,7 +8,7 @@ table{
 .btn{
   background: #001635;
   color: #EAEAEA;
-  border-color: #001635;
+  /*border-color: #001635;*/
 }
 
 .btn:hover{

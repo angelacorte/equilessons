@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {HttpClient} from "@angular/common/http";
 import {ClubService} from "../_services/club.service";
-import {SignupMessages, SnackBarActions, SnackBarMessages} from "../_utils/Utils";
+import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {UserInfos} from "../_utils/Person";

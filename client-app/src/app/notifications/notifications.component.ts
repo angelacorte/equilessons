@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatTable,MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {TokenStorageService} from "../_services/token-storage.service";
@@ -35,16 +35,16 @@ export class NotificationsComponent implements OnInit {
   notificationsToDelete: any[] = []
 
   constructor(
-    private notificationService: NotificationService,  
+    private notificationService: NotificationService,
     private tokenStorage: TokenStorageService,
     private socketIoService: SocketIoService,
     private lessonService: LessonService,
-    private lessonDialogService: LessonDialogService) { 
+    private lessonDialogService: LessonDialogService) {
       this.isClub = this.tokenStorage.isClub();
       this.isLoggedIn = !!this.tokenStorage.getToken();
       this.userId = this.tokenStorage.getInfos(this.isClub)._id
-  
-      
+
+
       this.socketIoService.eventObservable('notify-client').subscribe((data)=>{
         console.log("received notification")
         this.refreshNotifications(this.userId)
@@ -53,7 +53,7 @@ export class NotificationsComponent implements OnInit {
     }
 
   async ngOnInit(): Promise<void> {
-    if(this.isLoggedIn){ 
+    if(this.isLoggedIn){
       //call the service to retrieve user's notifications
       await this.refreshNotifications(this.userId)
     }
@@ -91,9 +91,9 @@ export class NotificationsComponent implements OnInit {
       console.log(lesson)
       if(lesson != null) {
         this.lessonDialogService.showLessonInfo(
-          lesson, 
-          this.isClub, 
-          this.tokenStorage.getInfos(this.isClub)['_id'], 
+          lesson,
+          this.isClub,
+          this.tokenStorage.getInfos(this.isClub)['_id'],
           this.tokenStorage.isCoach()
           )
       }

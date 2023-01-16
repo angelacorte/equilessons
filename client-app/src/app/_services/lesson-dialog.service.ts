@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog } from '@angular/material/dialog';
 import { DialogLessonViewComponent } from 'app/dialog-lesson-view/dialog-lesson-view.component';
 import { LessonState } from 'app/_utils/Lesson';
 
@@ -9,7 +9,7 @@ import { LessonState } from 'app/_utils/Lesson';
 export class LessonDialogService {
 
   constructor(public dialog: MatDialog) { }
-  
+
   showLessonInfo(lesson: LessonState, isClub: boolean, userId: string, isCoach: boolean) {
     let data = {
       lesson: lesson,

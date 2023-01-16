@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {HorseInfos} from "../_utils/Horse";
 import {UserService} from "../_services/user.service";
 import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";

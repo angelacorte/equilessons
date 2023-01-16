@@ -6,7 +6,7 @@ import {TokenStorageService} from "../_services/token-storage.service";
 import {ArenaService} from "../_services/arena.service";
 import {ClubService} from "../_services/club.service";
 import {HorseService} from "../_services/horse.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatAccordion} from "@angular/material/expansion";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";

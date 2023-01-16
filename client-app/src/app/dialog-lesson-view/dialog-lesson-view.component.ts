@@ -1,10 +1,8 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {LessonService} from "../_services/lesson.service"
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {LessonState} from "../_utils/Lesson";
 import {DialogModifyLessonViewComponent} from "../dialog-modify-lesson-view/dialog-modify-lesson-view.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {TokenStorageService} from "../_services/token-storage.service";
+import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-dialog-lesson-view',
   templateUrl: './dialog-lesson-view.component.html',

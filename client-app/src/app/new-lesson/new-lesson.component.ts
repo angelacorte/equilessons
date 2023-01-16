@@ -8,13 +8,13 @@ import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {LessonService} from "../_services/lesson.service";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 import {HorseInfos} from "../_utils/Horse";
 import {NotificationService} from '../_services/notification.service';
 import {Notification, NotificationType} from '../_utils/Notification';
 import {Lesson, LessonState} from '../_utils/Lesson';
 import {ArenaInfo} from "../_utils/Arena";
+import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 
 @Component({

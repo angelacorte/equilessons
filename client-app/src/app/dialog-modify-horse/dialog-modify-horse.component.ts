@@ -5,7 +5,7 @@ import {ClubService} from "../_services/club.service";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {UserService} from "../_services/user.service";
 import {HorseService} from "../_services/horse.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {HorseInfos} from "../_utils/Horse";
 import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
 import {DialogHorseViewComponent} from "../dialog-horse-view/dialog-horse-view.component";

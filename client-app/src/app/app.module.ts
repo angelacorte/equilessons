@@ -20,17 +20,15 @@ import {CommonModule, registerLocaleData} from '@angular/common';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import {FullCalendarModule} from "@fullcalendar/angular";
 import { NewLessonComponent } from './new-lesson/new-lesson.component';
 import { NewArenaComponent } from './new-arena/new-arena.component';
-import {MatTableModule} from "@angular/material/table";
+import {MatTableModule} from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSlider, MatSliderModule} from "@angular/material/slider";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {SchedulerModule} from "angular-calendar-scheduler";
 import {CalendarComponent} from "./calendar/calendar.component";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import localeIt from '@angular/common/locales/it';
 import { ClubLoginComponent } from './club-login/club-login.component';
 import {A11yModule} from "@angular/cdk/a11y";
@@ -39,28 +37,28 @@ import { NotAllowedComponent } from './not-allowed/not-allowed.component';
 import { ShowUsersComponent } from './show-users/show-users.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
+import {MatButtonModule} from '@angular/material/button';
 import { DialogUserViewComponent } from './dialog-user-view/dialog-user-view.component';
-import {MatDialogModule} from "@angular/material/dialog";
-import {MatListModule} from "@angular/material/list";
-import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatListModule} from '@angular/material/list';
+import {MatPaginatorModule} from '@angular/material/paginator';
 import { DialogLessonViewComponent } from './dialog-lesson-view/dialog-lesson-view.component';
 import { DialogHorseViewComponent } from './dialog-horse-view/dialog-horse-view.component';
 import { DialogModifyLessonViewComponent } from './dialog-modify-lesson-view/dialog-modify-lesson-view.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatSelectModule} from "@angular/material/select";
+import {MatSelectModule} from '@angular/material/select';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatNativeDateModule} from "@angular/material/core";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { HorseManagementComponent } from './horse-management/horse-management.component';
-import {MatRadioModule} from "@angular/material/radio";
-import {MatMenuModule} from "@angular/material/menu";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatRadioModule} from '@angular/material/radio';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { PersonalInfosComponent } from './personal-infos/personal-infos.component';
 import { LessonHistoryComponent } from './lesson-history/lesson-history.component';
-import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { DialogModifyHorseComponent } from './dialog-modify-horse/dialog-modify-horse.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -104,7 +102,6 @@ registerLocaleData(localeIt);
         NgbModalModule,
         CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
         SchedulerModule.forRoot({locale: localeIt.toLocaleString(), headerDateFormat: 'daysRange'}),
-        FullCalendarModule,
         MatTableModule,
         BrowserAnimationsModule,
         MatTableModule,

@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ArenaService} from "../_services/arena.service";
-import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatTable,MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatAccordion} from "@angular/material/expansion";
 import {MatSort} from "@angular/material/sort";
