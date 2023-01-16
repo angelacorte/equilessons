@@ -18,7 +18,7 @@ export class ClubService {
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { }
 
   clubLogin(data:Login):Promise<any>{
-    return this.http.post(BASE_URL + '/login', data, httpOptions).toPromise();
+    return this.http.post(BASE_URL + '/club/login', data, httpOptions).toPromise();
   }
 
   registration(data:any): Promise<any>{
