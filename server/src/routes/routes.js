@@ -27,7 +27,7 @@ module.exports = function (app){
   app.route('/*').delete(loginController.authenticate,)
 
   //---------------------------------ARENA---------------------------------
-  app.route('/arenaName/:arenaName')
+  app.route('/arenaName/:arenaName') //todo unused
     .get(arenaController.getArenaByName);
 
   app.route('/arena/:clubId')
@@ -94,7 +94,7 @@ module.exports = function (app){
   app.route('/lesson/coach/:coachId')
     .get(lessonController.getLessonByCoachID);
 
-  app.route('/removelesson/:clubId')
+  app.route('/removeLesson/:clubId')
     .delete(lessonController.deleteLesson);
 
   app.route('/lesson/getInfo/:clubId')
@@ -122,16 +122,16 @@ module.exports = function (app){
   app.route('/user')
     .delete(userController.removeUser);
 
-  app.route('/userinfo/:userId')
+  app.route('/userInfo/:userId')
     .get(userController.getUserById);
 
-  app.route('/userhorse/:userId')
+  app.route('/userHorse/:userId')
     .get(userController.getUserHorses);
 
-  app.route('/user/add-horse')
+  app.route('/user/addHorse')
     .post(userController.addHorse)
 
-  app.route('/user/remove-horse')
+  app.route('/user/removeHorse')
     .delete(userController.removeHorse)
 
   //---------------------------NOTIFICATION---------------------------------

@@ -151,7 +151,7 @@ export class NewLessonComponent implements OnInit {
   }
 
   private async getAllHorses(clubId: string): Promise<HorseInfos[]>{
-    return this.horseService.getAllHorses(this.form.clubId)
+    return this.horseService.getAllHorses(clubId)
   }
 
   private async getClubAthletes(clubId:string):Promise<any>{
@@ -166,8 +166,10 @@ export class NewLessonComponent implements OnInit {
     return this.horseService.getPrivateHorses(ownerId)
   }
 
-  private async getClubCoaches(id:string): Promise<Coach[]>{ //remove user's id from coaches list if id is not referred to club
-    return this.clubService.getClubCoaches(id).then(res =>{
+  private async getClubCoaches(clubId:string): Promise<Coach[]>{ //remove user's id from coaches list if id is not referred to club
+    console.log("id ", clubId)
+    return this.clubService.getClubCoaches(clubId).then(res =>{
+      console.log("res coach ", res)
       if(res.status == 200){
         res.coaches.forEach((c: Coach) => {
           this.coaches.push(c)

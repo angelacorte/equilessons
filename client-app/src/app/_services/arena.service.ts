@@ -22,7 +22,7 @@ export class ArenaService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(BASE_URL, {newArenas}, header).toPromise();
+    return this.http.post(BASE_URL + '/arena', {newArenas}, header).toPromise();
   }
 
   getClubArenas(clubId: string): Promise<any>{
@@ -30,7 +30,7 @@ export class ArenaService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(BASE_URL + '/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/arena' + clubId, header).toPromise();
   }
 
   removeArena(arenasId: string[]): Promise<any>{
@@ -42,6 +42,6 @@ export class ArenaService {
       httpOptions: header,
       body: arenasId
     }
-    return this.http.delete(BASE_URL, options).toPromise();
+    return this.http.delete(BASE_URL + '/arena', options).toPromise();
   }
 }

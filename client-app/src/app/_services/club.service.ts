@@ -22,7 +22,7 @@ export class ClubService {
   }
 
   registration(data:any): Promise<any>{
-    return this.http.post(BASE_URL, data, httpOptions).toPromise();
+    return this.http.post(BASE_URL + '/club', data, httpOptions).toPromise();
   }
 
   getAllClubs(): Promise<any>{
@@ -30,7 +30,7 @@ export class ClubService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(BASE_URL, header).toPromise();
+    return this.http.get(BASE_URL + '/club', header).toPromise();
   }
 
   updateCoach(coaches:string[], clubId:string): Promise<any>{
@@ -38,7 +38,7 @@ export class ClubService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(BASE_URL + '/updateCoach', {coaches, clubId}, header).toPromise();
+    return this.http.post(BASE_URL + '/club/updateCoach', {coaches, clubId}, header).toPromise();
   }
 
   getClubAthletes(clubId: string): Promise<any>{
@@ -46,7 +46,7 @@ export class ClubService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(BASE_URL + '/athletes/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/club/athletes/' + clubId, header).toPromise();
   }
 
   getClubCoaches(clubId: string): Promise<any>{
@@ -55,6 +55,6 @@ export class ClubService {
         .set('Content-Type', 'application/json')
         .set('responseType', 'json')
     }
-    return this.http.get(BASE_URL + '/coaches/' + clubId, header).toPromise();
+    return this.http.get(BASE_URL + '/club/coaches/' + clubId, header).toPromise();
   }
 }

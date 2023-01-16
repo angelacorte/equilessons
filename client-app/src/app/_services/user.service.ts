@@ -65,7 +65,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(BASE_URL + '/userinfo/' + userId, header).toPromise();
+    return this.http.get(BASE_URL + '/userInfo/' + userId, header).toPromise();
   }
 
   getUserHorses(userId:string): Promise<any>{
@@ -73,7 +73,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.get(BASE_URL + '/userhorse/' + userId, header).toPromise();
+    return this.http.get(BASE_URL + '/userHorse/' + userId, header).toPromise();
   }
 
   addUserHorse(id: string, horseId: string): Promise<any>{
@@ -81,7 +81,7 @@ export class UserService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.post(BASE_URL + '/user/add-horse', {id, horseId}, header).toPromise();
+    return this.http.post(BASE_URL + '/user/addHorse', {id, horseId}, header).toPromise();
   }
 
   removeUserHorse(id: string, horseId: string): Promise<any>{
@@ -93,6 +93,6 @@ export class UserService {
       options: header,
       body: {id, horseId}
     }
-    return this.http.delete(BASE_URL + '/user/remove-horse', options).toPromise();
+    return this.http.delete(BASE_URL + '/user/removeHorse', options).toPromise();
   }
 }

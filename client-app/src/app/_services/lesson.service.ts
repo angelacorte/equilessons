@@ -40,7 +40,7 @@ export class LessonService {
         .set('Authorization',  `${this.tokenStorage.getToken()}`)
         .set('Content-Type', 'application/json')
     }
-    return this.http.delete(BASE_URL + '/removelesson/' + lessonId, header).toPromise();
+    return this.http.delete(BASE_URL + '/removeLesson/' + lessonId, header).toPromise();
   }
 
   updateLesson(lesson:any):Promise<any>{
