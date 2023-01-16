@@ -25,7 +25,7 @@
     "@ng-bootstrap/ng-bootstrap": "^14.0.1",
     "angular-calendar": "^0.28.27",
     "angular-calendar-scheduler": "^11.0.7",
-    "angular-in-memory-web-api": "^0.11.0",
+    "angular-in-memory-web-api": "^0.15.0",
     "angularx-flatpickr": "^6.6.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.6.0",
