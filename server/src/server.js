@@ -6,7 +6,7 @@ const routes = require('./routes/routes');
 const db = require("./models/index")
 
 let corsOptions = {
-  origin: "http://localhost:4200",
+  origin: "*",
 };
 
 const express = require('express');
@@ -16,7 +16,7 @@ const sockets = require('./utils/socket').sockets
 
 const io = require('socket.io')(http, {
   cors: {
-    origin: "http://localhost:4200",
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
