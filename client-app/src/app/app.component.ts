@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { SocketIoService } from './_services/socket-io.service';
 import {TokenStorageService} from "./_services/token-storage.service";
 import {ClubInfos, UserInfos} from "./_utils/Person";
@@ -9,17 +9,21 @@ import {Router} from "@angular/router";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnChanges {
   title = 'Equilessons';
 
-  @Input() isLoggedIn = false;
-  @Input() username?: string;
+  @Input() isLoggedIn!: boolean;
+  // @Input() username?: string;
   isClub = false;
   infos !: ClubInfos | UserInfos
   isCoach!: boolean;
   perm=""
-  constructor(private tokenStorage: TokenStorageService,  private router: Router , private socketIoService: SocketIoService) { 
-    
+  constructor(private tokenStorage: TokenStorageService,  private router: Router , private socketIoService: SocketIoService) {
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.isLoggedIn = changes.isLoggedIn.currentValue
   }
 
   async ngOnInit(): Promise<void> {
