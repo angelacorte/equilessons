@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {LessonService} from "./lesson.service";
 import {ClubInfos, UserInfos} from "../_utils/Person";
 
 const TOKEN_KEY = 'auth-token';
@@ -63,8 +62,4 @@ export class TokenStorageService {
   public getInfos(isClub:boolean){
     return isClub ? this.getClub() : this.getUser();
   }
-/*
-  public isCoach(infos: any): boolean{
-    return infos['roles'].indexOf('coach') > -1;
-  }*/
 }

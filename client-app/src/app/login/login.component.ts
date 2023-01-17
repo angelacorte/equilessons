@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { AuthService} from "../_services/auth.service";
 import { TokenStorageService} from "../_services/token-storage.service";
 import {LoginMessages} from "../_utils/Utils";
-import {Route, Router} from "@angular/router";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -48,7 +48,8 @@ export class LoginComponent implements OnInit {
           this.isLoggedIn = true
           this.tokenStorage.saveToken(res.accessToken);
           this.tokenStorage.saveUser(res.user);
-          window.location.replace('calendar')
+          window.location.assign('calendar')
+          // window.location.replace('calendar')
           // this.router.navigateByUrl('calendar')
           break;
         case 500:

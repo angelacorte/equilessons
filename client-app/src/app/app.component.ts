@@ -3,13 +3,14 @@ import { SocketIoService } from './_services/socket-io.service';
 import {TokenStorageService} from "./_services/token-storage.service";
 import {ClubInfos, UserInfos} from "./_utils/Person";
 import {Router} from "@angular/router";
+import {map, take} from "rxjs";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit, OnChanges{
   title = 'Equilessons';
 
   @Input() isLoggedIn!: boolean;
@@ -19,10 +20,15 @@ export class AppComponent implements OnInit{
   isCoach!: boolean;
   perm=""
   constructor(private tokenStorage: TokenStorageService,  private router: Router , private socketIoService: SocketIoService) {
+    this.isLoggedIn = !!this.tokenStorage.getToken();
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.isLoggedIn = !!this.tokenStorage.getToken();
   }
 
   async ngOnInit(): Promise<void> {
+    this.isLoggedIn = !!this.tokenStorage.getToken();
     if (this.isLoggedIn) {
       this.isClub = this.tokenStorage.isClub();
       this.infos = this.tokenStorage.getInfos(this.isClub);
@@ -40,12 +46,11 @@ export class AppComponent implements OnInit{
 
     this.perm = await Notification.requestPermission()
     if(this.perm === "granted"){
-      console.log("notification permission granted")
       this.socketIoService.eventObservable('notify-client').subscribe((data)=>{
         new Notification(`Hai una nuova notifica di tipo ${data.data.notificationType}`)
       })
     } else {
-      console.log("permission not granted")
+      console.log("permission not yet granted")
     }
   }
 
