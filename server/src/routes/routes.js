@@ -144,6 +144,6 @@ module.exports = function (app){
   app.route('/notification/delete/:notificationId')
     .get(notificationController.deleteNotification)
 
-  app.route('/notificationSender/:senderId')
-    .get(notificationController.getNotificationSender)
+  /*app.route('/notificationSender/:senderId')
+    .get(notificationController.getNotificationSender)*/
 }

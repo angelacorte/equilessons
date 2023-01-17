@@ -34,6 +34,7 @@ exports.deleteNotification = async (req, res) => {
     }
 }
 
+/*
 exports.getNotificationSender = function (req,res){
     let pipeline = [
         {
@@ -75,6 +76,7 @@ exports.getNotificationSender = function (req,res){
         return res.status(404).send(err)
     })
 }
+*/
 
 function pushNotificationToClientSocket(id, notification){
     const socket = sockets.get(""+id);

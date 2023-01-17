@@ -8,7 +8,7 @@ let ObjectId = require('mongodb').ObjectID;
  * @param req
  * @param res
  */
-exports.getArenaByName = function (req,res){ //todo MUST be used to check if an arena is already signed for a lesson
+exports.getArenaByName = function (req,res){
   Arena.findOne({"arenaName":req.params.arenaName}).then(result=>{
     if(!result){
       return res.send({status: 400, message: "an error occurred"});
