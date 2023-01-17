@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {TokenStorageService} from "../_services/token-storage.service";
-import {UserService} from "../_services/user.service";
-import {ClubService} from "../_services/club.service";
 import {Observable, Observer} from "rxjs";
 import {ClubInfos, UserInfos} from "../_utils/Person";
 
@@ -25,7 +23,7 @@ export class ProfileComponent implements OnInit {
   infos!: UserInfos | ClubInfos;
   isClub: boolean = false;
 
-  constructor(private tokenStorage: TokenStorageService, private userService: UserService) {
+  constructor(private tokenStorage: TokenStorageService) {
     this.asyncTabsClub = new Observable((observer: Observer<ProfileTab[]>) => {
       setTimeout(() => {
         observer.next([

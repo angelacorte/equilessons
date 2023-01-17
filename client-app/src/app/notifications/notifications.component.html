@@ -15,10 +15,10 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="sender" >
+      <!--<ng-container matColumnDef="sender" >
         <mat-header-cell *matHeaderCellDef> Mittente </mat-header-cell>
-        <mat-cell *matCellDef="let n"> {{n['senderId']}}</mat-cell>
-      </ng-container>
+        <mat-cell *matCellDef="let n"> {{n['sender']}}</mat-cell>
+      </ng-container>-->
 
       <ng-container matColumnDef="object">
         <mat-header-cell *matHeaderCellDef> Oggetto </mat-header-cell>
@@ -37,7 +37,7 @@
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row
-        (click)="goToLesson(row['lessonId'])"
+        (click)="goToLesson(row['lessonId'], row['notificationType'])"
         #tooltip="matTooltip"
         matTooltip="Visualizza informazioni"
         matTooltipHideDelay="100"

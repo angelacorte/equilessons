@@ -124,10 +124,6 @@ exports.getLesson = async (req, res) => {
   }).catch(err=> {
     return res.send({status: 500, message: "an error occurred", error: err});
   });
-  /*const lessons = await Lesson.aggregate(pipeline)
-  const matchedLessons = matchAll(lessons)
-  const lesson = matchedLessons[0]
-  res.status(200).json(lesson)*/
 }
 
 
