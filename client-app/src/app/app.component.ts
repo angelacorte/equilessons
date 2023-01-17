@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnChanges {
+export class AppComponent implements OnInit{
   title = 'Equilessons';
 
   @Input() isLoggedIn!: boolean;
@@ -20,10 +20,6 @@ export class AppComponent implements OnInit, OnChanges {
   perm=""
   constructor(private tokenStorage: TokenStorageService,  private router: Router , private socketIoService: SocketIoService) {
 
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.isLoggedIn = changes.isLoggedIn.currentValue
   }
 
   async ngOnInit(): Promise<void> {

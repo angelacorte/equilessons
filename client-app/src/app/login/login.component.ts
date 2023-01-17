@@ -45,9 +45,11 @@ export class LoginComponent implements OnInit {
           this.errorMessage = LoginMessages.FAILED
           break;
         case 200:
+          this.isLoggedIn = true
           this.tokenStorage.saveToken(res.accessToken);
           this.tokenStorage.saveUser(res.user);
-          this.router.navigateByUrl('calendar')
+          window.location.replace('calendar')
+          // this.router.navigateByUrl('calendar')
           break;
         case 500:
           this.isLoginFailed = true;
