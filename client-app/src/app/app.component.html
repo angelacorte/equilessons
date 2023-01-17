@@ -1,9 +1,48 @@
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+<nav class="navbar navbar-dark sticky-top d-flex justify-content-between">
+<!--  <div class="d-flex flex-row justify-content-end">-->
   <a class="navbar-brand" href="/">
     <img src="../assets/logo.png" alt="EQUILESSONS logo">
   </a>
-  <app-navbar-logged *ngIf="isLoggedIn; else elseBlock"></app-navbar-logged>
-  <ng-template #elseBlock><app-navbar-not-logged></app-navbar-not-logged></ng-template>
+
+  <button mat-icon-button *ngIf="isLoggedIn" [matMenuTriggerFor]="menu" class="navbar-toggler menu-icon float-right toggle-navigation" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-label="toggle-navigation">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/">Home</button>
+    <button mat-menu-item *ngIf="isClub || isCoach" routerLink="/newLesson">Aggiungi lezione</button>
+    <button mat-menu-item *ngIf="isClub" routerLink="/horseRegistration">Registra cavallo</button>
+    <button mat-menu-item routerLink="/notifications">Notifiche</button>
+    <button mat-menu-item routerLink="/profile">Profilo</button>
+    <button mat-menu-item (click)="logout()">LOGOUT</button>
+  </mat-menu>
+
+  <div *ngIf="isLoggedIn" class="d-flex flex-row justify-content-end navbar-nav hide-on-phone" aria-label="hide-on-phone" >
+    <a class="nav-link px-2" *ngIf="isClub || isCoach" routerLink="/newLesson">Aggiungi lezione</a>
+    <a class="nav-link px-2" *ngIf="isClub" routerLink="horseRegistration">Registra cavallo</a>
+    <a class="nav-link px-2" routerLink="/notifications">Notifiche</a>
+    <a class="nav-link px-2" routerLink="profile">Profilo</a>
+    <a class="nav-link px-2" (click)="logout()">LOGOUT</a>
+  </div>
+<!--    <app-navbar-logged *ngIf="isLoggedIn; else elseBlock"></app-navbar-logged>-->
+
+
+  <button mat-icon-button *ngIf="!isLoggedIn" [matMenuTriggerFor]="menuNotLogged" class="navbar-toggler menu-icon float-right toggle-navigation" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-label="toggle-navigation">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <mat-menu #menuNotLogged="matMenu">
+    <button mat-menu-item routerLink="/login">Login utente</button>
+    <button mat-menu-item routerLink="clubLogin">Login circolo ippico</button>
+  </mat-menu>
+
+  <div *ngIf="!isLoggedIn" class="d-flex flex-row justify-content-end navbar-nav hide-on-phone" aria-label="hide-on-phone" >
+    <a class="nav-link px-2" routerLink="login">Login utente </a>
+    <a class="nav-link px-2" routerLink="clubLogin"> Login circolo ippico</a>
+  </div>
+
+<!--  </div>-->
+
 </nav>
 <router-outlet></router-outlet>
 <footer class="mb-4 pb-4"> </footer>

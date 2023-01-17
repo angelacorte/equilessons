@@ -62,8 +62,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { DialogModifyHorseComponent } from './dialog-modify-horse/dialog-modify-horse.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
-import { NavbarLoggedComponent } from './navbar-logged/navbar-logged.component';
-import { NavbarNotLoggedComponent } from './navbar-not-logged/navbar-not-logged.component';
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -91,9 +89,7 @@ registerLocaleData(localeIt);
     PersonalInfosComponent,
     LessonHistoryComponent,
     NotificationsComponent,
-    DialogModifyHorseComponent,
-    NavbarLoggedComponent,
-    NavbarNotLoggedComponent
+    DialogModifyHorseComponent
   ],
     imports: [
         BrowserModule,
