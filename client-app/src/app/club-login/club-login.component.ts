@@ -44,9 +44,11 @@ export class ClubLoginComponent implements OnInit {
           this.errorMessage = LoginMessages.FAILED
           break;
         case 200:
+          this.isLoggedIn = true
           this.tokenStorage.saveToken(res.accessToken);
           this.tokenStorage.saveClub(res.club);
-          this.router.navigateByUrl('calendar')
+          window.location.assign('calendar')
+          // this.router.navigateByUrl('calendar')
           break;
         case 500:
           this.errorMessage = LoginMessages.ERROR
