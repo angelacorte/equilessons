@@ -22,6 +22,9 @@ module.exports = function (app){
   app.route('/addTemporary')
     .post(signupController.signupTemporary);
 
+  app.route('/club')
+    .post(clubController.registerClub)
+
   // Filter out unauthorized POST and DELETE requests
   app.route('/*').post(loginController.authenticate,)
   app.route('/*').delete(loginController.authenticate,)
@@ -42,7 +45,6 @@ module.exports = function (app){
   //---------------------------------CLUB---------------------------------
   app.route('/club')
     .get(clubController.getAllClubs)
-    .post(clubController.registerClub)
 
   app.route('/clubId/:id')
     .get(clubController.getClubById);
