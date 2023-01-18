@@ -17,25 +17,13 @@ exports.login = function (req,res) {
     if (user) {
       const accessToken = await generateAccessToken(user._id);
       const refreshToken = jwt.sign(JSON.stringify(user._id), `${process.env.REFRESH_TOKEN_SECRET}`);
-
-      const filter = {"_id": user._id};
-      const update = {"token": refreshToken};
-
-      User.findOneAndUpdate(filter, update, {
-        new: true,
-        projection: {
-          'password': 0
-        }
-      }).then(userRes => {
+      User.findOne({"_id": user._id}, {password:0}).then(userRes => {
         if (!userRes) {
           res.send({status: 400, accessToken: accessToken, refreshToken: refreshToken});
         }else{
           res.send({status: 200, accessToken: accessToken, refreshToken: refreshToken, user: userRes});
         }
-      })/*.catch(err => {
-            return res.send({status: 500, message: "an error occurred", error: err});
-
-      });*/
+      })
     }
 
     let reasons = User.failedLogin;
@@ -58,8 +46,7 @@ exports.authenticate = async function authenticateToken(req,res,next) {
   jwt.verify(authHeader, `${process.env.ACCESS_TOKEN_SECRET}`, {}, async (err,user)=>{
     if(err){ return res.sendStatus(403); }
     try {
-      let u = await User.findById(user.id)
-      req.user = u;
+      req.user = await User.findById(user.id)
       next()
     } catch(err) {
       let c = await club.findById(user.id)
@@ -71,25 +58,4 @@ exports.authenticate = async function authenticateToken(req,res,next) {
       }
     }
   })
-}
-
-/**
- * User's logout, remove its token
- * @param req
- * @param res
- */
-exports.logout = function (req,res) {
-  const filter = { "token": req.body.token};
-  const update = { "token": ""};
-
-  User.findOneAndUpdate(filter, update,{
-    new:true
-  }).then(result =>{
-    if(!result){
-      return res.send({status: 404, description:"no token found"});
-    }
-    res.sendStatus(204);
-  }).catch(err => {
-    return res.send({status: 500, description:err});
-  });
 }

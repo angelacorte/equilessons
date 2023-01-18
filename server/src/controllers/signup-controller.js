@@ -1,8 +1,5 @@
-//const config = require('../config/auth.config');
 const db = require("../models");
 const User = db.user; //password already with salt
-const bcrypt = require("bcrypt");
-let SALT_WORK_FACTOR = 10;
 
 /**
  * User registration
@@ -22,12 +19,12 @@ exports.signup = function(req, res) {
     }else{ //if user does not exists or exists without email (means that it's a temporary user, so it is possible to overwrite his infos)
       if(u == null){
         let user = new User(await setUserFields(req.body))
-        user.save(function (err, user) {
+        user.save(function (err) {
           if (err) {
             res.send({status: 400, message: "error while saving user"})
             return err;
           }else{
-            return res.send({status: 200, message: "user added", user});
+            return res.send({status: 200, message: "user added"});
           }
         })
       }else if(u.email === undefined){ //was a temporary user
@@ -44,14 +41,6 @@ exports.signup = function(req, res) {
     }
   })
 };
-
-/*
-else if(u && u.phoneNumber !== undefined){
-      res.send({status: 409, description: "telephone number already in use"})
-    }else if (u && u.email !== undefined) {
-      res.send({status: 409, description: "email already in use"})
-    }
- */
 
 exports.signupTemporary = function (req, res){
   User.findOne({
@@ -81,13 +70,7 @@ exports.signupTemporary = function (req, res){
   })
 }
 
-async function hashPassword (password) {
-  let salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
-  return await bcrypt.hash(password, salt);
-}
-
 async function setUserFields(body) {
-  let hash = await hashPassword(body.password);
   return {
     isOwner: body.isOwner,
     roles: [],
@@ -97,7 +80,7 @@ async function setUserFields(body) {
     email: body.email,
     birthday: body.birthday,
     username: body.username,
-    password: hash,
+    password: body.password,
     phoneNumber: body.phoneNumber,
     taxCode: body.taxCode,
     city: body.city,
