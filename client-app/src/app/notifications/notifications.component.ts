@@ -46,9 +46,7 @@ export class NotificationsComponent implements OnInit {
       this.isLoggedIn = !!this.tokenStorage.getToken();
       this.userId = this.tokenStorage.getInfos(this.isClub)._id
 
-
       this.socketIoService.eventObservable('notify-client').subscribe((data)=>{
-        console.log("received notification")
         this.refreshNotifications(this.userId)
       })
 
