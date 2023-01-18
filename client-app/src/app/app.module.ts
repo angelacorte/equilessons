@@ -62,6 +62,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { DialogModifyHorseComponent } from './dialog-modify-horse/dialog-modify-horse.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatBadgeModule} from "@angular/material/badge";
 registerLocaleData(localeIt);
 
 @NgModule({
@@ -126,7 +127,8 @@ registerLocaleData(localeIt);
         MatTabsModule,
         MatProgressBarModule,
         MatTooltipModule,
-        MatToolbarModule
+        MatToolbarModule,
+        MatBadgeModule
     ],
   providers: [
     MatDatepickerModule,

@@ -19,6 +19,7 @@ export class AppComponent implements OnInit, OnChanges{
   infos !: ClubInfos | UserInfos
   isCoach!: boolean;
   perm=""
+  hidden = true;
   constructor(private tokenStorage: TokenStorageService,  private router: Router , private socketIoService: SocketIoService) {
     this.isLoggedIn = !!this.tokenStorage.getToken();
   }
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit, OnChanges{
     this.perm = await Notification.requestPermission()
     if(this.perm === "granted"){
       this.socketIoService.eventObservable('notify-client').subscribe((data)=>{
+        this.hidden = false
         new Notification(`Hai una nuova notifica di tipo ${data.data.notificationType}`)
       })
     } else {
@@ -57,5 +59,9 @@ export class AppComponent implements OnInit, OnChanges{
   logout(): void {
     this.tokenStorage.logout();
     window.location.replace("/");
+  }
+
+  seen(){
+    this.hidden = true
   }
 }
