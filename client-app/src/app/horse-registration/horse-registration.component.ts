@@ -79,7 +79,8 @@ export class HorseRegistrationComponent implements OnInit {
       clubId: '',
       horseBirthday: this.form.horseBirthday,
       riders: this.form.riders,
-      scholastic: this.form.scholastic
+      scholastic: this.form.scholastic,
+      horseFise: this.form.horseFise
     }
     if(!this.isClub){
       form.clubId = this.infos.clubId;
