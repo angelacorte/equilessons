@@ -225,10 +225,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
   }
 
   updateCoach() {
-    console.log("coaches ", this.form.coach['coachId'])
     this.coaches.some((obj:any)=>{
       if(obj._id === this.form.coach['coachId']){
-        console.log("obj", obj)
         this.form.coach['name'] = obj.name
         this.form.coach['surname'] = obj.surname
       }

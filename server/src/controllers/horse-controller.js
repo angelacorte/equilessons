@@ -10,7 +10,6 @@ let ObjectId = require('mongodb').ObjectID;
  * @param res
  */
 exports.addHorse = function (req,res){
-  console.log(req.body)
   let newHorse = new Horse(req.body);
   newHorse.ownerId = new ObjectId(req.body.ownerId)
   newHorse.riders = []
