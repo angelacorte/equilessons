@@ -6,7 +6,6 @@ export enum NotificationType {
 }
 
 export interface NotificationMessage{
-  sender?: string;
   notificationId?: string,
   senderId: string,
   recipientId: string,
