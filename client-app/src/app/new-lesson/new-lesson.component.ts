@@ -12,7 +12,7 @@ import {ClubInfos, Coach, UserInfos} from "../_utils/Person";
 import {HorseInfos} from "../_utils/Horse";
 import {NotificationService} from '../_services/notification.service';
 import {Notification, NotificationType} from '../_utils/Notification';
-import {Lesson, LessonState} from '../_utils/Lesson';
+import {Lesson, LessonState, Pairs} from '../_utils/Lesson';
 import {ArenaInfo} from "../_utils/Arena";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnackBarActions, SnackBarMessages} from "../_utils/Utils";
@@ -128,9 +128,13 @@ export class NewLessonComponent implements OnInit {
       })
 
       let my_lesson: LessonState = Lesson(d._id, d.beginDate, d.endDate, d.arena, d.Coach, d.pairs, d.notes, d.clubId)
+      let recipient: string[] = this.lesson.map((pair: Pairs) => pair.riderInfo.riderId)
+      if(this.isClub) recipient.push(this.form.coach.coachId)
+      if(this.tokenStorage.isCoach()) recipient.push(this.form.clubId)
+      // this.lesson.forEach(p => recipient.push(p.riderInfo.riderId))
       const notification = Notification(
         this.tokenStorage.getInfos(this.isClub)._id,
-        pairs.pop()?.riderId,
+        recipient,
         NotificationType.ADD,
         new Date(),
         my_lesson.lessonId,

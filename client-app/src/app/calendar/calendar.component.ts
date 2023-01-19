@@ -82,7 +82,7 @@ export class CalendarComponent implements OnInit {
       label: '<span class="valign-center"><i class="material-icons md-18 md-red-500">cancel</i></span>',
       title: 'Delete',
       onClick: (event: CalendarSchedulerEvent): void => {
-        console.log('Pressed action \'Delete\' on event ' + event.id);
+        // console.log('Pressed action \'Delete\' on event ' + event.id);
       }
     },
     {
@@ -90,7 +90,7 @@ export class CalendarComponent implements OnInit {
       label: '<span class="valign-center"><i class="material-icons md-18 md-red-500">autorenew</i></span>',
       title: 'Restore',
       onClick: (event: CalendarSchedulerEvent): void => {
-        console.log('Pressed action \'Restore\' on event ' + event.id);
+        // console.log('Pressed action \'Restore\' on event ' + event.id);
       }
     }
   ];
@@ -169,21 +169,21 @@ export class CalendarComponent implements OnInit {
   }
 
   viewDaysChanged(viewDays: number): void {
-    console.log('viewDaysChanged', viewDays);
+    // console.log('viewDaysChanged', viewDays);
     this.viewDays = viewDays;
   }
 
   dayHeaderClicked(day: SchedulerViewDay): void {
-    console.log('dayHeaderClicked Day', day);
+    // console.log('dayHeaderClicked Day', day);
   }
 
   hourClicked(hour: SchedulerViewHour): void {
-    console.log('hourClicked Hour', hour);
+    // console.log('hourClicked Hour', hour);
   }
 
   segmentClicked(action: string, segment: SchedulerViewHourSegment): void {
-    console.log('segmentClicked Action', action);
-    console.log('segmentClicked Segment', segment);
+    // console.log('segmentClicked Action', action);
+    // console.log('segmentClicked Segment', segment);
   }
 
   eventClicked(action: string, event: CalendarSchedulerEvent): void {
