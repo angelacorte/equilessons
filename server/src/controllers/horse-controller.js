@@ -10,10 +10,14 @@ let ObjectId = require('mongodb').ObjectID;
  * @param res
  */
 exports.addHorse = function (req,res){
+  console.log(req.body)
   let newHorse = new Horse(req.body);
   newHorse.ownerId = new ObjectId(req.body.ownerId)
   newHorse.riders = []
-  req.body.riders.forEach(r => newHorse.riders.push(new ObjectId(r)))
+  let riders = req.body.riders
+  if(riders) {
+    riders.forEach(r => newHorse.riders.push(new ObjectId(r)))
+  }
   newHorse.save(function(err, horse) {
     if (err){
       return res.send({status: 400, message: "Bad request " + err});
