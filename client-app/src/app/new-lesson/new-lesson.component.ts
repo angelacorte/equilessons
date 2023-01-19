@@ -74,6 +74,7 @@ export class NewLessonComponent implements OnInit {
       if(this.isClub && this.infos) {
         this.form.clubId = this.infos['_id'];
       }else{
+        if(this.tokenStorage.isCoach()) this.coachId = this.infos._id
         // @ts-ignore
         this.form.clubId = this.infos['clubId'];
       }

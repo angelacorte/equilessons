@@ -19,7 +19,7 @@
   </div>
   <div *ngIf="user.birthday ">
     <h5 class="text-secondary">Compleanno:</h5>
-    <p>{{user.birthday}}</p>
+    <p>{{user.birthday | date :'EEEE, MMMM d, y' : '' :'it' }}</p>
   </div>
   <div *ngIf="user.address">
     <h5 class="text-secondary">Indirizzo:</h5>
