@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {LessonService} from "../_services/lesson.service";
-import {LessonState} from "../_utils/Lesson";
+import {LessonState, Pairs} from "../_utils/Lesson";
 import {HttpClient} from "@angular/common/http";
 import {TokenStorageService} from "../_services/token-storage.service";
 import {ArenaService} from "../_services/arena.service";
@@ -44,10 +44,10 @@ export class DialogModifyLessonViewComponent implements OnInit {
     clubId: '',
     arena:{
       arenaName:'',
-      arenaId: ''
+      _id: ''
     },
     coach: {
-      coachId:'',
+      _id:'',
       name: '',
       surname: ''
     },
@@ -191,8 +191,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
       lessonId: this.updateLesson.lessonId,
       beginDate: beginDate,
       endDate: endDate,
-      arenaId: this.form.arena['arenaId'],
-      coachId: this.form.coach['coachId'],
+      arenaId: this.form.arena['_id'],
+      coachId: this.form.coach['_id'],
       clubId: clubId,
       pairs: pairs,
       notes: this.form.notes
@@ -200,10 +200,13 @@ export class DialogModifyLessonViewComponent implements OnInit {
     try {
       await this.lessonService.updateLesson(lesson).then(async res => {
         if (res.status == 200) {
-          this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH)
+          // this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH)
+          let recipient: string[] = this.form.pairs.map((pair: Pairs) => pair.riderInfo.riderId)
+          if(this.isClub) recipient.push(lesson.coachId)
+          if(this.isCoach) recipient.push(lesson.clubId)
           const notification = Notification(
             this.tokenStorage.getInfos(this.isClub)._id,
-            pairs.pop()?.riderId,
+            recipient,
             NotificationType.UPDATE,
             new Date(),
             lesson.lessonId,
@@ -226,7 +229,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
   updateCoach() {
     this.coaches.some((obj:any)=>{
-      if(obj._id === this.form.coach['coachId']){
+      if(obj._id === this.form.coach['_id']){
         this.form.coach['name'] = obj.name
         this.form.coach['surname'] = obj.surname
       }
@@ -235,7 +238,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
 
   updateArena() {
     this.arenas.forEach((value:any)=>{
-      if(value._id === this.form.arena['arenaId']) this.form.arena['arenaName'] = value.arenaName
+      if(value._id === this.form.arena['_id']) this.form.arena['arenaName'] = value.arenaName
     })
   }
 
@@ -281,7 +284,9 @@ export class DialogModifyLessonViewComponent implements OnInit {
       try {
         await this.lessonService.deleteLesson(this.updateLesson.lessonId)
         this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH)
-        let recipient = this.updateLesson.pairs.pop()?.riderInfo.riderId
+        let recipient: string[] = this.form.pairs.map((pair: Pairs) => pair.riderInfo.riderId)
+        if(this.isClub) recipient.push(this.form.coach._id)
+        if(this.isCoach) recipient.push(this.form.clubId)
         if(!recipient) throw new Error
         const notification = Notification(
           this.tokenStorage.getInfos(this.isClub)._id,

@@ -8,7 +8,7 @@ export enum NotificationType {
 export interface NotificationMessage{
   notificationId?: string,
   senderId: string,
-  recipientId: string,
+  recipientId: string[],
   lessonId?: string,
   lessonDate?: Date,
   notificationType: NotificationType,
@@ -19,7 +19,7 @@ export interface NotificationMessage{
 
 export function Notification(
   senderId: string,
-  recipientId: string,
+  recipientId: string[],
   notificationType: NotificationType,
   notificationDate: Date,
   lessonId?: string,

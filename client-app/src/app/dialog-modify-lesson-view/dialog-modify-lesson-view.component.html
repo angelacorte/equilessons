@@ -78,7 +78,7 @@
             <mat-select class="custom-select"
                         name="arenaId"
                         id="arenaId"
-                        [(ngModel)]="form.arena['arenaId']">
+                        [(ngModel)]="form.arena['_id']">
               <mat-option *ngFor="let arena of arenas"
                           [value]="arena['_id']">
                 {{arena['arenaName']}}</mat-option>
