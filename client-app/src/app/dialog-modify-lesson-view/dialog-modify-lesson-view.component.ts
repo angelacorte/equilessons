@@ -201,7 +201,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
       await this.lessonService.updateLesson(lesson).then(async res => {
         if (res.status == 200) {
           this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH)
-          let recipient: string[] = this.form.pairs.map((pair: Pairs) => pair.riderInfo.riderId)
+          let recipient: string[] = lesson.pairs.map(p => p.riderId)
           if(this.isClub) recipient.push(lesson.coachId)
           if(this.isCoach) recipient.push(lesson.clubId)
           const notification = Notification(
