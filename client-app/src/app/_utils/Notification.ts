@@ -1,7 +1,7 @@
 export enum NotificationType {
   ADD = "Nuova lezione",
-  UPDATE = "Lezione annullata",
-  DELETE = "Lezione cancellata",
+  UPDATE = "Lezione modificata",
+  DELETE = "Lezione annullata",
   INFO = "info"
 }
 
