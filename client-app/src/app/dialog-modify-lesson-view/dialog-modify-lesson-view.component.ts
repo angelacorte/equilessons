@@ -285,8 +285,8 @@ export class DialogModifyLessonViewComponent implements OnInit {
         await this.lessonService.deleteLesson(this.updateLesson.lessonId)
         this.openSnackbar(SnackBarMessages.SUCCESS, SnackBarActions.REFRESH)
         let recipient: string[] = this.form.pairs.map((pair: Pairs) => pair.riderInfo.riderId)
-        if(this.isClub) recipient.push(this.form.coach._id)
-        if(this.isCoach) recipient.push(this.form.clubId)
+        recipient.push(this.form.coach._id)
+        recipient.push(this.form.clubId)
         if(!recipient) throw new Error
         const notification = Notification(
           this.tokenStorage.getInfos(this.isClub)._id,
