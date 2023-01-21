@@ -266,7 +266,7 @@ export class DialogModifyLessonViewComponent implements OnInit {
     });
   }
 
-  deletePair(riderId: any) {
+  deletePair(riderId: string) {
     this.form.pairs.forEach((obj:any, index:any)=>{
       if(obj.riderInfo.riderId === riderId){
         this.form.pairs.splice(index,1);
