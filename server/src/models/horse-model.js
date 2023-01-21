@@ -8,7 +8,7 @@ let HorseSchema = new Schema({
   horseName: {type: String, required:true},
   //breed: {type: String, required:true},
   horseMicrochip: {type:Number, required:true, unique:true},
-  horseFise: {type:String, unique:true},
+  horseFise: {type:String}, //todo maybe unique true
   //nrFEI: {type:String, unique:true},
   ownerId: {type:Schema.Types.ObjectId, ref:"User", required: true}, //refers to an user
   clubId: {type:Schema.Types.ObjectId, ref:"Club", required: true}, //object/reference of 'club model'
