@@ -20,24 +20,24 @@ exports.signup = function(req, res) {
       res.send({status: 409, description: "username or email already in use"})
     }else{ //if user does not exists or exists without email (means that it's a temporary user, so it is possible to overwrite his infos)
       if(u == null){
-        let user = new User(await setUserFields(req.body))
+        let user = new User(await setUserFields(req.body, false))
         user.save(function (err) {
           if (err) {
-            res.send({status: 400, message: "error while saving user"})
+            res.send({status: 400, message: "Bad request"})
             return err;
           }else{
             return res.send({status: 200, message: "user added"});
           }
         })
       }else if(u.email === undefined){ //was a temporary user
-        req.body.password = hashPassword(req.body.password)
-        let updateUser = await setUserFields(req.body)
+        req.body.password = await hashPassword(req.body.password)
+        let updateUser = await setUserFields(req.body, true)
         User.updateOne({phoneNumber: updateUser.phoneNumber}, updateUser).then(result => {
-          if(result.nModified === 1){
+          if(result.modifiedCount === 1){
             delete updateUser.password;
             res.send({status: 200, message:"user added", updateUser})
           }else{
-            res.send({status: 400, message: "error while saving user"})
+            res.send({status: 400, message: "Bad request"})
           }
         });
       }
@@ -73,7 +73,9 @@ exports.signupTemporary = function (req, res){
   })
 }
 
-async function setUserFields(body) {
+async function setUserFields(body, isTemp) {
+  let password = body.password
+  if(isTemp) password = await hashPassword(password)
   return {
     isOwner: body.isOwner,
     roles: [],
@@ -83,7 +85,7 @@ async function setUserFields(body) {
     email: body.email,
     birthday: body.birthday,
     username: body.username,
-    password: body.password,
+    password: password,
     phoneNumber: body.phoneNumber,
     taxCode: body.taxCode,
     city: body.city,
