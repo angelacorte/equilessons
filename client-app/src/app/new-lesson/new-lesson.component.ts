@@ -97,7 +97,7 @@ export class NewLessonComponent implements OnInit {
     let beginDate = new Date(this.form.lessonDate);
     beginDate.setHours(this.form.lessonHour.substring(0,2), this.form.lessonHour.substring(3,5));
     let endDate = new Date(beginDate.getTime() + this.form.lessonDuration*60000);
-    let pairs: { riderId: any; horseId: any; }[] = [];
+    let pairs: { riderId: string, horseId: string }[] = [];
 
     this.lesson.forEach((val: any) =>{
       let pair = {
