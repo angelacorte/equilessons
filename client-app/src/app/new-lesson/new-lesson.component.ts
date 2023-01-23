@@ -106,7 +106,6 @@ export class NewLessonComponent implements OnInit {
       }
       pairs.push(pair);
     })
-
     const lesson = {
       beginDate: beginDate,
       endDate: endDate,
@@ -116,7 +115,6 @@ export class NewLessonComponent implements OnInit {
       pairs: pairs,
       notes: this.form.notes
     }
-
     try {
       let d = await this.lessonService.createLesson(lesson).then(res =>{
         if(res.status == 200){
@@ -129,8 +127,8 @@ export class NewLessonComponent implements OnInit {
 
       let my_lesson: LessonState = Lesson(d._id, d.beginDate, d.endDate, d.arena, d.Coach, d.pairs, d.notes, d.clubId)
       let recipient: string[] = lesson.pairs.map((p) => p.riderId)
-      if(this.isClub) recipient.push(this.form.coachId)
-      if(this.tokenStorage.isCoach()) recipient.push(this.form.clubId)
+      if(this.isClub) recipient.push(lesson.coachId)
+      if(this.tokenStorage.isCoach()) recipient.push(lesson.clubId)
       const notification = Notification(
         this.tokenStorage.getInfos(this.isClub)._id,
         recipient,
