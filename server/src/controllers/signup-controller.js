@@ -1,5 +1,7 @@
 const db = require("../models");
+const bcrypt = require("bcrypt");
 const User = db.user; //password already with salt
+let SALT_WORK_FACTOR = 10;
 
 /**
  * User registration
@@ -28,6 +30,7 @@ exports.signup = function(req, res) {
           }
         })
       }else if(u.email === undefined){ //was a temporary user
+        req.body.password = hashPassword(req.body.password)
         let updateUser = await setUserFields(req.body)
         User.updateOne({phoneNumber: updateUser.phoneNumber}, updateUser).then(result => {
           if(result.nModified === 1){
@@ -90,3 +93,7 @@ async function setUserFields(body) {
   };
 }
 
+async function hashPassword (password) {
+  let salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+  return await bcrypt.hash(password, salt);
+}
