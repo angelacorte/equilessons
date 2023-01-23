@@ -30,7 +30,6 @@ exports.signup = function(req, res) {
           }
         })
       }else if(u.email === undefined){ //was a temporary user
-        req.body.password = await hashPassword(req.body.password)
         let updateUser = await setUserFields(req.body, true)
         User.updateOne({phoneNumber: updateUser.phoneNumber}, updateUser).then(result => {
           if(result.modifiedCount === 1){
